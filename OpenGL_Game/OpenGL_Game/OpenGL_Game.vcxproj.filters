@@ -68,5 +68,8 @@
     <ClInclude Include="camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="mathdefinitions.h">
+      <Filter>Header Files\Maths</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
