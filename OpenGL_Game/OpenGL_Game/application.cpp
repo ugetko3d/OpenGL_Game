@@ -36,13 +36,16 @@ int main()
 	const GLfloat vertices[] = {
 		-0.5f, -0.5f, 0.0f,
 		0.5f, -0.5f, 0.0f,
-		0.5f, 0.5f, 0.0f,
-		-0.5f, 0.5f, 0.0f
+		0.5f, 0.3f, 0.0f,
+		-0.5f, 0.3f, 0.0f,
+		0.0f, 0.8f, 0.0f
 	};
 
 	const GLuint indices[] = {
 		0, 1, 3,
-		1, 2, 3
+		0, 1, 2,
+		1, 2, 3,
+		2, 3, 4
 	};
 
 	GLuint VAO, VBO, EBO;
@@ -64,7 +67,7 @@ int main()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	
+
 	glBindVertexArray(0);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -76,7 +79,7 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		glBindVertexArray(VAO);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, indices);
+		glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, indices);
 		glBindVertexArray(0);
 
 		/* Swap front and back buffers */
