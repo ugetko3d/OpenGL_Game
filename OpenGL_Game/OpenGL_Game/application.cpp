@@ -32,6 +32,7 @@ int main()
 	}
 
 	std::cout << "Status: Using GLEW " << glewGetString(GLEW_VERSION) << std::endl;
+	std::cout << glGetString(GL_VENDOR) << " and " << glGetString(GL_RENDERER) << std::endl;
 
 	const GLfloat vertices[] = {
 		-0.5f, -0.5f, 0.0f,
