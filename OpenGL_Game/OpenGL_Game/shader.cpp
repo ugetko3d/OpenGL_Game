@@ -54,7 +54,7 @@ GLint Shader::init(const GLchar* vertex_shader_path, const GLchar* fragment_shad
 		return -1;
 	};
 	// Compile the fragment shader
-	printf("Compiling: %s\n", vertex_shader_path);
+	printf("Compiling: %s\n", fragment_shader_path);
 	GLuint fragmentID = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragmentID, 1, &fragment_source, NULL);
 	glCompileShader(fragmentID);

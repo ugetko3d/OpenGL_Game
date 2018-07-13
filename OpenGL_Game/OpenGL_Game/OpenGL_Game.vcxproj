@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="application.cpp" />
+    <ClCompile Include="camera.cpp" />
     <ClCompile Include="mat2.cpp" />
     <ClCompile Include="mat3.cpp" />
     <ClCompile Include="mat4.cpp" />
