@@ -76,7 +76,7 @@ vec3 operator*(const vec3& left, const vec3& right) {
 }
 
 vec3 operator*(const vec3& left, const float& scalar) {
-	return vec3(left.x * scalar, left.y * scalar, left.z * scalar);
+	return vec3::scale(left, scalar);
 }
 
 vec3 operator/(const vec3& left, const vec3& right) {

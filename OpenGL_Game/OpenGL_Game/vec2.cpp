@@ -60,7 +60,7 @@ vec2 operator*(const vec2& left, const vec2& right) {
 }
 
 vec2 operator*(const vec2& left, const float& scalar) {
-	return vec2(left.x * scalar, left.y * scalar);
+	return vec2::scale(left, scalar);
 }
 
 vec2 operator/(const vec2& left, const vec2& right) {
