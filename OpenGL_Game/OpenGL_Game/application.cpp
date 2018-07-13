@@ -3,6 +3,10 @@
 
 #include <iostream>
 
+const GLuint POSITION = 0;
+const GLuint TEXTURE_COORD = 1;
+const GLuint NORMAL = 2;
+
 int main()
 {
 	GLFWwindow* window;
@@ -32,20 +36,60 @@ int main()
 	}
 
 	std::cout << "Status: Using GLEW " << glewGetString(GLEW_VERSION) << std::endl;
+	std::cout << glGetString(GL_VENDOR) << " and " << glGetString(GL_RENDERER) << std::endl;
 
-	const GLfloat vertices[] = {
-		-0.5f, -0.5f, 0.0f,
-		0.5f, -0.5f, 0.0f,
-		0.5f, 0.3f, 0.0f,
-		-0.5f, 0.3f, 0.0f,
-		0.0f, 0.8f, 0.0f
+	const GLfloat cubeVertices[] = {
+	    // POSITION COORD    // TEXTURE COORD    // NORMAL VECTOR
+
+		-0.5f, -0.5f, +0.5f,	+0.0f, +0.0f,	+0.0f, +0.0f, +1.0f, //FRONT
+		+0.5f, -0.5f, +0.5f,	+0.0f, +1.0f,	+0.0f, +0.0f, +1.0f,
+		+0.5f, +0.5f, +0.5f,	+1.0f, +1.0f,	+0.0f, +0.0f, +1.0f,
+		-0.5f, +0.5f, +0.5f,	+1.0f, +0.0f,	+0.0f, +0.0f, +1.0f,
+
+		-0.5f, -0.5f, +0.5f,	+0.0f, +0.0f,	-1.0f, +0.0f, +0.0f, // LEFT
+		-0.5f, +0.5f, +0.5f,	+0.0f, +1.0f,	-1.0f, +0.0f, +0.0f,
+		-0.5f, +0.5f, -0.5f,	+1.0f, +1.0f,	-1.0f, +0.0f, +0.0f,
+		-0.5f, -0.5f, -0.5f,	+1.0f, +0.0f,	-1.0f, +0.0f, +0.0f,
+
+		-0.5f, -0.5f, -0.5f,	+0.0f, +0.0f,	+0.0f, +0.0f, -1.0f, // BACK
+		+0.5f, -0.5f, -0.5f,	+0.0f, +1.0f,	+0.0f, +0.0f, -1.0f,
+		+0.5f, +0.5f, -0.5f,	+1.0f, +1.0f,	+0.0f, +0.0f, -1.0f,
+		-0.5f, +0.5f, -0.5f,	+1.0f, +0.0f,	+0.0f, +0.0f, -1.0f,
+
+		+0.5f, -0.5f, -0.5f,	+0.0f, +0.0f,	+1.0f, +0.0f, +0.0f, // RIGHT
+		+0.5f, +0.5f, -0.5f,	+0.0f, +1.0f,	+1.0f, +0.0f, +0.0f,
+		+0.5f, +0.5f, +0.5f,	+1.0f, +1.0f,	+1.0f, +0.0f, +0.0f,
+		+0.5f, -0.5f, +0.5f,	+1.0f, +0.0f,	+1.0f, +0.0f, +0.0f,
+
+		-0.5f, +0.5f, +0.5f,	+0.0f, +0.0f,	+0.0f, +1.0f, +0.0f, // TOP
+		-0.5f, +0.5f, -0.5f,	+0.0f, +1.0f,	+0.0f, +1.0f, +0.0f,
+		+0.5f, +0.5f, -0.5f,	+1.0f, +1.0f,	+0.0f, +1.0f, +0.0f,
+		+0.5f, +0.5f, +0.5f,	+1.0f, +0.0f,	+0.0f, +1.0f, +0.0f,
+
+		-0.5f, -0.5f, +0.5f,	+0.0f, +0.0f,	+0.0f, -1.0f, +0.0f, // BOTTOM
+		-0.5f, -0.5f, -0.5f,	+0.0f, +1.0f,	+0.0f, -1.0f, +0.0f,
+		+0.5f, -0.5f, -0.5f,	+1.0f, +1.0f,	+0.0f, -1.0f, +0.0f,
+		+0.5f, -0.5f, +0.5f,	+1.0f, +0.0f,	+0.0f, -1.0f, +0.0f
 	};
 
-	const GLuint indices[] = {
-		0, 1, 3,
-		0, 1, 2,
-		1, 2, 3,
-		2, 3, 4
+	const GLuint cubeIndices[] = {
+		0, 1, 2, // FRONT
+		0, 3, 2,
+
+		4, 5, 6, // LEFT
+		4, 7, 6,
+
+		8, 9, 10, // BACK
+		8, 11, 10,
+
+		12, 13, 14, // RIGHT
+		12, 15, 14,
+
+		16, 17, 18, // TOP
+		16, 19, 18,
+
+		20, 21, 22, // BOTTOM
+		20, 23, 22
 	};
 
 	GLuint VAO, VBO, EBO;
@@ -56,21 +100,19 @@ int main()
 	glBindVertexArray(VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), cubeVertices, GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cubeIndices), cubeIndices, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(POSITION, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
+	glEnableVertexAttribArray(POSITION);
 
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glVertexAttribPointer(TEXTURE_COORD, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
+	glEnableVertexAttribArray(TEXTURE_COORD);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-	glBindVertexArray(0);
-
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glVertexAttribPointer(NORMAL, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
+	glEnableVertexAttribArray(NORMAL);
 
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
@@ -78,9 +120,7 @@ int main()
 		/* Render here */
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		glBindVertexArray(VAO);
-		glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, indices);
-		glBindVertexArray(0);
+		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
