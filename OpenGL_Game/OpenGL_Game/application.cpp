@@ -100,6 +100,7 @@ int main()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_SAMPLES, 4);
 
 	// Create a windowed mode window and its OpenGL context
 	window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "OpenGL Flying Game", NULL, NULL);
@@ -133,6 +134,7 @@ int main()
 
 	// Set global OpenGL state
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_MULTISAMPLE);
 
 	// Printing out useful information to the console
 	std::cout << "Status: Using GLEW " << glewGetString(GLEW_VERSION) << std::endl;
