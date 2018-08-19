@@ -23,20 +23,20 @@ class Camera
 {
 public:
 	// Camera attributes
-	vec3 Position;
-	vec3 Front;
-	vec3 Up;
-	vec3 Right;
+	vec3 position;
+	vec3 front;
+	vec3 up;
+	vec3 right;
 	const vec3 WORLD_UP = vec3(0.0f, 1.0f, 0.0f);
 
 	// Eular angles
-	GLdouble Yaw;
-	GLdouble Pitch;
+	GLdouble yaw;
+	GLdouble pitch;
 
 	// Camera options
-	GLfloat MovementSpeed;
-	GLfloat MouseSensitivity;
-	GLfloat Fov;
+	GLfloat movementSpeed;
+	GLfloat mouseSensitivity;
+	GLfloat fov;
 
 	// Constructor
 	Camera(vec3 eye);
@@ -48,7 +48,7 @@ public:
 	GLvoid ProcessKeyboard(Camera_Movement direction, GLfloat deltaTime);
 
 	// Set camera position
-	GLvoid SetCameraPosition(vec3 v);
+	GLvoid SetCameraPosition(vec3 pos);
 
 	// Processes aim input
 	GLvoid ProcessMouseMovement(GLdouble xoffset, GLdouble yoffset);

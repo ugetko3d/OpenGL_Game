@@ -2,24 +2,24 @@
 
 Camera::Camera(vec3 eye)
 {
-	Position = eye;
-	Front = vec3(0.0f, 0.0f, -1.0f);
+	position = eye;
+	front = vec3(0.0f, 0.0f, -1.0f);
 
-	Yaw = YAW;
-	Pitch = PITCH;
+	yaw = YAW;
+	pitch = PITCH;
 
-	MovementSpeed = SPEED;
-	MouseSensitivity = SENSITIVTY;
-	Fov = FOV;
+	movementSpeed = SPEED;
+	mouseSensitivity = SENSITIVTY;
+	fov = FOV;
 
 	updateCameraVectors();
 }
 
 mat4 Camera::GetViewMatrix()
 {
-	vec3 Center(vec3::add(Position, Front));
-	vec3 f(vec3::normalize(vec3::subtract(Center, Position)));
-	vec3 s(vec3::normalize(vec3::cross(f, Up)));
+	vec3 center(vec3::add(position, front));
+	vec3 f(vec3::normalize(vec3::subtract(center, position)));
+	vec3 s(vec3::normalize(vec3::cross(f, up)));
 	vec3 u(vec3::cross(s, f));
 
 	mat4 result;
@@ -33,9 +33,9 @@ mat4 Camera::GetViewMatrix()
 	result.matrix[2] = -f.x;
 	result.matrix[6] = -f.y;
 	result.matrix[10] = -f.z;
-	result.matrix[12] = -vec3::dot(s, Position);
-	result.matrix[13] = -vec3::dot(u, Position);
-	result.matrix[14] = vec3::dot(f, Position);
+	result.matrix[12] = -vec3::dot(s, position);
+	result.matrix[13] = -vec3::dot(u, position);
+	result.matrix[14] = vec3::dot(f, position);
 	result.matrix[15] = 1.0f;
 
 	return result;
@@ -43,62 +43,61 @@ mat4 Camera::GetViewMatrix()
 
 GLvoid Camera::ProcessKeyboard(Camera_Movement direction, GLfloat deltaTime)
 {
-	GLfloat velocity = MovementSpeed * deltaTime;
+	GLfloat velocity = movementSpeed * deltaTime;
 	if (direction == FORWARD)
-		Position = vec3::add(Position, vec3::scale(Front, velocity));
+		position = vec3::add(position, vec3::scale(front, velocity));
 	if (direction == BACKWARD)
-		Position = vec3::subtract(Position, vec3::scale(Front, velocity));
+		position = vec3::subtract(position, vec3::scale(front, velocity));
 	if (direction == LEFT)
-		Position = vec3::subtract(Position, vec3::scale(Right, velocity));
+		position = vec3::subtract(position, vec3::scale(right, velocity));
 	if (direction == RIGHT)
-		Position = vec3::add(Position, vec3::scale(Right, velocity));
+		position = vec3::add(position, vec3::scale(right, velocity));
 }
 
 GLvoid Camera::ProcessMouseMovement(GLdouble xoffset, GLdouble yoffset)
 {
-	xoffset *= MouseSensitivity;
-	yoffset *= MouseSensitivity;
+	xoffset *= mouseSensitivity;
+	yoffset *= mouseSensitivity;
 
-	Yaw += xoffset;
-	Pitch += yoffset;
+	yaw += xoffset;
+	pitch += yoffset;
 
 	// Make sure that when pitch is out of bounds, screen doesn't get flipped
 
-	if (Pitch > 89.0f)
-		Pitch = 89.0f;
-	if (Pitch < -89.0f)
-		Pitch = -89.0f;
+	if (pitch > 89.0f)
+		pitch = 89.0f;
+	if (pitch < -89.0f)
+		pitch = -89.0f;
 
-	// Update Front, Right and Up vectors using the updated Eular angles
+	// Update front, right and up vectors using the updated Eular angles
 	updateCameraVectors();
 }
 
 GLvoid Camera::setFOV(GLfloat yoffset)
 {
-	if (Fov >= 1.0f && Fov <= 45.0f)
-		Fov -= yoffset;
-	if (Fov <= 1.0f)
-		Fov = 1.0f;
-	if (Fov >= 45.0f)
-		Fov = 45.0f;
+	if (fov >= 1.0f && fov <= 45.0f)
+		fov -= yoffset;
+	if (fov <= 1.0f)
+		fov = 1.0f;
+	if (fov >= 45.0f)
+		fov = 45.0f;
 }
 
-//Set position camera
-GLvoid Camera::SetCameraPosition(vec3 v)
+//Set camera position
+GLvoid Camera::SetCameraPosition(vec3 pos)
 {
-	Position = v;
+	position = pos;
 }
 
 GLvoid Camera::updateCameraVectors()
 {
-	GLfloat y = (GLfloat)(Yaw * (M_PI / 180.0f));
-	GLfloat p = (GLfloat)(Pitch * (M_PI / 180.0f));
+	GLfloat y = (GLfloat)(yaw * (M_PI / 180.0f));
+	GLfloat p = (GLfloat)(pitch * (M_PI / 180.0f));
 
-	// Calculate the new Front vector
-	vec3 front(cos(y) * cos(p), sin(p), sin(y) * cos(p));
-	Front = vec3::normalize(front);
+	// Calculate the new front vector
+	front = vec3::normalize(vec3(cos(y) * cos(p), sin(p), sin(y) * cos(p)));
 
-	// Also re-calculate the Right and Up vector
-	Right = vec3::normalize(vec3::cross(Front, WORLD_UP));  // Normalize the vectors, because their length gets closer to 0, 
-	Up = vec3::normalize(vec3::cross(Right, Front));		// the more you look up or down which results in slower movement
+	// Also re-calculate the right and up vector
+	right = vec3::normalize(vec3::cross(front, WORLD_UP));  // Normalize the vectors, because their length gets closer to 0, 
+	up = vec3::normalize(vec3::cross(right, front));		// the more you look up or down which results in slower movement
 }

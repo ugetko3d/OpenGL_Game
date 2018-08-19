@@ -8,10 +8,10 @@
 #include "camera.h"
 
 // Function prototypes
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-void processInput(GLFWwindow *window);
+GLvoid framebuffer_size_callback(GLFWwindow* window, GLint width, GLint height);
+GLvoid mouse_callback(GLFWwindow* window, GLdouble xpos, GLdouble ypos);
+GLvoid scroll_callback(GLFWwindow* window, GLdouble xoffset, GLdouble yoffset);
+GLvoid processInput(GLFWwindow *window);
 
 // Window settings
 const GLuint WINDOW_WIDTH = 1200;
@@ -166,6 +166,7 @@ int main()
 	mat4 view;
 	mat4 projection;
 
+	// Setting up shaders
 	Shader objectShader;
 	objectShader.init("vertex.shader", "fragment.shader");
 
@@ -173,6 +174,9 @@ int main()
 	objectShader.use();
 	objectShader.setMat4("model", model);
 	objectShader.setMat4("projection", projection);
+
+	// Setting up textures
+	glActiveTexture(GL_TEXTURE0);
 	
 	// Loop until the user closes the window
 	while (!glfwWindowShouldClose(window))
@@ -191,7 +195,7 @@ int main()
 
 		// Calculate the view matrix
 		view = camera.GetViewMatrix();
-		projection = mat4::makePerspective(camera.Fov, (GLfloat)WINDOW_WIDTH / (GLfloat)WINDOW_HEIGHT, 0.1f, 100.0f);
+		projection = mat4::makePerspective(camera.fov, (GLfloat)WINDOW_WIDTH / (GLfloat)WINDOW_HEIGHT, 0.1f, 100.0f);
 		
 		// The view matrix and projection matrix are changing dynamically, so we pass these matrices to the shader every frame
 		objectShader.setMat4("view", view);
@@ -235,7 +239,7 @@ GLvoid processInput(GLFWwindow *window)
 }
 
 // GLFW: whenever the window size changed (by OS or user resize), this callback function executes
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+GLvoid framebuffer_size_callback(GLFWwindow* window, GLint width, GLint height)
 {
 	// make sure the viewport matches the new window dimensions; note that width and 
 	// height will be significantly larger than specified on retina displays.
@@ -244,7 +248,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 
 // GLFW: whenever the mouse moves, this callback is called
-void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+GLvoid mouse_callback(GLFWwindow* window, GLdouble xpos, GLdouble ypos)
 {
 	if (firstMouse)
 	{
@@ -253,8 +257,8 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 		firstMouse = false;
 	}
 
-	float xoffset = xpos - lastX;
-	float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+	GLfloat xoffset = xpos - lastX;
+	GLfloat yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
 
 	lastX = xpos;
 	lastY = ypos;
@@ -263,7 +267,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 }
 
 // GLFW: whenever the mouse scroll wheel scrolls, this callback is called
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+GLvoid scroll_callback(GLFWwindow* window, GLdouble xoffset, GLdouble yoffset)
 {
 	camera.setFOV(yoffset);
 }
