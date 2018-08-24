@@ -5,7 +5,7 @@
 class Texture
 {
 public:
-	GLuint ID, index;
+	GLuint ID;
 
 	Texture();
 	Texture(const GLchar* path);
