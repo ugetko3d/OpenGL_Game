@@ -2,14 +2,13 @@
 
 #include "glew.h"
 
-class texture
+class Texture
 {
 public:
 	GLuint ID, index;
 
-	texture();
-	texture(const GLchar* path);
-	GLvoid activateTexture();
+	Texture();
+	Texture(const GLchar* path);
 	GLvoid bindTexture();
 };
 

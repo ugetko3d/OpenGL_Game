@@ -22,6 +22,9 @@
     <Filter Include="Shader Files">
       <UniqueIdentifier>{7168bd13-fd37-4d7d-9c2e-112c922e4e47}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Textures">
+      <UniqueIdentifier>{9f013a4c-f69f-48fe-9b2a-e7288f2bfdd2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="application.cpp">
@@ -103,5 +106,10 @@
     <None Include="fragment.shader">
       <Filter>Shader Files</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="stones.jpg">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
   </ItemGroup>
 </Project>

@@ -6,6 +6,7 @@
 #include "maths.hpp"
 #include "shader.hpp"
 #include "camera.hpp"
+#include "texture.hpp"
 
 // Function prototypes
 GLvoid framebuffer_size_callback(GLFWwindow* window, GLint width, GLint height);
@@ -174,9 +175,12 @@ int main()
 	objectShader.use();
 	objectShader.setMat4("model", model);
 	objectShader.setMat4("projection", projection);
+	objectShader.setInt("tex", 0);
 
 	// Setting up textures
+	Texture tex("stones.jpg");
 	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, tex.ID);
 	
 	// Loop until the user closes the window
 	while (!glfwWindowShouldClose(window))
