@@ -2,7 +2,7 @@
 #define _CRT_SECURE_NO_DEPRECATE
 
 #include "glew.h"
-#include "maths.h"
+#include "maths.hpp"
 #include <string.h>
 
 class Shader {

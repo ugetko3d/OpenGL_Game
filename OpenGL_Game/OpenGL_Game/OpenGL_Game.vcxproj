@@ -25,25 +25,25 @@
     <ClCompile Include="mat3.cpp" />
     <ClCompile Include="mat4.cpp" />
     <ClCompile Include="shader.cpp" />
-    <ClCompile Include="stb_image.cpp" />
+    <ClCompile Include="stb_image.c" />
     <ClCompile Include="texture.cpp" />
     <ClCompile Include="vec2.cpp" />
     <ClCompile Include="vec3.cpp" />
     <ClCompile Include="vec4.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="camera.h" />
-    <ClInclude Include="mat2.h" />
-    <ClInclude Include="mat3.h" />
-    <ClInclude Include="mat4.h" />
-    <ClInclude Include="mathdefinitions.h" />
-    <ClInclude Include="maths.h" />
-    <ClInclude Include="shader.h" />
+    <ClInclude Include="camera.hpp" />
+    <ClInclude Include="mat2.hpp" />
+    <ClInclude Include="mat3.hpp" />
+    <ClInclude Include="mat4.hpp" />
+    <ClInclude Include="mathdefinitions.hpp" />
+    <ClInclude Include="maths.hpp" />
+    <ClInclude Include="shader.hpp" />
     <ClInclude Include="stb_image.h" />
-    <ClInclude Include="texture.h" />
-    <ClInclude Include="vec2.h" />
-    <ClInclude Include="vec3.h" />
-    <ClInclude Include="vec4.h" />
+    <ClInclude Include="texture.hpp" />
+    <ClInclude Include="vec2.hpp" />
+    <ClInclude Include="vec3.hpp" />
+    <ClInclude Include="vec4.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fragment.shader" />

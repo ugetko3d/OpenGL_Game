@@ -1,5 +1,5 @@
-#include "mat4.h"
-#include "MathDefinitions.h"
+#include "mat4.hpp"
+#include "mathdefinitions.hpp"
 
 mat4::mat4() {
 	for (int i = 0; i < 16; i++)

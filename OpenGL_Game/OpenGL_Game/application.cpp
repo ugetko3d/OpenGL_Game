@@ -3,9 +3,9 @@
 
 #include <iostream>
 
-#include "maths.h"
-#include "shader.h"
-#include "camera.h"
+#include "maths.hpp"
+#include "shader.hpp"
+#include "camera.hpp"
 
 // Function prototypes
 GLvoid framebuffer_size_callback(GLFWwindow* window, GLint width, GLint height);

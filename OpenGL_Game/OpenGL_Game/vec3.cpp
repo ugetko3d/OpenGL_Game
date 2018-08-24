@@ -1,4 +1,4 @@
-#include "vec3.h"
+#include "vec3.hpp"
 
 vec3::vec3() {
 	x = 0.0f;

@@ -1,4 +1,4 @@
-#include "mat2.h"
+#include "mat2.hpp"
 
 mat2::mat2() {
 	for (int i = 0; i < 4; i++)

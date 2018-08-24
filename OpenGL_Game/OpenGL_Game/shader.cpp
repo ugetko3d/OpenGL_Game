@@ -1,4 +1,4 @@
-#include "shader.h"
+#include "shader.hpp"
  
 GLchar* Shader::readFile(const GLchar* file_path)
 {

@@ -54,46 +54,46 @@
     <ClCompile Include="texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="stb_image.cpp">
+    <ClCompile Include="stb_image.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="mat2.h">
-      <Filter>Header Files\Maths</Filter>
-    </ClInclude>
-    <ClInclude Include="mat3.h">
-      <Filter>Header Files\Maths</Filter>
-    </ClInclude>
-    <ClInclude Include="mat4.h">
-      <Filter>Header Files\Maths</Filter>
-    </ClInclude>
-    <ClInclude Include="maths.h">
-      <Filter>Header Files\Maths</Filter>
-    </ClInclude>
-    <ClInclude Include="vec2.h">
-      <Filter>Header Files\Maths</Filter>
-    </ClInclude>
-    <ClInclude Include="vec3.h">
-      <Filter>Header Files\Maths</Filter>
-    </ClInclude>
-    <ClInclude Include="vec4.h">
-      <Filter>Header Files\Maths</Filter>
-    </ClInclude>
-    <ClInclude Include="camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="mathdefinitions.h">
-      <Filter>Header Files\Maths</Filter>
-    </ClInclude>
-    <ClInclude Include="shader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="texture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="stb_image.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="texture.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="shader.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vec4.hpp">
+      <Filter>Header Files\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="vec3.hpp">
+      <Filter>Header Files\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="vec2.hpp">
+      <Filter>Header Files\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="maths.hpp">
+      <Filter>Header Files\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="mathdefinitions.hpp">
+      <Filter>Header Files\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="mat4.hpp">
+      <Filter>Header Files\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="mat3.hpp">
+      <Filter>Header Files\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="mat2.hpp">
+      <Filter>Header Files\Maths</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
