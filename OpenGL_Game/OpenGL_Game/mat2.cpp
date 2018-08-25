@@ -1,13 +1,15 @@
+#include <iostream>
+
 #include "mat2.hpp"
 
 mat2::mat2() {
 	for (int i = 0; i < 4; i++)
-		matrix[i] = 0.0f;
+		data[i] = 0.0f;
 }
 
 std::ostream& operator<<(std::ostream& stream, const mat2& m) {
 	stream << "mat2: \n" <<
-		m.matrix[0] << "\t" << m.matrix[1] << "\n" <<
-		m.matrix[2] << "\t" << m.matrix[3];
+		m.data[0] << "\t" << m.data[1] << "\n" <<
+		m.data[2] << "\t" << m.data[3];
 	return stream;
 }

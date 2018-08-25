@@ -1,11 +1,9 @@
 #pragma once
 
-#include <iostream>
-
 class mat2 {
 
 public:
-	float matrix[4];
+	float data[4];
 
 	mat2();
 

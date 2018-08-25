@@ -5,7 +5,7 @@
 class mat3 {
 
 public:
-	float matrix[9];
+	float data[9];
 
 	mat3();
 

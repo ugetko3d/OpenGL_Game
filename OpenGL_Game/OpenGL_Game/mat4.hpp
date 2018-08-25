@@ -1,12 +1,14 @@
 #pragma once
 
 #include <iostream>
+
 #include "vec3.hpp"
+#include "mathdefinitions.hpp"
 
 class mat4 {
 
 public:
-	float matrix[16];
+	float data[16];
 
 	mat4();
 

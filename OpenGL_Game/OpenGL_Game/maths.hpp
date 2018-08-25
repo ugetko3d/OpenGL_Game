@@ -1,4 +1,5 @@
 #pragma once
+
 #include "mathdefinitions.hpp"
 #include "mat4.hpp"
 #include "mat3.hpp"

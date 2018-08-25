@@ -1,5 +1,6 @@
-#include <iostream>
+#include <glew.h>
 
+#include <iostream>
 #include "stb_image.h"
 
 #include "texture.hpp"
@@ -14,7 +15,7 @@ Texture::Texture(const GLchar* path)
 	GLint width, height, nrChannels;
 	unsigned char *data = stbi_load(path, &width, &height, &nrChannels, 0);
 	if (!data) {
-		printf("Error: Texture failed to load at path: %s", path);
+		std::cout << "Error: Texture failed to load at path: " << path << std::endl;
 		stbi_image_free(data);
 	}
 

@@ -1,7 +1,6 @@
 #include "mat4.hpp"
 #include "vec4.hpp"
 
-
 vec4::vec4() {
 	x = 0.0f;
 	y = 0.0f;
@@ -24,10 +23,10 @@ vec4::vec4(const float& a, const float& b, const float& c, const float& d) {
 }
 
 vec4 vec4::multiply(const mat4& m, const vec4& v) {
-	return vec4(m.matrix[0] * v.x + m.matrix[4] * v.y + m.matrix[8] * v.z + m.matrix[12] * v.w,
-				m.matrix[1] * v.x + m.matrix[5] * v.y + m.matrix[9] * v.z + m.matrix[13] * v.w,
-				m.matrix[2] * v.x + m.matrix[6] * v.y + m.matrix[10] * v.z + m.matrix[14] * v.w,
-				m.matrix[3] * v.x + m.matrix[7] * v.y + m.matrix[11] * v.z + m.matrix[15] * v.w);
+	return vec4(m.data[0] * v.x + m.data[4] * v.y + m.data[8] * v.z + m.data[12] * v.w,
+				m.data[1] * v.x + m.data[5] * v.y + m.data[9] * v.z + m.data[13] * v.w,
+				m.data[2] * v.x + m.data[6] * v.y + m.data[10] * v.z + m.data[14] * v.w,
+				m.data[3] * v.x + m.data[7] * v.y + m.data[11] * v.z + m.data[15] * v.w);
 }
 
 vec4 vec4::cross(const vec4& v1, const vec4& v2) {

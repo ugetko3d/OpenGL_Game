@@ -95,6 +95,7 @@ GLvoid Shader::checkCompileErrors(GLuint shader, std::string type)
 {
 	GLint success;
 	GLchar infoLog[1024];
+
 	if (type != "PROGRAM")
 	{
 		glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
@@ -155,15 +156,15 @@ GLvoid Shader::setVec4(std::string name, const vec4& value)
 
 GLvoid Shader::setMat2(std::string name, const mat2& mat)
 {
-	glUniformMatrix2fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, mat.matrix);
+	glUniformMatrix2fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, mat.data);
 }
 
 GLvoid Shader::setMat3(std::string name, const mat3& mat)
 {
-	glUniformMatrix3fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, mat.matrix);
+	glUniformMatrix3fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, mat.data);
 }
 
 GLvoid Shader::setMat4(std::string name, const mat4& mat)
 {
-	glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, mat.matrix);
+	glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, mat.data);
 }

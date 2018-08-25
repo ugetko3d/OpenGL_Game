@@ -1,3 +1,6 @@
+#include <glew.h>
+
+#include "maths.hpp"
 #include "camera.hpp"
 
 Camera::Camera()
@@ -29,19 +32,19 @@ mat4 Camera::getViewMatrix()
 
 	mat4 result;
 
-	result.matrix[0] = s.x;
-	result.matrix[4] = s.y;
-	result.matrix[8] = s.z;
-	result.matrix[1] = u.x;
-	result.matrix[5] = u.y;
-	result.matrix[9] = u.z;
-	result.matrix[2] = -f.x;
-	result.matrix[6] = -f.y;
-	result.matrix[10] = -f.z;
-	result.matrix[12] = -vec3::dot(s, position);
-	result.matrix[13] = -vec3::dot(u, position);
-	result.matrix[14] = vec3::dot(f, position);
-	result.matrix[15] = 1.0f;
+	result.data[0] = s.x;
+	result.data[4] = s.y;
+	result.data[8] = s.z;
+	result.data[1] = u.x;
+	result.data[5] = u.y;
+	result.data[9] = u.z;
+	result.data[2] = -f.x;
+	result.data[6] = -f.y;
+	result.data[10] = -f.z;
+	result.data[12] = -vec3::dot(s, position);
+	result.data[13] = -vec3::dot(u, position);
+	result.data[14] = vec3::dot(f, position);
+	result.data[15] = 1.0f;
 
 	return result;
 }
