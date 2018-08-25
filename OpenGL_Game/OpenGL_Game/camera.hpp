@@ -1,7 +1,7 @@
 #pragma once
 
 // Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods
-enum Camera_Movement
+const enum Camera_Movement
 {
 	FORWARD,
 	BACKWARD,
@@ -36,8 +36,7 @@ public:
 	GLfloat mouseSensitivity;
 	GLfloat fov;
 
-	// Constructors
-	Camera();
+	// Constructor
 	Camera(vec3 eye);
 
 	// Returns the view matrix calculated using Eular angles

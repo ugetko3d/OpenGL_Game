@@ -4,8 +4,7 @@ class Shader {
 public:
 	GLuint ID;
 
-	// Constructors
-	Shader();
+	// Constructor
 	Shader(const GLchar* vertex_shader_path, const GLchar* fragment_shader_path);
 
 	// Use this program

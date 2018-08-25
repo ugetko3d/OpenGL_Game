@@ -3,11 +3,6 @@
 #include "maths.hpp"
 #include "camera.hpp"
 
-Camera::Camera()
-{
-
-}
-
 Camera::Camera(vec3 eye)
 {
 	position = eye;

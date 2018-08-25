@@ -60,6 +60,9 @@
     <ClCompile Include="stb_image.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="window.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stb_image.h">
@@ -97,6 +100,9 @@
     </ClInclude>
     <ClInclude Include="mat2.hpp">
       <Filter>Header Files\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="window.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

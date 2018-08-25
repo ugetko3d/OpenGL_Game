@@ -1,5 +1,6 @@
 #include <glew.h>
 #include <glfw3.h>
+#include "window.hpp"
 
 #include <iostream>
 
@@ -8,15 +9,7 @@
 #include "camera.hpp"
 #include "texture.hpp"
 
-// Function prototypes
-GLvoid framebuffer_size_callback(GLFWwindow* window, GLint width, GLint height);
-GLvoid mouse_callback(GLFWwindow* window, GLdouble xpos, GLdouble ypos);
-GLvoid scroll_callback(GLFWwindow* window, GLdouble xoffset, GLdouble yoffset);
-GLvoid processInput(GLFWwindow *window);
-
-// Window settings
-const GLuint WINDOW_WIDTH = 1200;
-const GLuint WINDOW_HEIGHT = 600;
+Window screen;
 
 // Vertex attributes
 const GLuint POSITION = 0;
@@ -25,8 +18,8 @@ const GLuint NORMAL = 2;
 
 // Camera
 Camera camera(vec3(0.0f, 0.0f, 5.0f));
-GLfloat lastX = WINDOW_WIDTH / 2.0f;
-GLfloat lastY = WINDOW_HEIGHT / 2.0f;
+GLfloat lastX = screen.WIDTH / 2.0f;
+GLfloat lastY = screen.HEIGHT / 2.0f;
 GLboolean firstMouse = true;
 
 // Timing
@@ -88,58 +81,20 @@ const GLuint cubeIndices[] = {
 	20, 23, 22
 };
 
+GLvoid framebuffer_size_callback(GLFWwindow* window, GLint width, GLint height);
+GLvoid mouse_callback(GLFWwindow* window, GLdouble xpos, GLdouble ypos);
+GLvoid scroll_callback(GLFWwindow* window, GLdouble xoffset, GLdouble yoffset);
+GLvoid processInput(GLFWwindow* window);
+
 int main()
 {
-	GLFWwindow* window;
+	screen.initGLFW();
 
-	// Initialize GLFW
-	if (!glfwInit())
-	{
-		return -1;
-	}
+	glfwSetFramebufferSizeCallback(screen.window, framebuffer_size_callback);
+	glfwSetCursorPosCallback(screen.window, mouse_callback);
+	glfwSetScrollCallback(screen.window, scroll_callback);
 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwWindowHint(GLFW_SAMPLES, 4);
-
-	// Create a windowed mode window and its OpenGL context
-	window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "OpenGL Flying Game", NULL, NULL);
-	if (!window)
-	{
-		glfwTerminate();
-		return -1;
-	}
-
-	// Make the window's context current
-	glfwMakeContextCurrent(window);
-
-	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-	glfwSetCursorPosCallback(window, mouse_callback);
-	glfwSetScrollCallback(window, scroll_callback);
-
-	// Tell GLFW to capture our mouse
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
-	glewExperimental = true;
-
-	// Initialize GLEW
-	GLuint glewStatus = glewInit();
-
-	if (glewStatus != GLEW_OK)
-	{
-		// Problem: glewInit failed, something is seriously wrong
-		std::cout << "Error: " << glewGetErrorString(glewStatus) << std::endl;
-		return -1;
-	}
-
-	// Set global OpenGL state
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_MULTISAMPLE);
-
-	// Printing out useful information to the console
-	std::cout << "Status: Using GLEW " << glewGetString(GLEW_VERSION) << std::endl;
-	std::cout << "Graphics card: " << glGetString(GL_VENDOR)<< " " << glGetString(GL_RENDERER) << std::endl;
+	screen.initGLEW();
 
 	GLuint VAO, VBO, EBO;
 	glGenVertexArrays(1, &VAO);
@@ -182,7 +137,7 @@ int main()
 	glBindTexture(GL_TEXTURE_2D, tex.ID);
 	
 	// Loop until the user closes the window
-	while (!glfwWindowShouldClose(window))
+	while (!glfwWindowShouldClose(screen.window))
 	{
 		// Per-frame time logic
 		GLfloat currentFrame = glfwGetTime();
@@ -190,7 +145,7 @@ int main()
 		lastFrame = currentFrame;
 
 		// Process player input
-		processInput(window);
+		processInput(screen.window);
 
 		// Render here
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -198,7 +153,7 @@ int main()
 
 		// Calculate the view and projection matrix
 		view = camera.getViewMatrix();
-		projection = mat4::makePerspective(camera.fov, (GLfloat)WINDOW_WIDTH / (GLfloat)WINDOW_HEIGHT, 0.1f, 100.0f);
+		projection = mat4::makePerspective(camera.fov, (GLfloat)screen.WIDTH / (GLfloat)screen.HEIGHT, 0.1f, 100.0f);
 		
 		// The view matrix and projection matrix are changing dynamically, so we pass these matrices to the shader every frame
 		objectShader.setMat4("view", view);
@@ -207,11 +162,7 @@ int main()
 		// Draw cube
 		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
-		// Swap front and back buffers
-		glfwSwapBuffers(window);
-
-		// Poll for and process events
-		glfwPollEvents();
+		screen.finishFrame();
 	}
 
 	// De-allocate memory on program exit
@@ -226,7 +177,7 @@ int main()
 // ---------------------------------------------------------------------------------------------------------
 // PLAYER INPUT
 // ---------------------------------------------------------------------------------------------------------
-GLvoid processInput(GLFWwindow *window)
+GLvoid processInput(GLFWwindow* window)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);

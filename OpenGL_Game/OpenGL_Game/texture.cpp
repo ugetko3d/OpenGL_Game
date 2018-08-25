@@ -5,11 +5,6 @@
 
 #include "texture.hpp"
 
-Texture::Texture()
-{
-
-}
-
 Texture::Texture(const GLchar* path)
 {
 	GLint width, height, nrChannels;

@@ -7,11 +7,6 @@
 #include "maths.hpp"
 #include "shader.hpp"
  
-Shader::Shader()
-{
-
-}
-
 Shader::Shader(const GLchar* vertex_shader_path, const GLchar* fragment_shader_path)
 {
 	// Retrieve the vertex / fragment source code from the file paths
