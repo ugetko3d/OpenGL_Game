@@ -168,8 +168,7 @@ int main()
 	mat4 projection;
 
 	// Setting up shaders
-	Shader objectShader;
-	objectShader.init("vertex.shader", "fragment.shader");
+	Shader objectShader("vertex.shader", "fragment.shader");
 
 	// The model matrix is static, so we pass the model matrix to the shader only once
 	objectShader.use();
@@ -197,8 +196,8 @@ int main()
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		// Calculate the view matrix
-		view = camera.GetViewMatrix();
+		// Calculate the view and projection matrix
+		view = camera.getViewMatrix();
 		projection = mat4::makePerspective(camera.fov, (GLfloat)WINDOW_WIDTH / (GLfloat)WINDOW_HEIGHT, 0.1f, 100.0f);
 		
 		// The view matrix and projection matrix are changing dynamically, so we pass these matrices to the shader every frame
@@ -233,13 +232,13 @@ GLvoid processInput(GLFWwindow *window)
 		glfwSetWindowShouldClose(window, true);
 
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		camera.ProcessKeyboard(FORWARD, deltaTime);
+		camera.processKeyboard(FORWARD, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		camera.ProcessKeyboard(BACKWARD, deltaTime);
+		camera.processKeyboard(BACKWARD, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		camera.ProcessKeyboard(LEFT, deltaTime);
+		camera.processKeyboard(LEFT, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		camera.ProcessKeyboard(RIGHT, deltaTime);
+		camera.processKeyboard(RIGHT, deltaTime);
 }
 
 // GLFW: whenever the window size changed (by OS or user resize), this callback function executes
@@ -267,7 +266,7 @@ GLvoid mouse_callback(GLFWwindow* window, GLdouble xpos, GLdouble ypos)
 	lastX = xpos;
 	lastY = ypos;
 
-	camera.ProcessMouseMovement(xoffset, yoffset);
+	camera.processMouseMovement(xoffset, yoffset);
 }
 
 // GLFW: whenever the mouse scroll wheel scrolls, this callback is called

@@ -4,7 +4,8 @@
 #include "maths.hpp"
 
 // Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods
-enum Camera_Movement {
+enum Camera_Movement
+{
 	FORWARD,
 	BACKWARD,
 	LEFT,
@@ -38,21 +39,22 @@ public:
 	GLfloat mouseSensitivity;
 	GLfloat fov;
 
-	// Constructor
+	// Constructors
+	Camera();
 	Camera(vec3 eye);
 
 	// Returns the view matrix calculated using Eular angles
-	mat4 GetViewMatrix();
-	
+	mat4 getViewMatrix();
+
 	// Processes movement input
-	GLvoid ProcessKeyboard(Camera_Movement direction, GLfloat deltaTime);
+	GLvoid processKeyboard(Camera_Movement direction, GLfloat deltaTime);
 
 	// Set camera position
-	GLvoid SetCameraPosition(vec3 pos);
+	GLvoid setCameraPosition(vec3 pos);
 
 	// Processes aim input
-	GLvoid ProcessMouseMovement(GLdouble xoffset, GLdouble yoffset);
-	
+	GLvoid processMouseMovement(GLdouble xoffset, GLdouble yoffset);
+
 	// Processes zoom input
 	GLvoid setFOV(GLfloat yoffset);
 
