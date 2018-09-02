@@ -1,11 +1,10 @@
 #include <glew.h>
 
-#include "maths.hpp"
 #include "camera.hpp"
 
-Camera::Camera(vec3 eye)
+GLvoid Camera::init()
 {
-	position = eye;
+	position = vec3(0.0f, 0.0f, -10.0f);
 	front = vec3(0.0f, 0.0f, -1.0f);
 
 	yaw = YAW;

@@ -5,6 +5,25 @@
 
 #include "window.hpp"
 
+GLboolean firstMouse = true;
+GLfloat lastX;
+GLfloat lastY;
+
+void resizeWindow(GLFWwindow* frame, int width, int height);
+GLvoid mouseMoved(GLFWwindow* frame, GLdouble xpos, GLdouble ypos);
+GLvoid mouseScrolled(GLFWwindow* frame, GLdouble xoffset, GLdouble yoffset);
+
+Window::Window()
+{
+	initGLFW();
+	initGLEW();
+}
+
+Window::~Window()
+{
+	glfwTerminate();
+}
+
 GLvoid Window::initGLFW()
 {
 	// Initialize GLFW
@@ -19,17 +38,21 @@ GLvoid Window::initGLFW()
 	glfwWindowHint(GLFW_SAMPLES, 4);
 
 	// Create a windowed mode window and its OpenGL context
-	window = glfwCreateWindow(WIDTH, HEIGHT, TITLE, NULL, NULL);
-	if (!window)
+	frame = glfwCreateWindow(WIDTH, HEIGHT, TITLE, NULL, NULL);
+	if (!frame)
 	{
 		glfwTerminate();
 		exit(EXIT_FAILURE);
 	}
 	// Make the window's context current
-	glfwMakeContextCurrent(window);
+	glfwMakeContextCurrent(frame);
+
+	glfwSetFramebufferSizeCallback(frame, resizeWindow);
+	glfwSetCursorPosCallback(frame, mouseMoved);
+	glfwSetScrollCallback(frame, mouseScrolled);
 
 	// Tell GLFW to capture our mouse
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetInputMode(frame, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
 GLvoid Window::initGLEW()
@@ -55,11 +78,82 @@ GLvoid Window::initGLEW()
 	std::cout << "Graphics card: " << glGetString(GL_VENDOR) << " " << glGetString(GL_RENDERER) << std::endl;
 }
 
-GLvoid Window::finishFrame()
+GLvoid Window::prepare()
+{
+	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+GLvoid Window::update()
 {
 	// Swap front and back buffers
-	glfwSwapBuffers(window);
+	glfwSwapBuffers(frame);
 
 	// Poll for and process events
 	glfwPollEvents();
+}
+
+GLboolean Window::closed()
+{
+	return glfwWindowShouldClose(frame);
+}
+
+// ---------------------------------------------------------------------------------------------------------
+// PLAYER INPUT
+// ---------------------------------------------------------------------------------------------------------
+GLvoid Window::processInput(GLfloat deltaTime)
+{
+	if (glfwGetKey(frame, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+	{
+		glfwSetWindowShouldClose(frame, true);
+	}
+	if (glfwGetKey(frame, GLFW_KEY_W) == GLFW_PRESS)
+	{
+		Camera::processKeyboard(FORWARD, deltaTime);
+	}
+	if (glfwGetKey(frame, GLFW_KEY_S) == GLFW_PRESS)
+	{
+		Camera::processKeyboard(BACKWARD, deltaTime);
+	}
+	if (glfwGetKey(frame, GLFW_KEY_A) == GLFW_PRESS)
+	{
+		Camera::processKeyboard(LEFT, deltaTime);
+	}
+	if (glfwGetKey(frame, GLFW_KEY_D) == GLFW_PRESS)
+	{
+		Camera::processKeyboard(RIGHT, deltaTime);
+	}
+}
+
+// GLFW: whenever the window size changed (by OS or user resize), this callback function executes
+void resizeWindow(GLFWwindow* frame, int width, int height)
+{
+	// make sure the viewport matches the new window dimensions; note that width and 
+	// height will be significantly larger than specified on retina displays.
+	glViewport(0, 0, width, height);
+}
+
+// GLFW: whenever the mouse moves, this callback is called
+GLvoid mouseMoved(GLFWwindow* frame, GLdouble xpos, GLdouble ypos)
+{
+	if (firstMouse)
+	{
+		lastX = xpos;
+		lastY = ypos;
+		firstMouse = false;
+	}
+
+	GLfloat xoffset = xpos - lastX;
+	GLfloat yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+
+	lastX = xpos;
+	lastY = ypos;
+
+	Camera::processMouseMovement(xoffset, yoffset);
+}
+
+// GLFW: whenever the mouse scroll wheel scrolls, this callback is called
+GLvoid mouseScrolled(GLFWwindow* frame, GLdouble xoffset, GLdouble yoffset)
+{
+	Camera::setFOV(yoffset);
 }

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "maths.hpp"
+
 // Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods
 const enum Camera_Movement
 {
@@ -15,46 +17,45 @@ const GLfloat PITCH = 0.0f;
 const GLfloat SPEED = 8.0f;
 const GLfloat SENSITIVTY = 0.1f;
 const GLfloat FOV = 45.0f;
+const vec3 WORLD_UP = vec3(0.0f, 1.0f, 0.0f);
 
 // An abstract camera class that processes input and calculates the corresponding Eular Angles, Vectors and Matrices for use in OpenGL
 class Camera
 {
 public:
 	// Camera attributes
-	vec3 position;
-	vec3 front;
-	vec3 up;
-	vec3 right;
-	const vec3 WORLD_UP = vec3(0.0f, 1.0f, 0.0f);
+	static vec3 position;
+	static vec3 front;
+	static vec3 up;
+	static vec3 right;
 
 	// Eular angles
-	GLdouble yaw;
-	GLdouble pitch;
+	static GLdouble yaw;
+	static GLdouble pitch;
 
 	// Camera options
-	GLfloat movementSpeed;
-	GLfloat mouseSensitivity;
-	GLfloat fov;
+	static GLfloat movementSpeed;
+	static GLfloat mouseSensitivity;
+	static GLfloat fov;
 
-	// Constructor
-	Camera(vec3 eye);
+	static GLvoid init();
 
 	// Returns the view matrix calculated using Eular angles
-	mat4 getViewMatrix();
+	static mat4 getViewMatrix();
 
 	// Processes movement input
-	GLvoid processKeyboard(Camera_Movement direction, GLfloat deltaTime);
+	static GLvoid processKeyboard(Camera_Movement direction, GLfloat deltaTime);
 
 	// Set camera position
-	GLvoid setCameraPosition(vec3 pos);
+	static GLvoid setCameraPosition(vec3 pos);
 
 	// Processes aim input
-	GLvoid processMouseMovement(GLdouble xoffset, GLdouble yoffset);
+	static GLvoid processMouseMovement(GLdouble xoffset, GLdouble yoffset);
 
 	// Processes zoom input
-	GLvoid setFOV(GLfloat yoffset);
+	static GLvoid setFOV(GLfloat yoffset);
 
 private:
 	// Calculates the front vector from the Camera's (updated) Eular angles
-	GLvoid updateCameraVectors();
+	static GLvoid updateCameraVectors();
 };
