@@ -11,51 +11,54 @@ const enum Camera_Movement
 	RIGHT
 };
 
-// Default camera values
-const GLfloat YAW = -90.0f;
-const GLfloat PITCH = 0.0f;
-const GLfloat SPEED = 8.0f;
-const GLfloat SENSITIVTY = 0.1f;
-const GLfloat FOV = 45.0f;
-const vec3 WORLD_UP = vec3(0.0f, 1.0f, 0.0f);
-
 // An abstract camera class that processes input and calculates the corresponding Eular Angles, Vectors and Matrices for use in OpenGL
 class Camera
 {
 public:
+	// Default camera values
+	const vec3 POSITION = vec3(0.0f, 0.0f, -10.0f);
+	const vec3 FRONT = vec3(0.0f, 0.0f, 0.0f);
+	const GLfloat YAW = -90.0f;
+	const GLfloat PITCH = 0.0f;
+	const GLfloat SPEED = 8.0f;
+	const GLfloat SENSITIVITY = 0.1f;
+	const GLfloat FOV = 45.0f;
+	const vec3 WORLD_UP = vec3(0.0f, 1.0f, 0.0f);
+
 	// Camera attributes
-	static vec3 position;
-	static vec3 front;
-	static vec3 up;
-	static vec3 right;
+	vec3 position;
+	vec3 front;
+	vec3 up;
+	vec3 right;
 
 	// Eular angles
-	static GLdouble yaw;
-	static GLdouble pitch;
+	GLdouble yaw;
+	GLdouble pitch;
 
 	// Camera options
-	static GLfloat movementSpeed;
-	static GLfloat mouseSensitivity;
-	static GLfloat fov;
+	GLfloat movementSpeed;
+	GLfloat mouseSensitivity;
+	GLfloat fov;
 
-	static GLvoid init();
+	// Constructor
+	Camera();
 
 	// Returns the view matrix calculated using Eular angles
-	static mat4 getViewMatrix();
+	mat4 getViewMatrix();
 
 	// Processes movement input
-	static GLvoid processKeyboard(Camera_Movement direction, GLfloat deltaTime);
+	GLvoid processKeyboard(Camera_Movement direction, GLfloat deltaTime);
 
 	// Set camera position
-	static GLvoid setCameraPosition(vec3 pos);
+	GLvoid setCameraPosition(vec3 pos);
 
 	// Processes aim input
-	static GLvoid processMouseMovement(GLdouble xoffset, GLdouble yoffset);
+	GLvoid processMouseMovement(GLdouble xoffset, GLdouble yoffset);
 
 	// Processes zoom input
-	static GLvoid setFOV(GLfloat yoffset);
+	GLvoid setFOV(GLfloat yoffset);
 
 private:
 	// Calculates the front vector from the Camera's (updated) Eular angles
-	static GLvoid updateCameraVectors();
+	GLvoid updateCameraVectors();
 };

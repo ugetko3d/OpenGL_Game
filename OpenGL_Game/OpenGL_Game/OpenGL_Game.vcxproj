@@ -21,10 +21,11 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="camera.cpp" />
-    <ClCompile Include="window.cpp" />
+    <ClCompile Include="display.cpp" />
     <ClCompile Include="mat2.cpp" />
     <ClCompile Include="mat3.cpp" />
     <ClCompile Include="mat4.cpp" />
+    <ClCompile Include="rawmodel.cpp" />
     <ClCompile Include="shader.cpp" />
     <ClCompile Include="stb_image.c" />
     <ClCompile Include="texture.cpp" />
@@ -34,12 +35,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera.hpp" />
-    <ClInclude Include="window.hpp" />
+    <ClInclude Include="display.hpp" />
     <ClInclude Include="mat2.hpp" />
     <ClInclude Include="mat3.hpp" />
     <ClInclude Include="mat4.hpp" />
     <ClInclude Include="mathdefinitions.hpp" />
     <ClInclude Include="maths.hpp" />
+    <ClInclude Include="rawmodel.hpp" />
     <ClInclude Include="shader.hpp" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="texture.hpp" />

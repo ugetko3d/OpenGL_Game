@@ -1,17 +1,16 @@
 #include <glew.h>
+#include <glfw3.h>
 
 #include "camera.hpp"
 
-GLvoid Camera::init()
+Camera::Camera()
 {
-	position = vec3(0.0f, 0.0f, -10.0f);
-	front = vec3(0.0f, 0.0f, -1.0f);
-
+	position = POSITION;
+	front = FRONT;
 	yaw = YAW;
 	pitch = PITCH;
-
 	movementSpeed = SPEED;
-	mouseSensitivity = SENSITIVTY;
+	mouseSensitivity = SENSITIVITY;
 	fov = FOV;
 
 	updateCameraVectors();
