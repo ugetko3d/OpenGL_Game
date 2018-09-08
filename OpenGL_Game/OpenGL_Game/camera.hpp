@@ -16,7 +16,7 @@ class Camera
 {
 public:
 	// Default camera values
-	const vec3 POSITION = vec3(0.0f, 0.0f, -10.0f);
+	const vec3 POSITION = vec3(0.0f, 0.0f, 10.0f);
 	const vec3 FRONT = vec3(0.0f, 0.0f, 0.0f);
 	const GLfloat YAW = -90.0f;
 	const GLfloat PITCH = 0.0f;

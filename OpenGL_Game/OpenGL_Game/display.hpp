@@ -9,8 +9,8 @@ public:
 	const GLuint HEIGHT = 720;
 
 	Window();
-	GLvoid prepare();
-	GLvoid update();
+	GLfloat prepareFrame();
+	GLvoid finishFrame();
 	GLboolean isClosed();
 
 private:

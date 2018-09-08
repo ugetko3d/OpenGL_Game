@@ -14,6 +14,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Models">
+      <UniqueIdentifier>{f9f824a4-5e6a-4862-8817-fe4e31ed53d1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="display.cpp">
@@ -50,8 +53,11 @@
       <Filter>RenderEngine</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="rawmodel.cpp">
-      <Filter>RenderEngine</Filter>
+    <ClCompile Include="entity.cpp">
+      <Filter>Models</Filter>
+    </ClCompile>
+    <ClCompile Include="cube.cpp">
+      <Filter>Models</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -94,8 +100,11 @@
     <ClInclude Include="camera.hpp">
       <Filter>RenderEngine</Filter>
     </ClInclude>
-    <ClInclude Include="rawmodel.hpp">
-      <Filter>RenderEngine</Filter>
+    <ClInclude Include="entity.hpp">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="cube.hpp">
+      <Filter>Models</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

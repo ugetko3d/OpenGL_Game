@@ -8,6 +8,7 @@
 #include "shader.hpp"
 #include "texture.hpp"
 #include "camera.hpp"
+#include "cube.hpp"
 
 // Processes input
 GLvoid processInput(GLFWwindow* frame, GLfloat deltaTime);
@@ -24,77 +25,15 @@ GLboolean firstMouse = true;
 GLfloat lastX;
 GLfloat lastY;
 
-// Vertex attributes
-const GLuint POSITION = 0;
-const GLuint TEXTURE = 1;
-const GLuint NORMAL = 2;
-
-// Timing
-GLfloat deltaTime = 0.0f;	// Time between current frame and last frame
-GLfloat lastFrame = 0.0f;
-
-// Object data
-const GLfloat cubeVertices[] = {
-	// POSITION COORD    // TEXTURE COORD    // NORMAL VECTOR
-
-	-0.5f, -0.5f, +0.5f,	+0.0f, +0.0f,	+0.0f, +0.0f, +1.0f, //FRONT
-	+0.5f, -0.5f, +0.5f,	+0.0f, +1.0f,	+0.0f, +0.0f, +1.0f,
-	+0.5f, +0.5f, +0.5f,	+1.0f, +1.0f,	+0.0f, +0.0f, +1.0f,
-	-0.5f, +0.5f, +0.5f,	+1.0f, +0.0f,	+0.0f, +0.0f, +1.0f,
-
-	-0.5f, -0.5f, +0.5f,	+0.0f, +0.0f,	-1.0f, +0.0f, +0.0f, // LEFT
-	-0.5f, +0.5f, +0.5f,	+0.0f, +1.0f,	-1.0f, +0.0f, +0.0f,
-	-0.5f, +0.5f, -0.5f,	+1.0f, +1.0f,	-1.0f, +0.0f, +0.0f,
-	-0.5f, -0.5f, -0.5f,	+1.0f, +0.0f,	-1.0f, +0.0f, +0.0f,
-
-	-0.5f, -0.5f, -0.5f,	+0.0f, +0.0f,	+0.0f, +0.0f, -1.0f, // BACK
-	+0.5f, -0.5f, -0.5f,	+0.0f, +1.0f,	+0.0f, +0.0f, -1.0f,
-	+0.5f, +0.5f, -0.5f,	+1.0f, +1.0f,	+0.0f, +0.0f, -1.0f,
-	-0.5f, +0.5f, -0.5f,	+1.0f, +0.0f,	+0.0f, +0.0f, -1.0f,
-
-	+0.5f, -0.5f, -0.5f,	+0.0f, +0.0f,	+1.0f, +0.0f, +0.0f, // RIGHT
-	+0.5f, +0.5f, -0.5f,	+0.0f, +1.0f,	+1.0f, +0.0f, +0.0f,
-	+0.5f, +0.5f, +0.5f,	+1.0f, +1.0f,	+1.0f, +0.0f, +0.0f,
-	+0.5f, -0.5f, +0.5f,	+1.0f, +0.0f,	+1.0f, +0.0f, +0.0f,
-
-	-0.5f, +0.5f, +0.5f,	+0.0f, +0.0f,	+0.0f, +1.0f, +0.0f, // TOP
-	-0.5f, +0.5f, -0.5f,	+0.0f, +1.0f,	+0.0f, +1.0f, +0.0f,
-	+0.5f, +0.5f, -0.5f,	+1.0f, +1.0f,	+0.0f, +1.0f, +0.0f,
-	+0.5f, +0.5f, +0.5f,	+1.0f, +0.0f,	+0.0f, +1.0f, +0.0f,
-
-	-0.5f, -0.5f, +0.5f,	+0.0f, +0.0f,	+0.0f, -1.0f, +0.0f, // BOTTOM
-	-0.5f, -0.5f, -0.5f,	+0.0f, +1.0f,	+0.0f, -1.0f, +0.0f,
-	+0.5f, -0.5f, -0.5f,	+1.0f, +1.0f,	+0.0f, -1.0f, +0.0f,
-	+0.5f, -0.5f, +0.5f,	+1.0f, +0.0f,	+0.0f, -1.0f, +0.0f
-};
-
-const GLuint cubeIndices[] = {
-	0, 1, 2, // FRONT
-	0, 3, 2,
-
-	4, 5, 6, // LEFT
-	4, 7, 6,
-
-	8, 9, 10, // BACK
-	8, 11, 10,
-
-	12, 13, 14, // RIGHT
-	12, 15, 14,
-
-	16, 17, 18, // TOP
-	16, 19, 18,
-
-	20, 21, 22, // BOTTOM
-	20, 23, 22
-};
-
 int main()
 {
 	glfwSetFramebufferSizeCallback(window.frame, resizeWindow);
 	glfwSetCursorPosCallback(window.frame, mouseMoved);
 	glfwSetScrollCallback(window.frame, mouseScrolled);
 
-	GLuint VAO, VBO, EBO;
+	Cube cube;
+
+	/*GLuint VAO, VBO, EBO;
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &EBO);
@@ -107,16 +46,21 @@ int main()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cubeIndices), cubeIndices, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(POSITION, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
-	glEnableVertexAttribArray(POSITION);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(0 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(0);
 
-	glVertexAttribPointer(TEXTURE, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-	glEnableVertexAttribArray(TEXTURE);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(1);
 
-	glVertexAttribPointer(NORMAL, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(5 * sizeof(GLfloat)));
-	glEnableVertexAttribArray(NORMAL);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(5 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(2);
 
-	mat4 model = mat4::makeTranslate(vec3(0.0f, 0.0f, -27.0f)) * mat4::makeRotate(2.0f, vec3(0.0f, 1.0f, 0.0f)) * mat4::makeScale(vec3(1.0f, 1.0f, 50.0f));
+	glBindVertexArray(0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);*/
+
+	mat4 model = mat4::makeTranslate(vec3(0.0f, 0.0f, 0.0f)) * mat4::makeRotate(45.0f, vec3(1.0f, 1.0f, 0.0f)) * mat4::makeScale(vec3(1.0f, 1.0f, 1.0f));
 	mat4 view;
 	mat4 projection;
 
@@ -137,12 +81,7 @@ int main()
 	// Loop until the user closes the window
 	while (!window.isClosed())
 	{
-		// Per-frame time logic
-		GLfloat currentFrame = glfwGetTime();
-		deltaTime = currentFrame - lastFrame;
-		lastFrame = currentFrame;
-
-		window.prepare();
+		GLfloat deltaTime = window.prepareFrame();
 
 		// Process player input
 		processInput(window.frame, deltaTime);
@@ -156,16 +95,17 @@ int main()
 		objectShader.setMat4("projection", projection);
 
 		// Draw cube
-		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+		cube.bindVAO();
+		cube.drawObject();
 
-		window.update();
+		window.finishFrame();
 	}
 
 	// De-allocate memory on program exit
-	glDeleteVertexArrays(1, &VAO);
+	glDeleteVertexArrays(1, &cube.vaoID);
 	glDeleteTextures(1, &tex.ID);
-	glDeleteBuffers(1, &VBO);
-	glDeleteBuffers(1, &EBO);
+	glDeleteBuffers(1, &cube.vboID);
+	glDeleteBuffers(1, &cube.eboID);
 
 	glfwTerminate();
 	return 0;

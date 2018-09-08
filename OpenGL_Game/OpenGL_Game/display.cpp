@@ -5,6 +5,10 @@
 
 #include "display.hpp"
 
+// Timing
+GLfloat deltaTime = 0.0f;	// Time between current frame and last frame
+GLfloat lastFrame = 0.0f;
+
 Window::Window()
 {
 	createDisplay();
@@ -61,13 +65,20 @@ GLvoid Window::startOpenGL()
 	std::cout << "Graphics card: " << glGetString(GL_VENDOR) << " " << glGetString(GL_RENDERER) << std::endl;
 }
 
-GLvoid Window::prepare()
+GLfloat Window::prepareFrame()
 {
+	// Per-frame time logic
+	GLfloat currentFrame = glfwGetTime();
+	deltaTime = currentFrame - lastFrame;
+	lastFrame = currentFrame;
+
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	return deltaTime;
 }
 
-GLvoid Window::update()
+GLvoid Window::finishFrame()
 {
 	// Swap front and back buffers
 	glfwSwapBuffers(frame);
