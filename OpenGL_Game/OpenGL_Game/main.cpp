@@ -222,8 +222,3 @@ GLvoid mouseScrolled(GLFWwindow* frame, GLdouble xoffset, GLdouble yoffset)
 {
 	camera.setFOV((GLfloat)yoffset);
 }
-
-
-
-
-
