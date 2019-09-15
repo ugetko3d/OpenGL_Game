@@ -17,11 +17,11 @@
     <Filter Include="Misc">
       <UniqueIdentifier>{1b55aace-eb8a-4f13-855f-5d4fa3142751}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Window">
+      <UniqueIdentifier>{d9895be2-68dd-4532-bcfb-acc9afdd0d04}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="display.cpp">
-      <Filter>RenderEngine</Filter>
-    </ClCompile>
     <ClCompile Include="shader.cpp">
       <Filter>Shaders</Filter>
     </ClCompile>
@@ -49,9 +49,6 @@
     <ClCompile Include="texture.cpp">
       <Filter>Textures</Filter>
     </ClCompile>
-    <ClCompile Include="camera.cpp">
-      <Filter>RenderEngine</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="vertex_buffer.cpp">
       <Filter>RenderEngine</Filter>
@@ -60,6 +57,15 @@
       <Filter>RenderEngine</Filter>
     </ClCompile>
     <ClCompile Include="vertex_array.cpp">
+      <Filter>RenderEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="camera.cpp">
+      <Filter>Maths</Filter>
+    </ClCompile>
+    <ClCompile Include="display.cpp">
+      <Filter>Window</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
       <Filter>RenderEngine</Filter>
     </ClCompile>
   </ItemGroup>
@@ -91,12 +97,6 @@
     <ClInclude Include="vec4.h">
       <Filter>Maths</Filter>
     </ClInclude>
-    <ClInclude Include="camera.h">
-      <Filter>RenderEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="display.h">
-      <Filter>RenderEngine</Filter>
-    </ClInclude>
     <ClInclude Include="shader.h">
       <Filter>Shaders</Filter>
     </ClInclude>
@@ -113,6 +113,15 @@
       <Filter>Misc</Filter>
     </ClInclude>
     <ClInclude Include="vertex_array.h">
+      <Filter>RenderEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="display.h">
+      <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
       <Filter>RenderEngine</Filter>
     </ClInclude>
   </ItemGroup>

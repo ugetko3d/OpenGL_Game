@@ -114,7 +114,7 @@ int main()
 	// Setting up textures
 	Texture stones("stones.jpg");
 	Texture sun("sun.jpg");
-	glActiveTexture(GL_TEXTURE0);
+	Texture::Activate(GL_TEXTURE0);
 	
 	// Loop until the user closes the window
 	while (!window.isClosed())
@@ -158,11 +158,6 @@ int main()
 
 		window.finishFrame();
 	}
-
-	// De-allocate memory on program exit
-	//glDeleteVertexArrays(1, &cubeVAO);
-	//glDeleteTextures(1, &tex.ID);
-	//glDeleteBuffers(1, &VBO);
 
 	glfwTerminate();
 	return 0;

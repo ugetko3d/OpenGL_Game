@@ -18,8 +18,8 @@ Texture::Texture(const std::string& path)
 	m_width = width;
 	m_height = height;
 
-	glGenTextures(1, &m_ID);
-	glBindTexture(GL_TEXTURE_2D, m_ID);
+	glGenTextures(1, &m_texID);
+	glBindTexture(GL_TEXTURE_2D, m_texID);
 
 	// Bind texture and generate mipmap
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
@@ -40,10 +40,20 @@ Texture::Texture(const std::string& path)
 
 Texture::~Texture()
 {
-	glDeleteTextures(1, &m_ID);
+	glDeleteTextures(1, &m_texID);
+}
+
+void Texture::Activate(GLenum textureUnit)
+{
+	glActiveTexture(textureUnit);
 }
 
 void Texture::Bind()
 {
-	glBindTexture(GL_TEXTURE_2D, m_ID);
+	glBindTexture(GL_TEXTURE_2D, m_texID);
+}
+
+void Texture::Unbind()
+{
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
