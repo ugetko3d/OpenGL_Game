@@ -1,24 +1,28 @@
 #include <glew.h>
 
 #include <iostream>
+#include <string>
 #include "stb_image.h"
 
-#include "texture.hpp"
+#include "texture.h"
 
-Texture::Texture(const GLchar* path)
+Texture::Texture(const std::string& path)
 {
-	GLint width, height, nrChannels;
-	unsigned char *data = stbi_load(path, &width, &height, &nrChannels, 0);
+	int nrChannels, width, height;
+	unsigned char *data = stbi_load(path.c_str(), &width, &height, &nrChannels, 0);
 	if (!data) {
 		std::cout << "Error: Texture failed to load at path: " << path << std::endl;
 		stbi_image_free(data);
 	}
 
-	glGenTextures(1, &this->ID);
-	glBindTexture(GL_TEXTURE_2D, this->ID);
+	m_width = width;
+	m_height = height;
+
+	glGenTextures(1, &m_ID);
+	glBindTexture(GL_TEXTURE_2D, m_ID);
 
 	// Bind texture and generate mipmap
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 	glGenerateMipmap(GL_TEXTURE_2D);
 
 	// Set texture wrapping parameters
@@ -34,7 +38,12 @@ Texture::Texture(const GLchar* path)
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-GLvoid Texture::bindTexture()
+Texture::~Texture()
 {
-	glBindTexture(GL_TEXTURE_2D, this->ID);
+	glDeleteTextures(1, &m_ID);
+}
+
+void Texture::Bind()
+{
+	glBindTexture(GL_TEXTURE_2D, m_ID);
 }

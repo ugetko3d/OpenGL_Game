@@ -1,4 +1,4 @@
-#include "mat4.hpp"
+#include "mat4.h"
 
 mat4::mat4() {
 	for (int i = 0; i < 16; i++)

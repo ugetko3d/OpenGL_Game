@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "mat2.hpp"
+#include "mat2.h"
 
 mat2::mat2() {
 	for (int i = 0; i < 4; i++)

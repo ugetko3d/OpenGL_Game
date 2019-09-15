@@ -1,4 +1,4 @@
-#include "vec2.hpp"
+#include "vec2.h"
 
 vec2::vec2() {
 	x = 0.0f;

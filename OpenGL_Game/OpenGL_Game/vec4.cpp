@@ -1,5 +1,5 @@
-#include "mat4.hpp"
-#include "vec4.hpp"
+#include "mat4.h"
+#include "vec4.h"
 
 vec4::vec4() {
 	x = 0.0f;

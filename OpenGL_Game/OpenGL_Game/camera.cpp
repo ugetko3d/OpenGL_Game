@@ -1,7 +1,7 @@
 #include <glew.h>
 #include <glfw3.h>
 
-#include "camera.hpp"
+#include "camera.h"
 
 Camera::Camera()
 {

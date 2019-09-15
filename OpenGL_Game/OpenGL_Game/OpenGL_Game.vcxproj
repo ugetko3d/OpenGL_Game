@@ -19,8 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="cube.cpp" />
-    <ClCompile Include="entity.cpp" />
+    <ClCompile Include="index_buffer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="display.cpp" />
@@ -33,30 +32,37 @@
     <ClCompile Include="vec2.cpp" />
     <ClCompile Include="vec3.cpp" />
     <ClCompile Include="vec4.cpp" />
+    <ClCompile Include="vertex_array.cpp" />
+    <ClCompile Include="vertex_buffer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="camera.hpp" />
-    <ClInclude Include="cube.hpp" />
-    <ClInclude Include="display.hpp" />
-    <ClInclude Include="entity.hpp" />
-    <ClInclude Include="mat2.hpp" />
-    <ClInclude Include="mat3.hpp" />
-    <ClInclude Include="mat4.hpp" />
-    <ClInclude Include="mathdefinitions.hpp" />
-    <ClInclude Include="maths.hpp" />
-    <ClInclude Include="shader.hpp" />
+    <ClInclude Include="camera.h" />
+    <ClInclude Include="comm.h" />
+    <ClInclude Include="display.h" />
+    <ClInclude Include="vertex_array.h" />
+    <ClInclude Include="index_buffer.h" />
+    <ClInclude Include="mat2.h" />
+    <ClInclude Include="mat3.h" />
+    <ClInclude Include="mat4.h" />
+    <ClInclude Include="mathdefinitions.h" />
+    <ClInclude Include="maths.h" />
+    <ClInclude Include="shader.h" />
     <ClInclude Include="stb_image.h" />
-    <ClInclude Include="texture.hpp" />
-    <ClInclude Include="vec2.hpp" />
-    <ClInclude Include="vec3.hpp" />
-    <ClInclude Include="vec4.hpp" />
+    <ClInclude Include="texture.h" />
+    <ClInclude Include="vec2.h" />
+    <ClInclude Include="vec3.h" />
+    <ClInclude Include="vec4.h" />
+    <ClInclude Include="vertex_buffer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fragment.shader" />
+    <None Include="lightfragment.shader" />
+    <None Include="lightvertex.shader" />
     <None Include="vertex.shader" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="stones.jpg" />
+    <Image Include="sun.jpg" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -118,6 +124,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\GLFW\lib;$(SolutionDir)Dependencies\GLEW\lib</AdditionalLibraryDirectories>
@@ -142,6 +149,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>

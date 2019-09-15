@@ -2,8 +2,8 @@
 
 #include <iostream>
 
-#include "vec3.hpp"
-#include "mathdefinitions.hpp"
+#include "vec3.h"
+#include "mathdefinitions.h"
 
 class mat4 {
 

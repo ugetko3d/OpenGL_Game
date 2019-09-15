@@ -14,8 +14,8 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Models">
-      <UniqueIdentifier>{f9f824a4-5e6a-4862-8817-fe4e31ed53d1}</UniqueIdentifier>
+    <Filter Include="Misc">
+      <UniqueIdentifier>{1b55aace-eb8a-4f13-855f-5d4fa3142751}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -53,58 +53,67 @@
       <Filter>RenderEngine</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="entity.cpp">
-      <Filter>Models</Filter>
+    <ClCompile Include="vertex_buffer.cpp">
+      <Filter>RenderEngine</Filter>
     </ClCompile>
-    <ClCompile Include="cube.cpp">
-      <Filter>Models</Filter>
+    <ClCompile Include="index_buffer.cpp">
+      <Filter>RenderEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="vertex_array.cpp">
+      <Filter>RenderEngine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="display.hpp">
-      <Filter>RenderEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="shader.hpp">
-      <Filter>Shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="vec4.hpp">
-      <Filter>Maths</Filter>
-    </ClInclude>
-    <ClInclude Include="vec3.hpp">
-      <Filter>Maths</Filter>
-    </ClInclude>
-    <ClInclude Include="vec2.hpp">
-      <Filter>Maths</Filter>
-    </ClInclude>
-    <ClInclude Include="maths.hpp">
-      <Filter>Maths</Filter>
-    </ClInclude>
-    <ClInclude Include="mathdefinitions.hpp">
-      <Filter>Maths</Filter>
-    </ClInclude>
-    <ClInclude Include="mat4.hpp">
-      <Filter>Maths</Filter>
-    </ClInclude>
-    <ClInclude Include="mat3.hpp">
-      <Filter>Maths</Filter>
-    </ClInclude>
-    <ClInclude Include="mat2.hpp">
-      <Filter>Maths</Filter>
-    </ClInclude>
     <ClInclude Include="stb_image.h">
       <Filter>Textures</Filter>
     </ClInclude>
-    <ClInclude Include="texture.hpp">
-      <Filter>Textures</Filter>
+    <ClInclude Include="mat2.h">
+      <Filter>Maths</Filter>
     </ClInclude>
-    <ClInclude Include="camera.hpp">
+    <ClInclude Include="mat3.h">
+      <Filter>Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="mat4.h">
+      <Filter>Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="mathdefinitions.h">
+      <Filter>Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="maths.h">
+      <Filter>Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="vec2.h">
+      <Filter>Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="vec3.h">
+      <Filter>Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="vec4.h">
+      <Filter>Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.h">
       <Filter>RenderEngine</Filter>
     </ClInclude>
-    <ClInclude Include="entity.hpp">
-      <Filter>Models</Filter>
+    <ClInclude Include="display.h">
+      <Filter>RenderEngine</Filter>
     </ClInclude>
-    <ClInclude Include="cube.hpp">
-      <Filter>Models</Filter>
+    <ClInclude Include="shader.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="texture.h">
+      <Filter>Textures</Filter>
+    </ClInclude>
+    <ClInclude Include="vertex_buffer.h">
+      <Filter>RenderEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="index_buffer.h">
+      <Filter>RenderEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="comm.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="vertex_array.h">
+      <Filter>RenderEngine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -114,9 +123,18 @@
     <None Include="fragment.shader">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="lightfragment.shader">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="lightvertex.shader">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="stones.jpg">
+      <Filter>Textures</Filter>
+    </Image>
+    <Image Include="sun.jpg">
       <Filter>Textures</Filter>
     </Image>
   </ItemGroup>

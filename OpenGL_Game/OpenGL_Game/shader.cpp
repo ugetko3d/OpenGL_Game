@@ -1,11 +1,13 @@
+#include <glew.h>
+
 #include <string>
 #include <fstream>
 #include <sstream>
 #include <iostream>
 
-#include "glew.h"
-#include "maths.hpp"
-#include "shader.hpp"
+#include "maths.h"
+#include "shader.h"
+#include "texture.h"
  
 Shader::Shader(const GLchar* vertex_shader_path, const GLchar* fragment_shader_path)
 {
@@ -116,50 +118,50 @@ GLvoid Shader::use()
 	glUseProgram(ID);
 }
 
-GLvoid Shader::setBool(std::string name, GLboolean value)
+GLvoid Shader::setBool(std::string name, GLboolean value) const
 {
 	glUniform1i(glGetUniformLocation(ID, name.c_str()), (GLint) value);
 }
 
-GLvoid Shader::setInt(std::string name, GLint value)
+GLvoid Shader::setInt(std::string name, GLint value) const
 {
 	glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
 }
 
-GLvoid Shader::setFloat(std::string name, GLfloat value)
+GLvoid Shader::setFloat(std::string name, GLfloat value) const
 {
 	glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
 }
 
-GLvoid Shader::setVec2(std::string name, const vec2& value)
+GLvoid Shader::setVec2(std::string name, const vec2& value) const
 {
 	GLfloat temp[] = { value.x, value.y };
 	glUniform2fv(glGetUniformLocation(ID, name.c_str()), 1, temp);
 }
 
-GLvoid Shader::setVec3(std::string name, const vec3& value)
+GLvoid Shader::setVec3(std::string name, const vec3& value) const
 {
 	GLfloat temp[] = { value.x, value.y, value.z };
 	glUniform3fv(glGetUniformLocation(ID, name.c_str()), 1, temp);
 }
 
-GLvoid Shader::setVec4(std::string name, const vec4& value)
+GLvoid Shader::setVec4(std::string name, const vec4& value) const
 {
 	GLfloat temp[] = { value.x, value.y, value.z, value.w };
 	glUniform4fv(glGetUniformLocation(ID, name.c_str()), 1, temp);
 }
 
-GLvoid Shader::setMat2(std::string name, const mat2& mat)
+GLvoid Shader::setMat2(std::string name, const mat2& mat) const
 {
 	glUniformMatrix2fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, mat.data);
 }
 
-GLvoid Shader::setMat3(std::string name, const mat3& mat)
+GLvoid Shader::setMat3(std::string name, const mat3& mat) const
 {
 	glUniformMatrix3fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, mat.data);
 }
 
-GLvoid Shader::setMat4(std::string name, const mat4& mat)
+GLvoid Shader::setMat4(std::string name, const mat4& mat) const
 {
 	glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, mat.data);
 }

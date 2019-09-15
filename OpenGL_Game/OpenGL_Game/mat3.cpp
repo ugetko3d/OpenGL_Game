@@ -1,4 +1,4 @@
-#include "mat3.hpp"
+#include "mat3.h"
 
 mat3::mat3() {
 	for (int i = 0; i < 9; i++)

@@ -1,14 +1,17 @@
 #include <glew.h>
+
+#include "comm.h"
 #include <glfw3.h>
-#include "display.hpp"
+#include "display.h"
 
-#include <iostream>
+#include "maths.h"
+#include "shader.h"
+#include "texture.h"
+#include "camera.h"
 
-#include "maths.hpp"
-#include "shader.hpp"
-#include "texture.hpp"
-#include "camera.hpp"
-#include "cube.hpp"
+#include "vertex_array.h"
+#include "vertex_buffer.h"
+#include "index_buffer.h"
 
 // Processes input
 GLvoid processInput(GLFWwindow* frame, GLfloat deltaTime);
@@ -16,14 +19,76 @@ GLvoid resizeWindow(GLFWwindow* frame, GLint width, GLint height);
 GLvoid mouseMoved(GLFWwindow* frame, GLdouble xpos, GLdouble ypos);
 GLvoid mouseScrolled(GLFWwindow* frame, GLdouble xoffset, GLdouble yoffset);
 
+const enum attrib
+{
+	POSITION, TEXTURE, NORMAL
+};
+
 // Window
 Window window;
 
 // Camera
 Camera camera;
 GLboolean firstMouse = true;
-GLfloat lastX;
-GLfloat lastY;
+GLfloat lastX = window.WIDTH / 2;
+GLfloat lastY = window.HEIGHT / 2;
+
+// Lighting
+vec3 lightPos(5.0f, 5.0f, 5.0f);
+
+// Object data
+float vertices[] = {
+	// POSITION COORD    // TEXTURE COORD    // NORMAL VECTOR
+
+	// Back
+	-0.5f, -0.5f, -0.5f,    1.0f, 0.0f,		0.0f, 0.0f, -0.5f,
+	+0.5f, -0.5f, -0.5f,    0.0f, 0.0f,		0.0f, 0.0f, -0.5f,
+	+0.5f, +0.5f, -0.5f,    0.0f, 1.0f,		0.0f, 0.0f, -0.5f,
+	+0.5f, +0.5f, -0.5f,	0.0f, 1.0f,		0.0f, 0.0f, -0.5f,
+	-0.5f, +0.5f, -0.5f,	1.0f, 1.0f,		0.0f, 0.0f, -0.5f,
+	-0.5f, -0.5f, -0.5f,	1.0f, 0.0f,		0.0f, 0.0f, -0.5f,
+
+	// Front
+	-0.5f, -0.5f, +0.5f,	0.0f, 0.0f,		0.0f, 0.0f, +0.5f,
+	+0.5f, -0.5f, +0.5f,	1.0f, 0.0f,		0.0f, 0.0f, +0.5f,
+	+0.5f, +0.5f, +0.5f,	1.0f, 1.0f,		0.0f, 0.0f, +0.5f,
+	+0.5f, +0.5f, +0.5f,	1.0f, 1.0f,		0.0f, 0.0f, +0.5f,
+	-0.5f, +0.5f, +0.5f,	0.0f, 1.0f,		0.0f, 0.0f, +0.5f,
+	-0.5f, -0.5f, +0.5f,	0.0f, 0.0f,		0.0f, 0.0f, +0.5f,
+
+	// Left
+	-0.5f, +0.5f, +0.5f,	1.0f, 1.0f,		-0.5f, 0.0f, 0.0f,
+	-0.5f, +0.5f, -0.5f,	0.0f, 1.0f,		-0.5f, 0.0f, 0.0f,
+	-0.5f, -0.5f, -0.5f,	0.0f, 0.0f,		-0.5f, 0.0f, 0.0f,
+	-0.5f, -0.5f, -0.5f,	0.0f, 0.0f,		-0.5f, 0.0f, 0.0f,
+	-0.5f, -0.5f, +0.5f,	1.0f, 0.0f,		-0.5f, 0.0f, 0.0f,
+	-0.5f, +0.5f, +0.5f,	1.0f, 1.0f,		-0.5f, 0.0f, 0.0f,
+
+	// Right
+	+0.5f, +0.5f, +0.5f,	0.0f, 1.0f,		+0.5f, 0.0f, 0.0f,
+	+0.5f, +0.5f, -0.5f,	1.0f, 1.0f,		+0.5f, 0.0f, 0.0f,
+	+0.5f, -0.5f, -0.5f,	1.0f, 0.0f,		+0.5f, 0.0f, 0.0f,
+	+0.5f, -0.5f, -0.5f,	1.0f, 0.0f,		+0.5f, 0.0f, 0.0f,
+	+0.5f, -0.5f, +0.5f,	0.0f, 0.0f,		+0.5f, 0.0f, 0.0f,
+	+0.5f, +0.5f, +0.5f,	0.0f, 1.0f,		+0.5f, 0.0f, 0.0f,
+
+	// Bottom
+	-0.5f, -0.5f, -0.5f,	0.0f, 0.0f,		0.0f, -0.5f, 0.0f,
+	+0.5f, -0.5f, -0.5f,	1.0f, 0.0f,		0.0f, -0.5f, 0.0f,
+	+0.5f, -0.5f, +0.5f,	1.0f, 1.0f,		0.0f, -0.5f, 0.0f,
+	+0.5f, -0.5f, +0.5f,	1.0f, 1.0f,		0.0f, -0.5f, 0.0f,
+	-0.5f, -0.5f, +0.5f,	0.0f, 1.0f,		0.0f, -0.5f, 0.0f,
+	-0.5f, -0.5f, -0.5f,	0.0f, 0.0f,		0.0f, -0.5f, 0.0f,
+
+	// Top
+	-0.5f, +0.5f, -0.5f,	0.0f, 1.0f,		0.0f, +0.5f, 0.0f,
+	+0.5f, +0.5f, -0.5f,	1.0f, 1.0f,		0.0f, +0.5f, 0.0f,
+	+0.5f, +0.5f, +0.5f,	1.0f, 0.0f,		0.0f, +0.5f, 0.0f,
+	+0.5f, +0.5f, +0.5f,	1.0f, 0.0f,		0.0f, +0.5f, 0.0f,
+	-0.5f, +0.5f, +0.5f,	0.0f, 0.0f,		0.0f, +0.5f, 0.0f,
+	-0.5f, +0.5f, -0.5f,	0.0f, 1.0f,		0.0f, +0.5f, 0.0f
+};
+
 
 int main()
 {
@@ -31,52 +96,25 @@ int main()
 	glfwSetCursorPosCallback(window.frame, mouseMoved);
 	glfwSetScrollCallback(window.frame, mouseScrolled);
 
-	Cube cube;
+	// OBJECT
 
-	/*GLuint VAO, VBO, EBO;
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-	glGenBuffers(1, &EBO);
+	VertexArray cube;
+	VertexBuffer cubeBuffer(vertices, sizeof(vertices));
 
-	glBindVertexArray(VAO);
+	cube.SetAttribPointer(POSITION, 3, 8, 0);
+	cube.SetAttribPointer(TEXTURE, 2, 8, 3);
+	cube.SetAttribPointer(NORMAL, 3, 8, 5);
 
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), cubeVertices, GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cubeIndices), cubeIndices, GL_STATIC_DRAW);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(0 * sizeof(GLfloat)));
-	glEnableVertexAttribArray(0);
-
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-	glEnableVertexAttribArray(1);
-
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(5 * sizeof(GLfloat)));
-	glEnableVertexAttribArray(2);
-
-	glBindVertexArray(0);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);*/
-
-	mat4 model = mat4::makeTranslate(vec3(0.0f, 0.0f, 0.0f)) * mat4::makeRotate(45.0f, vec3(1.0f, 1.0f, 0.0f)) * mat4::makeScale(vec3(1.0f, 1.0f, 1.0f));
 	mat4 view;
 	mat4 projection;
 
 	// Setting up shaders
-	Shader objectShader("vertex.shader", "fragment.shader");
-
-	// The model matrix is static, so we pass the model matrix to the shader only once
-	objectShader.use();
-	objectShader.setMat4("model", model);
-	objectShader.setMat4("projection", projection);
-	objectShader.setInt("tex", 0);
+	Shader objectShader("vertex.shader", "fragment.shader"), lightShader("lightvertex.shader", "lightfragment.shader");
 
 	// Setting up textures
-	Texture tex("stones.jpg");
+	Texture stones("stones.jpg");
+	Texture sun("sun.jpg");
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, tex.ID);
 	
 	// Loop until the user closes the window
 	while (!window.isClosed())
@@ -91,21 +129,40 @@ int main()
 		projection = mat4::makePerspective(camera.fov, (GLfloat)window.WIDTH / (GLfloat)window.HEIGHT, 0.1f, 100.0f);
 		
 		// The view matrix and projection matrix are changing dynamically, so we pass these matrices to the shader every frame
+		objectShader.use();
 		objectShader.setMat4("view", view);
 		objectShader.setMat4("projection", projection);
+		mat4 model = mat4::makeTranslate(vec3(0.0f, 0.0f, 0.0f)) * mat4::makeRotate(45.0f, vec3(1.0f, 1.0f, 0.0f)) * mat4::makeScale(vec3(1.0f, 1.0f, 1.0f));
+		objectShader.setMat4("model", model);
+		objectShader.setInt("tex", 0);
+		objectShader.setVec3("objectColor", vec3(1.0f, 0.5f, 0.31f));
+		objectShader.setVec3("lightColor", vec3(1.0f, 1.0f, 1.0f));
 
-		// Draw cube
-		cube.bindVAO();
-		cube.drawObject();
+		// Bind cube to draw twice
+		cube.Bind();
+
+		// Draw cube #1
+		stones.Bind();
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+
+		lightShader.use();
+		lightShader.setMat4("view", view);
+		lightShader.setMat4("projection", projection);
+		model = mat4::makeTranslate(lightPos) * mat4::makeRotate(45.0f, vec3(1.0f, 1.0f, 0.0f)) * mat4::makeScale(vec3(1.0f, 1.0f, 1.0f));
+		lightShader.setMat4("model", model);
+		lightShader.setInt("sun", 0);
+
+		// Draw cube #2
+		sun.Bind();
+		glDrawArrays(GL_TRIANGLES, 0, 36);
 
 		window.finishFrame();
 	}
 
 	// De-allocate memory on program exit
-	glDeleteVertexArrays(1, &cube.vaoID);
-	glDeleteTextures(1, &tex.ID);
-	glDeleteBuffers(1, &cube.vboID);
-	glDeleteBuffers(1, &cube.eboID);
+	//glDeleteVertexArrays(1, &cubeVAO);
+	//glDeleteTextures(1, &tex.ID);
+	//glDeleteBuffers(1, &VBO);
 
 	glfwTerminate();
 	return 0;

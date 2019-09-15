@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-#include "display.hpp"
+#include "display.h"
 
 // Timing
 GLfloat deltaTime = 0.0f;	// Time between current frame and last frame
