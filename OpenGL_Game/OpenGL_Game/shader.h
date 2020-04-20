@@ -2,8 +2,6 @@
 
 class Shader {
 public:
-	GLuint ID;
-
 	// Constructor
 	Shader(const std::string& vertex_shader_path, const std::string& fragment_shader_path);
 
@@ -38,5 +36,9 @@ public:
 	GLvoid setMat4(const std::string& name, const mat4& mat) const;
 
 private:
-	GLvoid checkCompileErrors(uint32_t shader, const std::string& type);
+	GLuint m_program;
+
+	GLvoid parseFile(const std::string& file_path, std::string& shaderCode);
+	GLuint compileShader(GLuint type, const std::string& source);
+	GLvoid checkCompileErrors(GLuint shader, const std::string& type);
 };
