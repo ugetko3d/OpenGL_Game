@@ -11,19 +11,28 @@
  
 Shader::Shader(const std::string& vertex_shader_path, const std::string& fragment_shader_path)
 {
-
-
+	// Parsing Shader Code
 	std::string vertexCode, fragmentCode;
+
+	std::cout << "Parsing Vertex Shader code..." << std::endl;
 	parseFile(vertex_shader_path, vertexCode);
+
+	std::cout << "Parsing Fragment Shader code..." << std::endl;
 	parseFile(fragment_shader_path, fragmentCode);
 
 	// Compile the shaders
+	std::cout << "Compiling: Vertex Shader" << std::endl;
 	GLuint vs = compileShader(GL_VERTEX_SHADER, vertexCode);
+
+	std::cout << "Compiling: Fragment Shader" << std::endl;
 	GLuint fs = compileShader(GL_FRAGMENT_SHADER, fragmentCode);
 
 	// Print compile errors if any
-	checkCompileErrors(vs, "VERTEX");
-	checkCompileErrors(fs, "FRAGMENT");
+	std::cout << "Checking for errors in Vertex Shader compilation..." << std::endl;
+	errorChecking(vs, "VERTEX");
+
+	std::cout << "Checking for errors in Fragment Shader compilation..." << std::endl;
+	errorChecking(fs, "FRAGMENT");
 
 	// Link vertex shader and fragment shader
 	std::cout << "Linking: " << vertex_shader_path << " and " << fragment_shader_path << std::endl;
@@ -33,11 +42,17 @@ Shader::Shader(const std::string& vertex_shader_path, const std::string& fragmen
 	glLinkProgram(m_program);
 
 	// Print linking errors if any
-	checkCompileErrors(m_program, "PROGRAM");
+	std::cout << "Checking for errors in Program linking..." << std::endl;
+	errorChecking(m_program, "PROGRAM");
 
 	// Delete the shaders as they're linked into our program now and are no longer necessery
 	glDeleteShader(vs);
 	glDeleteShader(fs);
+}
+
+Shader::~Shader()
+{
+	glDeleteProgram(m_program);
 }
 
 void Shader::use()
@@ -126,8 +141,6 @@ GLvoid Shader::parseFile(const std::string& file_path, std::string& shaderCode)
 
 GLuint Shader::compileShader(GLuint type, const std::string& source)
 {
-	// Compile the shader
-	std::cout << "Compiling: " << source << std::endl;
 	GLuint id = glCreateShader(type);
 
 	const char* src = source.c_str();
@@ -137,27 +150,36 @@ GLuint Shader::compileShader(GLuint type, const std::string& source)
 	return id;
 }
 
-GLvoid Shader::checkCompileErrors(GLuint shader, const std::string& type)
+GLvoid Shader::errorChecking(GLuint id, const std::string& type)
 {
 	GLint success;
-	char infoLog[1024];
+	char* message;
+	GLint length;
 
 	if (type != "PROGRAM")
 	{
-		glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+		glGetShaderiv(id, GL_COMPILE_STATUS, &success);
 		if (!success)
 		{
-			glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-			std::cout << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+			glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
+			message = new char[length];
+			glGetShaderInfoLog(id, length, &length, message);
+			std::cout << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << message << "\n -- --------------------------------------------------- -- " << std::endl;
+			delete[] message;
+			glDeleteShader(id);
 		}
 	}
 	else
 	{
-		glGetProgramiv(shader, GL_LINK_STATUS, &success);
+		glGetProgramiv(id, GL_LINK_STATUS, &success);
 		if (!success)
 		{
-			glGetProgramInfoLog(shader, 1024, NULL, infoLog);
-			std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+			glGetProgramiv(id, GL_INFO_LOG_LENGTH, &length);
+			message = new char[length];
+			glGetProgramInfoLog(id, length, &length, message);
+			std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << message << "\n -- --------------------------------------------------- -- " << std::endl;
+			delete[] message;
+			glDeleteProgram(id);
 		}
 	}
 }

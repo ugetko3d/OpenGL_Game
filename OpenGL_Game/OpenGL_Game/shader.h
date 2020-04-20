@@ -5,6 +5,8 @@ public:
 	// Constructor
 	Shader(const std::string& vertex_shader_path, const std::string& fragment_shader_path);
 
+	~Shader();
+
 	// Use this program
 	GLvoid use();
 
@@ -40,5 +42,5 @@ private:
 
 	GLvoid parseFile(const std::string& file_path, std::string& shaderCode);
 	GLuint compileShader(GLuint type, const std::string& source);
-	GLvoid checkCompileErrors(GLuint shader, const std::string& type);
+	GLvoid errorChecking(GLuint shader, const std::string& type);
 };

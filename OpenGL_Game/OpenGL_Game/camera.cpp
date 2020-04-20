@@ -16,42 +16,43 @@ Camera::Camera()
 	updateCameraVectors();
 }
 
-mat4 Camera::getViewMatrix()
+mat4& Camera::getViewMatrix()
+{
+	return m_view;
+}
+
+GLvoid Camera::updateViewMatrix()
 {
 	vec3 center(vec3::add(position, front));
 	vec3 f(vec3::normalize(vec3::subtract(center, position)));
 	vec3 s(vec3::normalize(vec3::cross(f, up)));
 	vec3 u(vec3::cross(s, f));
 
-	mat4 result;
-
-	result.data[0] = s.x;
-	result.data[4] = s.y;
-	result.data[8] = s.z;
-	result.data[1] = u.x;
-	result.data[5] = u.y;
-	result.data[9] = u.z;
-	result.data[2] = -f.x;
-	result.data[6] = -f.y;
-	result.data[10] = -f.z;
-	result.data[12] = -vec3::dot(s, position);
-	result.data[13] = -vec3::dot(u, position);
-	result.data[14] = vec3::dot(f, position);
-	result.data[15] = 1.0f;
-
-	return result;
+	m_view.data[0] = s.x;
+	m_view.data[4] = s.y;
+	m_view.data[8] = s.z;
+	m_view.data[1] = u.x;
+	m_view.data[5] = u.y;
+	m_view.data[9] = u.z;
+	m_view.data[2] = -f.x;
+	m_view.data[6] = -f.y;
+	m_view.data[10] = -f.z;
+	m_view.data[12] = -vec3::dot(s, position);
+	m_view.data[13] = -vec3::dot(u, position);
+	m_view.data[14] = vec3::dot(f, position);
+	m_view.data[15] = 1.0f;
 }
 
 GLvoid Camera::processKeyboard(Camera_Movement direction, GLfloat deltaTime)
 {
 	GLfloat velocity = movementSpeed * deltaTime;
-	if (direction == FORWARD)
+	if (direction == Camera_Movement::FORWARD)
 		position = vec3::add(position, vec3::scale(front, velocity));
-	if (direction == BACKWARD)
+	if (direction == Camera_Movement::BACKWARD)
 		position = vec3::subtract(position, vec3::scale(front, velocity));
-	if (direction == LEFT)
+	if (direction == Camera_Movement::LEFT)
 		position = vec3::subtract(position, vec3::scale(right, velocity));
-	if (direction == RIGHT)
+	if (direction == Camera_Movement::RIGHT)
 		position = vec3::add(position, vec3::scale(right, velocity));
 }
 

@@ -2,15 +2,6 @@
 
 #include "maths.h"
 
-// Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods
-const enum Camera_Movement
-{
-	FORWARD,
-	BACKWARD,
-	LEFT,
-	RIGHT
-};
-
 // An abstract camera class that processes input and calculates the corresponding Eular Angles, Vectors and Matrices for use in OpenGL
 class Camera
 {
@@ -24,6 +15,15 @@ public:
 	const GLfloat SENSITIVITY = 0.1f;
 	const GLfloat FOV = 45.0f;
 	const vec3 WORLD_UP = vec3(0.0f, 1.0f, 0.0f);
+
+	// Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods
+	enum class Camera_Movement
+	{
+		FORWARD,
+		BACKWARD,
+		LEFT,
+		RIGHT
+	};
 
 	// Camera attributes
 	vec3 position;
@@ -40,11 +40,20 @@ public:
 	GLfloat mouseSensitivity;
 	GLfloat fov;
 
-	// Constructor
-	Camera();
+	// Deleting the copy constructor (because this class is a singleton)
+	Camera(const Camera&) = delete;
 
-	// Returns the view matrix calculated using Eular angles
-	mat4 getViewMatrix();
+	static Camera& instance()
+	{
+		static Camera instance;
+		return instance;
+	}
+
+	// Returns the view matrix
+	mat4& getViewMatrix();
+
+	// Calculates the view matrix
+	GLvoid updateViewMatrix();
 
 	// Processes movement input
 	GLvoid processKeyboard(Camera_Movement direction, GLfloat deltaTime);
@@ -59,6 +68,12 @@ public:
 	GLvoid setFOV(GLfloat yoffset);
 
 private:
+	// View matrix
+	mat4 m_view;
+
+	// Constructor
+	Camera();
+
 	// Calculates the front vector from the Camera's (updated) Eular angles
 	GLvoid updateCameraVectors();
 };

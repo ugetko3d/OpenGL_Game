@@ -28,7 +28,7 @@ const enum attrib
 Window window;
 
 // Camera
-Camera camera;
+Camera& camera = Camera::instance();
 GLboolean firstMouse = true;
 GLfloat lastX = window.WIDTH / 2;
 GLfloat lastY = window.HEIGHT / 2;
@@ -125,12 +125,12 @@ int main()
 		processInput(window.frame, deltaTime);
 
 		// Calculate the view and projection matrix
-		view = camera.getViewMatrix();
+		camera.updateViewMatrix();
 		projection = mat4::makePerspective(camera.fov, (GLfloat)window.WIDTH / (GLfloat)window.HEIGHT, 0.1f, 100.0f);
 		
 		// The view matrix and projection matrix are changing dynamically, so we pass these matrices to the shader every frame
 		objectShader.use();
-		objectShader.setMat4("view", view);
+		objectShader.setMat4("view", camera.getViewMatrix());
 		objectShader.setMat4("projection", projection);
 		mat4 model = mat4::makeTranslate(vec3(0.0f, 0.0f, 0.0f)) * mat4::makeRotate(45.0f, vec3(1.0f, 1.0f, 0.0f)) * mat4::makeScale(vec3(1.0f, 1.0f, 1.0f));
 		objectShader.setMat4("model", model);
@@ -146,7 +146,7 @@ int main()
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
 		lightShader.use();
-		lightShader.setMat4("view", view);
+		lightShader.setMat4("view", camera.getViewMatrix());
 		lightShader.setMat4("projection", projection);
 		model = mat4::makeTranslate(lightPos) * mat4::makeRotate(45.0f, vec3(1.0f, 1.0f, 0.0f)) * mat4::makeScale(vec3(1.0f, 1.0f, 1.0f));
 		lightShader.setMat4("model", model);
@@ -174,19 +174,19 @@ GLvoid processInput(GLFWwindow* frame, GLfloat deltaTime)
 	}
 	if (glfwGetKey(frame, GLFW_KEY_W) == GLFW_PRESS)
 	{
-		camera.processKeyboard(FORWARD, deltaTime);
+		camera.processKeyboard(Camera::Camera_Movement::FORWARD, deltaTime);
 	}
 	if (glfwGetKey(frame, GLFW_KEY_S) == GLFW_PRESS)
 	{
-		camera.processKeyboard(BACKWARD, deltaTime);
+		camera.processKeyboard(Camera::Camera_Movement::BACKWARD, deltaTime);
 	}
 	if (glfwGetKey(frame, GLFW_KEY_A) == GLFW_PRESS)
 	{
-		camera.processKeyboard(LEFT, deltaTime);
+		camera.processKeyboard(Camera::Camera_Movement::LEFT, deltaTime);
 	}
 	if (glfwGetKey(frame, GLFW_KEY_D) == GLFW_PRESS)
 	{
-		camera.processKeyboard(RIGHT, deltaTime);
+		camera.processKeyboard(Camera::Camera_Movement::RIGHT, deltaTime);
 	}
 }
 
