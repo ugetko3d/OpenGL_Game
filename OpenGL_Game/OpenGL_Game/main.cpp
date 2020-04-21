@@ -30,8 +30,8 @@ Window window;
 // Camera
 Camera& camera = Camera::instance();
 GLboolean firstMouse = true;
-GLfloat lastX = window.WIDTH / 2;
-GLfloat lastY = window.HEIGHT / 2;
+GLdouble lastX = (GLdouble) (window.WIDTH / 2.0f);
+GLdouble lastY = (GLdouble) (window.HEIGHT / 2.0f);
 
 // Lighting
 vec3 lightPos(5.0f, 5.0f, 5.0f);
@@ -105,8 +105,7 @@ int main()
 	cube.SetAttribPointer(TEXTURE, 2, 8, 3);
 	cube.SetAttribPointer(NORMAL, 3, 8, 5);
 
-	mat4 view;
-	mat4 projection;
+	mat4 t, r, s, model, view, projection;
 
 	// Setting up shaders
 	Shader objectShader("vertex.shader", "fragment.shader"), lightShader("lightvertex.shader", "lightfragment.shader");
@@ -125,14 +124,17 @@ int main()
 		processInput(window.frame, deltaTime);
 
 		// Calculate the view and projection matrix
-		camera.updateViewMatrix();
-		projection = mat4::makePerspective(camera.fov, (GLfloat)window.WIDTH / (GLfloat)window.HEIGHT, 0.1f, 100.0f);
+		view.makeView(camera.position, camera.front, camera.up);
+		projection.makePerspective(camera.fov, (GLfloat)window.WIDTH / (GLfloat)window.HEIGHT, 0.1f, 100.0f);
 		
 		// The view matrix and projection matrix are changing dynamically, so we pass these matrices to the shader every frame
 		objectShader.use();
-		objectShader.setMat4("view", camera.getViewMatrix());
+		objectShader.setMat4("view", view);
 		objectShader.setMat4("projection", projection);
-		mat4 model = mat4::makeTranslate(vec3(0.0f, 0.0f, 0.0f)) * mat4::makeRotate(45.0f, vec3(1.0f, 1.0f, 0.0f)) * mat4::makeScale(vec3(1.0f, 1.0f, 1.0f));
+		t.translate(vec3(0.0f, 0.0f, 0.0f));
+		r.rotate(45.0f, vec3(1.0f, 1.0f, 0.0f));
+		s.scale(vec3(1.0f, 1.0f, 1.0f));
+		model = t * r * s;
 		objectShader.setMat4("model", model);
 		objectShader.setInt("tex", 0);
 		objectShader.setVec3("objectColor", vec3(1.0f, 0.5f, 0.31f));
@@ -146,9 +148,12 @@ int main()
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
 		lightShader.use();
-		lightShader.setMat4("view", camera.getViewMatrix());
+		lightShader.setMat4("view", view);
 		lightShader.setMat4("projection", projection);
-		model = mat4::makeTranslate(lightPos) * mat4::makeRotate(45.0f, vec3(1.0f, 1.0f, 0.0f)) * mat4::makeScale(vec3(1.0f, 1.0f, 1.0f));
+		t.translate(lightPos);
+		r.rotate(45.0f, vec3(1.0f, 1.0f, 0.0f));
+		s.scale(vec3(1.0f, 1.0f, 1.0f));
+		model = t * r * s;
 		lightShader.setMat4("model", model);
 		lightShader.setInt("sun", 0);
 
@@ -208,8 +213,8 @@ GLvoid mouseMoved(GLFWwindow* frame, GLdouble xpos, GLdouble ypos)
 		firstMouse = false;
 	}
 
-	GLfloat xoffset = xpos - lastX;
-	GLfloat yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+	GLfloat xoffset = (GLfloat) (xpos - lastX);
+	GLfloat yoffset = (GLfloat) (lastY - ypos); // reversed since y-coordinates go from bottom to top
 
 	lastX = xpos;
 	lastY = ypos;

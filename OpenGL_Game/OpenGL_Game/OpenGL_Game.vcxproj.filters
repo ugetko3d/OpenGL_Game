@@ -37,12 +37,6 @@
     <ClCompile Include="mat4.cpp">
       <Filter>Maths</Filter>
     </ClCompile>
-    <ClCompile Include="mat3.cpp">
-      <Filter>Maths</Filter>
-    </ClCompile>
-    <ClCompile Include="mat2.cpp">
-      <Filter>Maths</Filter>
-    </ClCompile>
     <ClCompile Include="stb_image.c">
       <Filter>Textures</Filter>
     </ClCompile>
@@ -69,12 +63,6 @@
   <ItemGroup>
     <ClInclude Include="stb_image.h">
       <Filter>Textures</Filter>
-    </ClInclude>
-    <ClInclude Include="mat2.h">
-      <Filter>Maths</Filter>
-    </ClInclude>
-    <ClInclude Include="mat3.h">
-      <Filter>Maths</Filter>
     </ClInclude>
     <ClInclude Include="mat4.h">
       <Filter>Maths</Filter>

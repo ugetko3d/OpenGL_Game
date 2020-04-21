@@ -49,12 +49,6 @@ public:
 		return instance;
 	}
 
-	// Returns the view matrix
-	mat4& getViewMatrix();
-
-	// Calculates the view matrix
-	GLvoid updateViewMatrix();
-
 	// Processes movement input
 	GLvoid processKeyboard(Camera_Movement direction, GLfloat deltaTime);
 
@@ -62,15 +56,12 @@ public:
 	GLvoid setCameraPosition(vec3 pos);
 
 	// Processes aim input
-	GLvoid processMouseMovement(GLdouble xoffset, GLdouble yoffset);
+	GLvoid processMouseMovement(GLfloat xoffset, GLfloat yoffset);
 
 	// Processes zoom input
 	GLvoid setFOV(GLfloat yoffset);
 
 private:
-	// View matrix
-	mat4 m_view;
-
 	// Constructor
 	Camera();
 

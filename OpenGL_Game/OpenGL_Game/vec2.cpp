@@ -1,13 +1,22 @@
 #include "vec2.h"
 
-vec2::vec2() {
-	x = 0.0f;
-	y = 0.0f;
+vec2::vec2() : x(0.0f), y(0.0f) {
+
 }
 
-vec2::vec2(const float& a, const float& b) {
-	x = a;
-	y = b;
+vec2::vec2(float a) : x(a), y(a) {
+
+}
+
+vec2::vec2(float a, float b) : x(a), y(b) {
+
+}
+
+vec2::vec2(const vec2& v)
+{
+	copyCounter2++;
+	std::cout << "We have copied: " << copyCounter2 << " number of vec4 so far..." << std::endl;
+	*this = v;
 }
 
 float vec2::dot(const vec2& v1, const vec2& v2) {
@@ -18,9 +27,10 @@ float vec2::length(const vec2& v) {
 	return sqrt(pow(v.x, 2) + pow(v.y, 2));
 }
 
-vec2 vec2::normalize(const vec2& v) {
-	float vectorLength = sqrt((v.x * v.x) + (v.y * v.y));
-	return vec2(v.x / vectorLength, v.y / vectorLength);
+void vec2::normalize() {
+	float vectorLength = sqrt((x * x) + (y * y));
+	x /= vectorLength;
+	y /= vectorLength;
 }
 
 vec2 vec2::midpoint(const vec2 &a, const vec2 &b) {
@@ -43,8 +53,9 @@ vec2 vec2::divide(const vec2& v1, const vec2& v2) {
 	return vec2(v1.x / v2.x, v1.y / v2.y);
 }
 
-vec2 vec2::scale(const vec2& v, const float& k) {
-	return vec2(v.x * k, v.y * k);
+void vec2::scale(float k) {
+	x *= k;
+	y *= k;
 }
 
 vec2 operator+(const vec2& left, const vec2& right) {
@@ -57,10 +68,6 @@ vec2 operator-(const vec2& left, const vec2& right) {
 
 vec2 operator*(const vec2& left, const vec2& right) {
 	return vec2::multiply(left, right);
-}
-
-vec2 operator*(const vec2& left, const float& scalar) {
-	return vec2::scale(left, scalar);
 }
 
 vec2 operator/(const vec2& left, const vec2& right) {

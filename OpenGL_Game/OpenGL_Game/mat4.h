@@ -1,9 +1,11 @@
 #pragma once
 
-#include <iostream>
+//#include <iostream>
 
 #include "vec3.h"
 #include "mathdefinitions.h"
+
+static int copyCounter = 0;
 
 class mat4 {
 
@@ -12,33 +14,46 @@ public:
 
 	mat4();
 
+	mat4(const mat4& m1);
+
+	/**
+	Sets all the elements in the matrix to zero (0)
+	@return An empty matrix
+*/
+	void reset();
+
 	/**
 		Constructs a 4x4 identity matrix
-	@return An identity matrix
 	*/
-	static mat4 makeIdentity();
+	void identity();
 
 	/**
 		Constructs a 4x4 scale matrix that can be used to scale a vector by multiplication
 	@param scale A vec3 which describes how much you want to scale a point in x, y and z directions.
-	@return A scale matrix 
 	*/
-	static mat4 makeScale(const vec3& scale);
+	void scale(const vec3& scale);
 
 	/**
 		Constructs a 4x4 rotation matrix that can be used to rotate a vector by multiplication
 	@param angle A float which describes how far you want to rotate around the given axis in degrees (NOT RADIANS).
 	@param axis A vec3 which describes how you want to rotate a point around the x, y and z axis.
-	@return A rotation matrix
 	*/
-	static mat4 makeRotate(const float& angle, const vec3& axis);
+	void rotate(float angle, vec3 v);
 
 	/**
 		Constructs a 4x4 translation matrix that can be used to translate a vector by multiplication
 	@param translation A vec3 which describes how much you want to move a point in the x, y and z directions.
-	@return A translation matrix
 	*/
-	static mat4 makeTranslate(const vec3& translation);
+	void translate(const vec3& translation);
+
+
+	/**
+		Constructs a 4x4 view matrix that we will use to transform a model's vertices from world-space to view-space
+	@param The camera's position vector.
+	@param The camera's front (direction) vector.
+	@param The camera's up vector.
+	*/
+	void makeView(const vec3& position, const vec3& front, const vec3& up);
 
 	/**
 		Constructs a 4x4 perspective projection matrix that we will use to define our projection in the world
@@ -46,9 +61,8 @@ public:
 	@param aspectRatio Specifying the correlation between screenwidth and screenheight.
 	@param near Specifying the near plane of the world (objects rendered in front of the near plane will not be visible).
 	@param far Specifying the far plane of the world (objects rendered behind the far plane will not be visible).
-	@return A perspective projection matrix
 	*/
-	static mat4 makePerspective(const float& angle, const float& aspectRatio, const float& near, const float& far);
+	void makePerspective(float angle, float aspectRatio, float near, float far);
 
 	/**
 		Constructs a 4x4 orthographic projection matrix that we will use to define our projection in the xy-plane
@@ -56,16 +70,13 @@ public:
 	@param r Specifying the right side of the screen.
 	@param b Specifying the bottom of the screen.
 	@param t Specifying the top of the screen.
-	@return An orthographic projection matrix
 	*/
-	static mat4 makeOrtho(const float& l, const float& r, const float& b, const float& t);
+	void makeOrtho(float l, float r, float b, float t);
 
 	/**
 		Removes the translation from a 4x4 matrix
-	@param m A 4x4 matrix we will remove the translation vector from.
-	@return A 4x4 matrix without the translation attribute
 	*/
-	static mat4 removeTranslation(const mat4& m);
+	void removeTranslation();
 
 	/**
 		Multiplies two 4x4 matrices together
@@ -76,11 +87,9 @@ public:
 	static mat4 multiply(const mat4& m1, const mat4& m2);
 
 	/**
-		Inverste a 4x4 matrix
-		@param m - a 4x4 matrix tto be inversed
-		@return the inverted matrix
+		Inverse a 4x4 matrix
 	*/
-	static mat4 inverse(const mat4 & m);
+	void inverse();
 
 	/**
 		This method overwrites the "*" operator, when used between two mat4 objects

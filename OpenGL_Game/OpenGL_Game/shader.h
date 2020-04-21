@@ -28,12 +28,6 @@ public:
 	// Set uniform: vec4
 	GLvoid setVec4(const std::string& name, const vec4& value) const;
 
-	// Set uniform: mat2
-	GLvoid setMat2(const std::string& name, const mat2& mat) const;
-
-	// Set uniform: mat3
-	GLvoid setMat3(const std::string& name, const mat3& mat) const;
-
 	// Set uniform: mat4
 	GLvoid setMat4(const std::string& name, const mat4& mat) const;
 

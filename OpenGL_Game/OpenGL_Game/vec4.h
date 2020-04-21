@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+static int copyCounter4 = 0;
+
 class vec4 {
 
 public:
@@ -11,8 +13,11 @@ public:
 	float w;
 
 	vec4();
-	vec4(const float& a, const float& b, const float& c, const float& d);
-	vec4(const float& a, const float& b, const float& c);
+	vec4(float a);
+	vec4(float a, float b, float c);
+	vec4(float a, float b, float c, float d);
+
+	vec4(const vec4& v);
 
 	/**
 		Multiplies a vector with a matrix
@@ -43,15 +48,7 @@ public:
 	@param v The vector to be normalized.
 	@return The normalized vector v
 	*/
-	static vec4 normalize(const vec4& v);
-
-	/**
-		Scales a vector by a scalar k
-	@param v The vector to be scaled.
-	@param k The scalar.
-	@return The scaled vector v
-	*/
-	static vec4 scale(const vec4& v, const float& k);
+	void normalize();
 
 	/**
 		Arithmetic operations on vectors
@@ -65,6 +62,14 @@ public:
 	static vec4 divide(const vec4& v1, const vec4& v2);
 
 	/**
+		Scales a vector by a scalar k
+	@param v The vector to be scaled.
+	@param k The scalar.
+	@return The scaled vector v
+	*/
+	static vec4 scale(const vec4& v, float k);
+
+	/**
 		These methods overwrites the arithmetic operators when they are used between two vec4 objects 
 	@param v1 Vector 1.
 	@param v2 Vector 2.
@@ -73,7 +78,7 @@ public:
 	friend vec4 operator+(const vec4& left, const vec4& right);
 	friend vec4 operator-(const vec4& left, const vec4& right);
 	friend vec4 operator*(const vec4& left, const vec4& right);
-	friend vec4 operator*(const mat4& left, const vec4& right);
+	friend vec4 operator*(const vec4& v, float k);
 	friend vec4 operator/(const vec4& left, const vec4& right);
 
 	/**

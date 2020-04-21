@@ -1,125 +1,147 @@
 #include "mat4.h"
+#include <iostream>
 
-mat4::mat4() {
-	for (int i = 0; i < 16; i++)
-		data[i] = 0.0f;
-}
-
-mat4 mat4::makeIdentity() {
-
-	mat4 result;
-
-	result.data[0] = 1.0f;
-	result.data[5] = 1.0f;
-	result.data[10] = 1.0f;
-	result.data[15] = 1.0f;
-
-	return result;
+mat4::mat4() : data{0.0f} {
 
 }
 
-mat4 mat4::makeScale(const vec3& scale) {
+mat4::mat4(const mat4& m1) {
+	copyCounter++;
+	std::cout << "We have copied: " << copyCounter << " number of 4x4 matrixes so far..." << std::endl;
 
-	mat4 result;
+	*this = m1;
+}
 
-	result.data[0] = scale.x;
-	result.data[5] = scale.y;
-	result.data[10] = scale.z;
-	result.data[15] = 1.0f;
+void mat4::reset()
+{
+	*data = { 0 };
+}
 
-	return result;
+void mat4::identity() {
+
+	reset();
+
+	data[0] = 1.0f;
+	data[5] = 1.0f;
+	data[10] = 1.0f;
+	data[15] = 1.0f;
 
 }
 
-mat4 mat4::makeRotate(const float& angle, const vec3& axis) {
+void mat4::scale(const vec3& scale) {
+
+	reset();
+
+	data[0] = scale.x;
+	data[5] = scale.y;
+	data[10] = scale.z;
+	data[15] = 1.0f;
+
+}
+
+void mat4::rotate(float angle, vec3 v) {
 
 	float r = (float)(angle * (M_PI / 180.0f));
-
-	mat4 result;
 
 	float c = (float)cos((double)r);
 	float s = (float)sin((double)r);
 	float omc = 1.0f - c;
 
-	vec3 v = vec3::normalize(axis);
+	v.normalize();
 
-	result.data[0] = c + omc * v.x * v.x;
-	result.data[1] = omc * v.x * v.y + s * v.z;
-	result.data[2] = omc * v.x * v.z - s * v.y;
-		   
-	result.data[4] = omc * v.y * v.x - s * v.z;
-	result.data[5] = c + omc * v.y * v.y;
-	result.data[6] = omc * v.y * v.z + s * v.x;
-		   
-	result.data[8] = omc * v.z * v.x + s * v.y;
-	result.data[9] = omc * v.z * v.y - s * v.x;
-	result.data[10] = c + omc * v.z * v.z;
-		   
-	result.data[15] = 1.0f;
+	reset();
 
-	return result;
+	data[0] = c + omc * v.x * v.x;
+	data[1] = omc * v.x * v.y + s * v.z;
+	data[2] = omc * v.x * v.z - s * v.y;
+
+	data[4] = omc * v.y * v.x - s * v.z;
+	data[5] = c + omc * v.y * v.y;
+	data[6] = omc * v.y * v.z + s * v.x;
+
+	data[8] = omc * v.z * v.x + s * v.y;
+	data[9] = omc * v.z * v.y - s * v.x;
+	data[10] = c + omc * v.z * v.z;
+	 
+	data[15] = 1.0f;
+}
+
+void mat4::translate(const vec3& translation) {
+
+	identity();
+
+	data[12] = translation.x;
+	data[13] = translation.y;
+	data[14] = translation.z;
 
 }
 
-mat4 mat4::makeTranslate(const vec3& translation) {
+void mat4::makeView(const vec3& position, const vec3& front, const vec3& up)
+{
+	vec3 center = position + front;
 
-	mat4 result = makeIdentity();
+	vec3 f = center - position;
+	f.normalize();
+	vec3 s = vec3::cross(f, up);
+	s.normalize();
 
-	result.data[12] = translation.x;
-	result.data[13] = translation.y;
-	result.data[14] = translation.z;
+	vec3 u = vec3::cross(s, f);
 
-	return result;
+	reset();
 
+	data[0] = s.x;
+	data[4] = s.y;
+	data[8] = s.z;
+	data[1] = u.x;
+	data[5] = u.y;
+	data[9] = u.z;
+	data[2] = -f.x;
+	data[6] = -f.y;
+	data[10] = -f.z;
+	data[12] = -vec3::dot(s, position);
+	data[13] = -vec3::dot(u, position);
+	data[14] = vec3::dot(f, position);
+	data[15] = 1.0f;
 }
 
-mat4 mat4::makePerspective(const float& angle, const float& aspectRatio, const float& n, const float& f) {
+void mat4::makePerspective(float angle, float aspectRatio, float n, float f) {
 
 	float a = (float)(angle * (M_PI / 180.0f));
-
-	mat4 result;
 
 	float t = tan(a / 2.0f) * n;
 	float b = -t;
 	float r = t * aspectRatio;
 	float l = -t * aspectRatio;
 
-	result.data[0] = (2.0f * n) / (r - l);
-	result.data[5] = (2.0f * n) / (t - b);
-	result.data[8] = (r + l) / (r - l);
-	result.data[9] = (t + b) / (t - b);
-	result.data[10] = -((f + n) / (f - n));
-	result.data[11] = -1.0f;
-	result.data[14] = -((2.0f * f * n) / (f - n));
+	reset();
 
-	return result;
-
+	data[0] = (2.0f * n) / (r - l);
+	data[5] = (2.0f * n) / (t - b);
+	data[8] = (r + l) / (r - l);
+	data[9] = (t + b) / (t - b);
+	data[10] = -((f + n) / (f - n));
+	data[11] = -1.0f;
+	data[14] = -((2.0f * f * n) / (f - n));
 }
 
-mat4 mat4::makeOrtho(const float& l, const float& r, const float& b, const float& t) {
-
-	mat4 result;
-
-	result.data[0] = 2.0f / (r - l);
-	result.data[5] = 2.0f / (t - b);
-	result.data[10] = -1.0f;
-	result.data[12] = -((r + l) / (r - l));
-	result.data[13] = -((t + b) / (t - b));
-	result.data[15] = 1.0f;
-
-	return result;
-
-}
-
-mat4 mat4::removeTranslation(const mat4& m) {
+void mat4::makeOrtho(float l, float r, float b, float t) {
 	
-	mat4 result = m;
+	reset();
 
-	result.data[12] = 0.0f;
-	result.data[13] = 0.0f;
-	result.data[14] = 0.0f;
+	data[0] = 2.0f / (r - l);
+	data[5] = 2.0f / (t - b);
+	data[10] = -1.0f;
+	data[12] = -((r + l) / (r - l));
+	data[13] = -((t + b) / (t - b));
+	data[15] = 1.0f;
 
-	return result;
+}
+
+void mat4::removeTranslation() {
+
+	data[12] = 0.0f;
+	data[13] = 0.0f;
+	data[14] = 0.0f;
 
 }
 
@@ -145,152 +167,147 @@ mat4 mat4::multiply(const mat4& m1, const mat4& m2) {
 	result.data[15] = m1.data[2] * m2.data[12] + m1.data[7] * m2.data[13] + m1.data[11] * m2.data[14] + m1.data[15] * m2.data[15];
 
 	return result;
-
 }
 
-mat4 mat4::inverse(const mat4& m)
+void mat4::inverse()
 {
-	double b[16], det;
-	mat4 m_inv;
+	float b[16], det;
 
 	b[0] =
-		m.data[5] * m.data[10] * m.data[15] -
-		m.data[5] * m.data[11] * m.data[14] -
-		m.data[9] * m.data[6] * m.data[15] +
-		m.data[9] * m.data[7] * m.data[14] +
-		m.data[13] * m.data[6] * m.data[11] -
-		m.data[13] * m.data[7] * m.data[10];
+		data[5] * data[10] * data[15] -
+		data[5] * data[11] * data[14] -
+		data[9] * data[6] * data[15] +
+		data[9] * data[7] * data[14] +
+		data[13] * data[6] * data[11] -
+		data[13] * data[7] * data[10];
 
 	b[4] =
-		-m.data[4] * m.data[10] * m.data[15] +
-		m.data[4] * m.data[11] * m.data[14] +
-		m.data[8] * m.data[6] * m.data[15] -
-		m.data[8] * m.data[7] * m.data[14] -
-		m.data[12] * m.data[6] * m.data[11] +
-		m.data[12] * m.data[7] * m.data[10];
+		-data[4] * data[10] * data[15] +
+		data[4] * data[11] * data[14] +
+		data[8] * data[6] * data[15] -
+		data[8] * data[7] * data[14] -
+		data[12] * data[6] * data[11] +
+		data[12] * data[7] * data[10];
 
 	b[8] =
-		m.data[4] * m.data[9] * m.data[15] -
-		m.data[4] * m.data[11] * m.data[13] -
-		m.data[8] * m.data[5] * m.data[15] +
-		m.data[8] * m.data[7] * m.data[13] +
-		m.data[12] * m.data[5] * m.data[11] -
-		m.data[12] * m.data[7] * m.data[9];
+		data[4] * data[9] * data[15] -
+		data[4] * data[11] * data[13] -
+		data[8] * data[5] * data[15] +
+		data[8] * data[7] * data[13] +
+		data[12] * data[5] * data[11] -
+		data[12] * data[7] * data[9];
 
 	b[12] =
-		-m.data[4] * m.data[9] * m.data[14] +
-		m.data[4] * m.data[10] * m.data[13] +
-		m.data[8] * m.data[5] * m.data[14] -
-		m.data[8] * m.data[6] * m.data[13] -
-		m.data[12] * m.data[5] * m.data[10] +
-		m.data[12] * m.data[6] * m.data[9];
+		-data[4] * data[9] * data[14] +
+		data[4] * data[10] * data[13] +
+		data[8] * data[5] * data[14] -
+		data[8] * data[6] * data[13] -
+		data[12] * data[5] * data[10] +
+		data[12] * data[6] * data[9];
 
 	b[1] =
-		-m.data[1] * m.data[10] * m.data[15] +
-		m.data[1] * m.data[11] * m.data[14] +
-		m.data[9] * m.data[2] * m.data[15] -
-		m.data[9] * m.data[3] * m.data[14] -
-		m.data[13] * m.data[2] * m.data[11] +
-		m.data[13] * m.data[3] * m.data[10];
+		-data[1] * data[10] * data[15] +
+		data[1] * data[11] * data[14] +
+		data[9] * data[2] * data[15] -
+		data[9] * data[3] * data[14] -
+		data[13] * data[2] * data[11] +
+		data[13] * data[3] * data[10];
 
 	b[5] =
-		m.data[0] * m.data[10] * m.data[15] -
-		m.data[0] * m.data[11] * m.data[14] -
-		m.data[8] * m.data[2] * m.data[15] +
-		m.data[8] * m.data[3] * m.data[14] +
-		m.data[12] * m.data[2] * m.data[11] -
-		m.data[12] * m.data[3] * m.data[10];
+		data[0] * data[10] * data[15] -
+		data[0] * data[11] * data[14] -
+		data[8] * data[2] * data[15] +
+		data[8] * data[3] * data[14] +
+		data[12] * data[2] * data[11] -
+		data[12] * data[3] * data[10];
 
 	b[9] =
-		-m.data[0] * m.data[9] * m.data[15] +
-		m.data[0] * m.data[11] * m.data[13] +
-		m.data[8] * m.data[1] * m.data[15] -
-		m.data[8] * m.data[3] * m.data[13] -
-		m.data[12] * m.data[1] * m.data[11] +
-		m.data[12] * m.data[3] * m.data[9];
+		-data[0] * data[9] * data[15] +
+		data[0] * data[11] * data[13] +
+		data[8] * data[1] * data[15] -
+		data[8] * data[3] * data[13] -
+		data[12] * data[1] * data[11] +
+		data[12] * data[3] * data[9];
 
 	b[13] =
-		m.data[0] * m.data[9] * m.data[14] -
-		m.data[0] * m.data[10] * m.data[13] -
-		m.data[8] * m.data[1] * m.data[14] +
-		m.data[8] * m.data[2] * m.data[13] +
-		m.data[12] * m.data[1] * m.data[10] -
-		m.data[12] * m.data[2] * m.data[9];
+		data[0] * data[9] * data[14] -
+		data[0] * data[10] * data[13] -
+		data[8] * data[1] * data[14] +
+		data[8] * data[2] * data[13] +
+		data[12] * data[1] * data[10] -
+		data[12] * data[2] * data[9];
 
 	b[2] =
-		m.data[1] * m.data[6] * m.data[15] -
-		m.data[1] * m.data[7] * m.data[14] -
-		m.data[5] * m.data[2] * m.data[15] +
-		m.data[5] * m.data[3] * m.data[14] +
-		m.data[13] * m.data[2] * m.data[7] -
-		m.data[13] * m.data[3] * m.data[6];
+		data[1] * data[6] * data[15] -
+		data[1] * data[7] * data[14] -
+		data[5] * data[2] * data[15] +
+		data[5] * data[3] * data[14] +
+		data[13] * data[2] * data[7] -
+		data[13] * data[3] * data[6];
 
 	b[6] =
-		-m.data[0] * m.data[6] * m.data[15] +
-		m.data[0] * m.data[7] * m.data[14] +
-		m.data[4] * m.data[2] * m.data[15] -
-		m.data[4] * m.data[3] * m.data[14] -
-		m.data[12] * m.data[2] * m.data[7] +
-		m.data[12] * m.data[3] * m.data[6];
+		-data[0] * data[6] * data[15] +
+		data[0] * data[7] * data[14] +
+		data[4] * data[2] * data[15] -
+		data[4] * data[3] * data[14] -
+		data[12] * data[2] * data[7] +
+		data[12] * data[3] * data[6];
 
 	b[10] =
-		m.data[0] * m.data[5] * m.data[15] -
-		m.data[0] * m.data[7] * m.data[13] -
-		m.data[4] * m.data[1] * m.data[15] +
-		m.data[4] * m.data[3] * m.data[13] +
-		m.data[12] * m.data[1] * m.data[7] -
-		m.data[12] * m.data[3] * m.data[5];
+		data[0] * data[5] * data[15] -
+		data[0] * data[7] * data[13] -
+		data[4] * data[1] * data[15] +
+		data[4] * data[3] * data[13] +
+		data[12] * data[1] * data[7] -
+		data[12] * data[3] * data[5];
 
 	b[14] =
-		-m.data[0] * m.data[5] * m.data[14] +
-		m.data[0] * m.data[6] * m.data[13] +
-		m.data[4] * m.data[1] * m.data[14] -
-		m.data[4] * m.data[2] * m.data[13] -
-		m.data[12] * m.data[1] * m.data[6] +
-		m.data[12] * m.data[2] * m.data[5];
+		-data[0] * data[5] * data[14] +
+		data[0] * data[6] * data[13] +
+		data[4] * data[1] * data[14] -
+		data[4] * data[2] * data[13] -
+		data[12] * data[1] * data[6] +
+		data[12] * data[2] * data[5];
 
 	b[3] =
-		-m.data[1] * m.data[6] * m.data[11] +
-		m.data[1] * m.data[7] * m.data[10] +
-		m.data[5] * m.data[2] * m.data[11] -
-		m.data[5] * m.data[3] * m.data[10] -
-		m.data[9] * m.data[2] * m.data[7] +
-		m.data[9] * m.data[3] * m.data[6];
+		-data[1] * data[6] * data[11] +
+		data[1] * data[7] * data[10] +
+		data[5] * data[2] * data[11] -
+		data[5] * data[3] * data[10] -
+		data[9] * data[2] * data[7] +
+		data[9] * data[3] * data[6];
 
 	b[7] =
-		m.data[0] * m.data[6] * m.data[11] -
-		m.data[0] * m.data[7] * m.data[10] -
-		m.data[4] * m.data[2] * m.data[11] +
-		m.data[4] * m.data[3] * m.data[10] +
-		m.data[8] * m.data[2] * m.data[7] -
-		m.data[8] * m.data[3] * m.data[6];
+		data[0] * data[6] * data[11] -
+		data[0] * data[7] * data[10] -
+		data[4] * data[2] * data[11] +
+		data[4] * data[3] * data[10] +
+		data[8] * data[2] * data[7] -
+		data[8] * data[3] * data[6];
 
 	b[11] =
-		-m.data[0] * m.data[5] * m.data[11] +
-		m.data[0] * m.data[7] * m.data[9] +
-		m.data[4] * m.data[1] * m.data[11] -
-		m.data[4] * m.data[3] * m.data[9] -
-		m.data[8] * m.data[1] * m.data[7] +
-		m.data[8] * m.data[3] * m.data[5];
+		-data[0] * data[5] * data[11] +
+		data[0] * data[7] * data[9] +
+		data[4] * data[1] * data[11] -
+		data[4] * data[3] * data[9] -
+		data[8] * data[1] * data[7] +
+		data[8] * data[3] * data[5];
 
 	b[15] =
-		m.data[0] * m.data[5] * m.data[10] -
-		m.data[0] * m.data[6] * m.data[9] -
-		m.data[4] * m.data[1] * m.data[10] +
-		m.data[4] * m.data[2] * m.data[9] +
-		m.data[8] * m.data[1] * m.data[6] -
-		m.data[8] * m.data[2] * m.data[5];
+		data[0] * data[5] * data[10] -
+		data[0] * data[6] * data[9] -
+		data[4] * data[1] * data[10] +
+		data[4] * data[2] * data[9] +
+		data[8] * data[1] * data[6] -
+		data[8] * data[2] * data[5];
 
-	det = m.data[0] * b[0] + m.data[1] * b[4] + m.data[2] * b[8] + m.data[3] * b[12];
+	det = data[0] * b[0] + data[1] * b[4] + data[2] * b[8] + data[3] * b[12];
 
-	if (det == 0) return m_inv;
-
-	det = 1.0 / det;
+	if (det != 0.0f)
+		det = 1.0f / det;
 
 	for (int i = 0; i < 16; i++)
-		m_inv.data[i] = b[i] * det;
-
-	return m_inv;
+		data[i] = b[i] * det;
 }
 
 mat4 operator*(const mat4& left, const mat4& right) {

@@ -68,7 +68,7 @@ GLvoid Window::startOpenGL()
 GLfloat Window::prepareFrame()
 {
 	// Per-frame time logic
-	GLfloat currentFrame = glfwGetTime();
+	GLfloat currentFrame = (GLfloat) glfwGetTime();
 	deltaTime = currentFrame - lastFrame;
 	lastFrame = currentFrame;
 

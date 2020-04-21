@@ -1,25 +1,27 @@
 #include "mat4.h"
 #include "vec4.h"
 
-vec4::vec4() {
-	x = 0.0f;
-	y = 0.0f;
-	z = 0.0f;
-	w = 1.0f;
+vec4::vec4() : x(0.0f), y(0.0f), z(0.0f), w(1.0f) {
+
 }
 
-vec4::vec4(const float& a, const float& b, const float& c) {
-	x = a;
-	y = b;
-	z = c;
-	w = 1.0f;
+vec4::vec4(float a) : x(a), y(a), z(a), w(1.0f) {
+
 }
 
-vec4::vec4(const float& a, const float& b, const float& c, const float& d) {
-	x = a;
-	y = b;
-	z = c;
-	w = d;
+vec4::vec4(float a, float b, float c) : x(a), y(b), z(c), w(1.0f) {
+
+}
+
+vec4::vec4(float a, float b, float c, float d) : x(a), y(b), z(c), w(d) {
+
+}
+
+vec4::vec4(const vec4& v)
+{
+	copyCounter4++;
+	std::cout << "We have copied: " << copyCounter4 << " number of vec4 so far..." << std::endl;
+	*this = v;
 }
 
 vec4 vec4::multiply(const mat4& m, const vec4& v) {
@@ -37,9 +39,12 @@ float vec4::dot(const vec4& v1, const vec4& v2) {
 	return (v1.x * v2.x) + (v1.y * v2.y) + (v1.z * v2.z);
 }
 
-vec4 vec4::normalize(const vec4& v) {
-	float vectorLength = sqrt((v.x * v.x) + (v.y * v.y) + (v.z * v.z));
-	return vec4(v.x / vectorLength, v.y / vectorLength, v.z / vectorLength, 1.0f);
+void vec4::normalize() {
+	float vectorLength = sqrt((x * x) + (y * y) + (z * z));
+	x /= vectorLength;
+	y /= vectorLength;
+	z /= vectorLength;
+	w = 1.0f;
 }
 
 vec4 vec4::add(const vec4& v1, const vec4& v2) {
@@ -58,7 +63,7 @@ vec4 vec4::divide(const vec4& v1, const vec4& v2) {
 	return vec4(v1.x / v2.x, v1.y / v2.y, v1.z / v2.z, 1.0f);
 }
 
-vec4 vec4::scale(const vec4& v, const float& k) {
+vec4 vec4::scale(const vec4& v, float k) {
 	return vec4(v.x * k, v.y * k, v.z * k, 1.0f);
 }
 
@@ -74,8 +79,8 @@ vec4 operator*(const vec4& left, const vec4& right) {
 	return vec4::multiply(left, right);
 }
 
-vec4 operator*(const mat4& left, const vec4& right) {
-	return vec4::multiply(left, right);
+vec4 operator*(const vec4& v, float k) {
+	return vec4::scale(v, k);
 }
 
 vec4 operator/(const vec4& left, const vec4& right) {
