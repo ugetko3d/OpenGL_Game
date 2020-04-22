@@ -6,8 +6,8 @@
 #include "display.h"
 
 // Timing
-GLfloat deltaTime = 0.0f;	// Time between current frame and last frame
-GLfloat lastFrame = 0.0f;
+float deltaTime = 0.0f;	// Time between current frame and last frame
+float lastFrame = 0.0f;
 
 Window::Window()
 {
@@ -15,7 +15,7 @@ Window::Window()
 	startOpenGL();
 }
 
-GLvoid Window::createDisplay()
+void Window::createDisplay()
 {
 	// Initialize GLFW
 	if (!glfwInit())
@@ -42,12 +42,12 @@ GLvoid Window::createDisplay()
 	glfwSetInputMode(frame, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
-GLvoid Window::startOpenGL()
+void Window::startOpenGL()
 {
 	glewExperimental = true;
 
 	// Initialize GLEW
-	GLuint glewStatus = glewInit();
+	unsigned int glewStatus = glewInit();
 
 	if (glewStatus != GLEW_OK)
 	{
@@ -65,10 +65,10 @@ GLvoid Window::startOpenGL()
 	std::cout << "Graphics card: " << glGetString(GL_VENDOR) << " " << glGetString(GL_RENDERER) << std::endl;
 }
 
-GLfloat Window::prepareFrame()
+float Window::prepareFrame()
 {
 	// Per-frame time logic
-	GLfloat currentFrame = (GLfloat) glfwGetTime();
+	float currentFrame = (float) glfwGetTime();
 	deltaTime = currentFrame - lastFrame;
 	lastFrame = currentFrame;
 
@@ -78,7 +78,7 @@ GLfloat Window::prepareFrame()
 	return deltaTime;
 }
 
-GLvoid Window::finishFrame()
+void Window::finishFrame()
 {
 	// Swap front and back buffers
 	glfwSwapBuffers(frame);
@@ -87,7 +87,7 @@ GLvoid Window::finishFrame()
 	glfwPollEvents();
 }
 
-GLboolean Window::isClosed()
+bool Window::isClosed()
 {
 	return glfwWindowShouldClose(frame);
 }

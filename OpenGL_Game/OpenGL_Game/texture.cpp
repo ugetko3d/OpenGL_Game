@@ -43,7 +43,7 @@ Texture::~Texture()
 	glDeleteTextures(1, &m_texID);
 }
 
-void Texture::Activate(GLenum textureUnit)
+void Texture::Activate(unsigned int textureUnit)
 {
 	glActiveTexture(textureUnit);
 }

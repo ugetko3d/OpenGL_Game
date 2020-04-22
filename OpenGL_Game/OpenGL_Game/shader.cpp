@@ -22,10 +22,10 @@ Shader::Shader(const std::string& vertex_shader_path, const std::string& fragmen
 
 	// Compile the shaders
 	std::cout << "Compiling: Vertex Shader" << std::endl;
-	GLuint vs = compileShader(GL_VERTEX_SHADER, vertexCode);
+	unsigned int vs = compileShader(GL_VERTEX_SHADER, vertexCode);
 
 	std::cout << "Compiling: Fragment Shader" << std::endl;
-	GLuint fs = compileShader(GL_FRAGMENT_SHADER, fragmentCode);
+	unsigned int fs = compileShader(GL_FRAGMENT_SHADER, fragmentCode);
 
 	// Print compile errors if any
 	std::cout << "Checking for errors in Vertex Shader compilation..." << std::endl;
@@ -60,17 +60,17 @@ void Shader::use()
 	glUseProgram(m_program);
 }
 
-void Shader::setBool(const std::string& name, GLboolean value) const
+void Shader::setBool(const std::string& name, bool value) const
 {
-	glUniform1i(glGetUniformLocation(m_program, name.c_str()), (GLint) value);
+	glUniform1i(glGetUniformLocation(m_program, name.c_str()), (int) value);
 }
 
-void Shader::setInt(const std::string& name, GLint value) const
+void Shader::setInt(const std::string& name, int value) const
 {
 	glUniform1i(glGetUniformLocation(m_program, name.c_str()), value);
 }
 
-void Shader::setFloat(const std::string& name, GLfloat value) const
+void Shader::setFloat(const std::string& name, float value) const
 {
 	glUniform1f(glGetUniformLocation(m_program, name.c_str()), value);
 }
@@ -99,7 +99,7 @@ void Shader::setMat4(const std::string& name, const mat4& mat) const
 }
 
 
-GLvoid Shader::parseFile(const std::string& file_path, std::string& shaderCode)
+void Shader::parseFile(const std::string& file_path, std::string& shaderCode)
 {
 	// Retrieve the vertex / fragment source code from the file paths
 	std::ifstream shaderFile;
@@ -129,9 +129,9 @@ GLvoid Shader::parseFile(const std::string& file_path, std::string& shaderCode)
 	}
 }
 
-GLuint Shader::compileShader(GLuint type, const std::string& source)
+unsigned int Shader::compileShader(unsigned int type, const std::string& source)
 {
-	GLuint id = glCreateShader(type);
+	unsigned int id = glCreateShader(type);
 
 	const char* src = source.c_str();
 	glShaderSource(id, 1, &src, nullptr);
@@ -140,11 +140,11 @@ GLuint Shader::compileShader(GLuint type, const std::string& source)
 	return id;
 }
 
-GLvoid Shader::errorChecking(GLuint id, const std::string& type)
+void Shader::errorChecking(unsigned int id, const std::string& type)
 {
-	GLint success;
+	int success;
 	char* message;
-	GLint length;
+	int length;
 
 	if (type != "PROGRAM")
 	{

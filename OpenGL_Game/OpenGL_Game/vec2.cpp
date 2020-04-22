@@ -53,9 +53,8 @@ vec2 vec2::divide(const vec2& v1, const vec2& v2) {
 	return vec2(v1.x / v2.x, v1.y / v2.y);
 }
 
-void vec2::scale(float k) {
-	x *= k;
-	y *= k;
+vec2 vec2::scale(const vec2& v, float k) {
+	return vec2(v.x * k, v.y * k);
 }
 
 vec2 operator+(const vec2& left, const vec2& right) {
@@ -68,6 +67,10 @@ vec2 operator-(const vec2& left, const vec2& right) {
 
 vec2 operator*(const vec2& left, const vec2& right) {
 	return vec2::multiply(left, right);
+}
+
+vec2 operator*(const vec2& v, float k) {
+	return vec2::scale(v, k);
 }
 
 vec2 operator/(const vec2& left, const vec2& right) {

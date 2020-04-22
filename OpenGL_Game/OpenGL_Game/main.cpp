@@ -14,10 +14,10 @@
 #include "index_buffer.h"
 
 // Processes input
-GLvoid processInput(GLFWwindow* frame, GLfloat deltaTime);
-GLvoid resizeWindow(GLFWwindow* frame, GLint width, GLint height);
-GLvoid mouseMoved(GLFWwindow* frame, GLdouble xpos, GLdouble ypos);
-GLvoid mouseScrolled(GLFWwindow* frame, GLdouble xoffset, GLdouble yoffset);
+void processInput(GLFWwindow* frame, float deltaTime);
+void resizeWindow(GLFWwindow* frame, int width, int height);
+void mouseMoved(GLFWwindow* frame, double xpos, double ypos);
+void mouseScrolled(GLFWwindow* frame, double xoffset, double yoffset);
 
 const enum attrib
 {
@@ -29,9 +29,9 @@ Window window;
 
 // Camera
 Camera& camera = Camera::instance();
-GLboolean firstMouse = true;
-GLdouble lastX = (GLdouble) (window.WIDTH / 2.0f);
-GLdouble lastY = (GLdouble) (window.HEIGHT / 2.0f);
+bool firstMouse = true;
+double lastX = (double) (window.WIDTH / 2.0f);
+double lastY = (double) (window.HEIGHT / 2.0f);
 
 // Lighting
 vec3 lightPos(5.0f, 5.0f, 5.0f);
@@ -112,33 +112,36 @@ int main()
 
 	// Setting up textures
 	Texture stones("stones.jpg");
-	Texture sun("sun.jpg");
 	Texture::Activate(GL_TEXTURE0);
+
+	// Rotation angle that is used for rotating the objects. Value is increased after every iteration of the renderer loop.
+	float angle = 0.0f;
 	
 	// Loop until the user closes the window
 	while (!window.isClosed())
 	{
-		GLfloat deltaTime = window.prepareFrame();
+		float deltaTime = window.prepareFrame();
 
 		// Process player input
 		processInput(window.frame, deltaTime);
 
 		// Calculate the view and projection matrix
 		view.makeView(camera.position, camera.front, camera.up);
-		projection.makePerspective(camera.fov, (GLfloat)window.WIDTH / (GLfloat)window.HEIGHT, 0.1f, 100.0f);
+		projection.makePerspective(camera.fov, (float)window.WIDTH / (float)window.HEIGHT, 0.1f, 100.0f);
 		
 		// The view matrix and projection matrix are changing dynamically, so we pass these matrices to the shader every frame
 		objectShader.use();
 		objectShader.setMat4("view", view);
 		objectShader.setMat4("projection", projection);
 		t.translate(vec3(0.0f, 0.0f, 0.0f));
-		r.rotate(45.0f, vec3(1.0f, 1.0f, 0.0f));
+		r.rotate(angle, vec3(0.3f, 0.5f, 0.6f));
+		angle += 0.5f;
 		s.scale(vec3(1.0f, 1.0f, 1.0f));
 		model = t * r * s;
 		objectShader.setMat4("model", model);
-		objectShader.setInt("tex", 0);
-		objectShader.setVec3("objectColor", vec3(1.0f, 0.5f, 0.31f));
-		objectShader.setVec3("lightColor", vec3(1.0f, 1.0f, 1.0f));
+		objectShader.setVec3("viewPos", camera.position);
+		objectShader.setVec3("lightPos", lightPos);
+		objectShader.setVec3("lightColour", vec3(1.0f, 1.0f, 1.0f));
 
 		// Bind cube to draw twice
 		cube.Bind();
@@ -146,6 +149,7 @@ int main()
 		// Draw cube #1
 		stones.Bind();
 		glDrawArrays(GL_TRIANGLES, 0, 36);
+		stones.Unbind();
 
 		lightShader.use();
 		lightShader.setMat4("view", view);
@@ -158,7 +162,6 @@ int main()
 		lightShader.setInt("sun", 0);
 
 		// Draw cube #2
-		sun.Bind();
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
 		window.finishFrame();
@@ -171,7 +174,7 @@ int main()
 // ---------------------------------------------------------------------------------------------------------
 // PLAYER INPUT
 // ---------------------------------------------------------------------------------------------------------
-GLvoid processInput(GLFWwindow* frame, GLfloat deltaTime)
+void processInput(GLFWwindow* frame, float deltaTime)
 {
 	if (glfwGetKey(frame, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 	{
@@ -196,7 +199,7 @@ GLvoid processInput(GLFWwindow* frame, GLfloat deltaTime)
 }
 
 // GLFW: whenever the window size changed (by OS or user resize), this callback function executes
-GLvoid resizeWindow(GLFWwindow* frame, GLint width, GLint height)
+void resizeWindow(GLFWwindow* frame, int width, int height)
 {
 	// make sure the viewport matches the new window dimensions; note that width and 
 	// height will be significantly larger than specified on retina displays.
@@ -204,7 +207,7 @@ GLvoid resizeWindow(GLFWwindow* frame, GLint width, GLint height)
 }
 
 // GLFW: whenever the mouse moves, this callback is called
-GLvoid mouseMoved(GLFWwindow* frame, GLdouble xpos, GLdouble ypos)
+void mouseMoved(GLFWwindow* frame, double xpos, double ypos)
 {
 	if (firstMouse)
 	{
@@ -213,8 +216,8 @@ GLvoid mouseMoved(GLFWwindow* frame, GLdouble xpos, GLdouble ypos)
 		firstMouse = false;
 	}
 
-	GLfloat xoffset = (GLfloat) (xpos - lastX);
-	GLfloat yoffset = (GLfloat) (lastY - ypos); // reversed since y-coordinates go from bottom to top
+	float xoffset = (float) (xpos - lastX);
+	float yoffset = (float) (lastY - ypos); // reversed since y-coordinates go from bottom to top
 
 	lastX = xpos;
 	lastY = ypos;
@@ -223,7 +226,7 @@ GLvoid mouseMoved(GLFWwindow* frame, GLdouble xpos, GLdouble ypos)
 }
 
 // GLFW: whenever the mouse scroll wheel scrolls, this callback is called
-GLvoid mouseScrolled(GLFWwindow* frame, GLdouble xoffset, GLdouble yoffset)
+void mouseScrolled(GLFWwindow* frame, double xoffset, double yoffset)
 {
-	camera.setFOV((GLfloat)yoffset);
+	camera.setFOV((float)yoffset);
 }

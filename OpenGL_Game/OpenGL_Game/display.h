@@ -4,18 +4,18 @@ class Window
 {
 public:
 	GLFWwindow* frame;
-	const GLchar* TITLE = "OpenGL Game";
-	const GLuint WIDTH = 1280;
-	const GLuint HEIGHT = 720;
+	const char* TITLE = "OpenGL Game";
+	const unsigned int WIDTH = 1280;
+	const unsigned int HEIGHT = 720;
 
 	Window();
-	GLfloat prepareFrame();
-	GLvoid finishFrame();
-	GLboolean isClosed();
+	float prepareFrame();
+	void finishFrame();
+	bool isClosed();
 
 private:
-	GLvoid createDisplay();
-	GLvoid startOpenGL();
+	void createDisplay();
+	void startOpenGL();
 };
 
 

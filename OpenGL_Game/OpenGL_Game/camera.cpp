@@ -16,9 +16,9 @@ Camera::Camera()
 	updateCameraVectors();
 }
 
-GLvoid Camera::processKeyboard(Camera_Movement direction, GLfloat deltaTime)
+void Camera::processKeyboard(Camera_Movement direction, float deltaTime)
 {
-	GLfloat velocity = movementSpeed * deltaTime;
+	float velocity = movementSpeed * deltaTime;
 	if (direction == Camera_Movement::FORWARD)
 		position = position + (front * velocity);
 	if (direction == Camera_Movement::BACKWARD)
@@ -29,7 +29,7 @@ GLvoid Camera::processKeyboard(Camera_Movement direction, GLfloat deltaTime)
 		position = position + (right * velocity);
 }
 
-GLvoid Camera::processMouseMovement(GLfloat xoffset, GLfloat yoffset)
+void Camera::processMouseMovement(float xoffset, float yoffset)
 {
 	xoffset *= mouseSensitivity;
 	yoffset *= mouseSensitivity;
@@ -51,7 +51,7 @@ GLvoid Camera::processMouseMovement(GLfloat xoffset, GLfloat yoffset)
 	updateCameraVectors();
 }
 
-GLvoid Camera::setFOV(GLfloat yoffset)
+void Camera::setFOV(float yoffset)
 {
 	if (fov >= 1.0f && fov <= 45.0f)
 	{
@@ -68,15 +68,15 @@ GLvoid Camera::setFOV(GLfloat yoffset)
 }
 
 // Set camera position
-GLvoid Camera::setCameraPosition(vec3 pos)
+void Camera::setCameraPosition(vec3 pos)
 {
 	position = pos;
 }
 
-GLvoid Camera::updateCameraVectors()
+void Camera::updateCameraVectors()
 {
-	GLfloat y = (GLfloat)(yaw * (M_PI / 180.0f));
-	GLfloat p = (GLfloat)(pitch * (M_PI / 180.0f));
+	float y = (float)(yaw * (M_PI / 180.0f));
+	float p = (float)(pitch * (M_PI / 180.0f));
 
 	// Calculate the new front vector
 	front = vec3(cos(y) * cos(p), sin(p), sin(y) * cos(p));

@@ -25,7 +25,7 @@ public:
 
 	void normalize();
 
-	static vec3 midpoint(const vec3 & a, const vec3 & b);
+	static vec3 midpoint(const vec3& a, const vec3& b);
 
 	static vec3 add(const vec3& v1, const vec3& v2);
 	static vec3 subtract(const vec3& v1, const vec3& v2);
