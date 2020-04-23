@@ -112,7 +112,6 @@ int main()
 
 	// Setting up textures
 	Texture stones("stones.jpg");
-	Texture::Activate(GL_TEXTURE0);
 
 	// Rotation angle that is used for rotating the objects. Value is increased after every iteration of the renderer loop.
 	float angle = 0.0f;
@@ -131,6 +130,7 @@ int main()
 		
 		// The view matrix and projection matrix are changing dynamically, so we pass these matrices to the shader every frame
 		objectShader.use();
+		objectShader.setInt("tex", 0);
 		objectShader.setMat4("view", view);
 		objectShader.setMat4("projection", projection);
 		t.translate(vec3(0.0f, 0.0f, 0.0f));
@@ -147,7 +147,7 @@ int main()
 		cube.Bind();
 
 		// Draw cube #1
-		stones.Bind();
+		stones.Bind(0);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 		stones.Unbind();
 

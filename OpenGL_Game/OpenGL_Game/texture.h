@@ -3,13 +3,15 @@
 class Texture
 {
 private:
-	unsigned int m_texID, m_width, m_height;
+	unsigned int m_texID;
+	int m_width, m_height, m_channels;
+	std::string m_filePath;
+	unsigned char* m_texBuffer;
 public:
 	Texture(const std::string& path);
 	~Texture();
 
-	static void Activate(unsigned int textureUnit);
-	void Bind();
+	void Bind(unsigned int slot);
 	void Unbind();
 };
 

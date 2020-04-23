@@ -6,24 +6,11 @@
 
 #include "texture.h"
 
-Texture::Texture(const std::string& path)
+Texture::Texture(const std::string& path) : m_filePath(path), m_texBuffer(nullptr)
 {
-	int nrChannels, width, height;
-	unsigned char *data = stbi_load(path.c_str(), &width, &height, &nrChannels, 0);
-	if (!data) {
-		std::cout << "Error: Texture failed to load at path: " << path << std::endl;
-		stbi_image_free(data);
-	}
-
-	m_width = width;
-	m_height = height;
-
+	// Bind texture
 	glGenTextures(1, &m_texID);
 	glBindTexture(GL_TEXTURE_2D, m_texID);
-
-	// Bind texture and generate mipmap
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-	glGenerateMipmap(GL_TEXTURE_2D);
 
 	// Set texture wrapping parameters
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -33,8 +20,23 @@ Texture::Texture(const std::string& path)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	// Free data and unbind texture
-	stbi_image_free(data);
+	// Load texture data to buffer
+	m_texBuffer = stbi_load(path.c_str(), &m_width, &m_height, &m_channels, 4);
+
+	if (m_texBuffer) {
+		// Send texture data to GPU
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_width, m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_texBuffer);
+		// Generate mipmap
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else {
+		std::cout << "Error: Texture failed to load at path: " << path << std::endl;
+	}
+	
+	// Free data
+	stbi_image_free(m_texBuffer);
+
+	// Unbind texture
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
@@ -43,13 +45,9 @@ Texture::~Texture()
 	glDeleteTextures(1, &m_texID);
 }
 
-void Texture::Activate(unsigned int textureUnit)
+void Texture::Bind(unsigned int slot)
 {
-	glActiveTexture(textureUnit);
-}
-
-void Texture::Bind()
-{
+	glActiveTexture(slot);
 	glBindTexture(GL_TEXTURE_2D, m_texID);
 }
 
