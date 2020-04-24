@@ -50,10 +50,8 @@ public:
 	}
 
 	// Processes movement input
-	void processKeyboard(Camera_Movement direction, float deltaTime);
-
-	// Set camera position
-	void setCameraPosition(vec3 pos);
+	void processKeyboard(Camera_Movement direction, float deltaTime, bool sprint);
+	void processKeyboard(Camera_Movement direction, float deltaTime, bool sprint, bool flyingmode);
 
 	// Processes aim input
 	void processMouseMovement(float xoffset, float yoffset);

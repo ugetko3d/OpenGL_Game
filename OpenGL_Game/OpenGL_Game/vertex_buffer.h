@@ -3,9 +3,9 @@
 class VertexBuffer
 {
 private:
-	uint32_t m_BufferID;
+	unsigned int m_BufferID;
 public:
-	VertexBuffer(float* vertices, uint32_t size);
+	VertexBuffer(float* vertices, unsigned int size);
 	~VertexBuffer();
 
 	void Bind();

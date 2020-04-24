@@ -1,14 +1,13 @@
 #include <glew.h>
 
-#include "comm.h"
 #include "index_buffer.h"
 
-IndexBuffer::IndexBuffer(uint32_t* indices, uint32_t count)
+IndexBuffer::IndexBuffer(unsigned int* indices, unsigned int count)
 	: m_Count(count)
 {
 	glGenBuffers(1, &m_BufferID);
 	glBindBuffer(GL_ARRAY_BUFFER, m_BufferID);
-	glBufferData(GL_ARRAY_BUFFER, count * sizeof(uint32_t), indices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, count * sizeof(unsigned int), indices, GL_STATIC_DRAW);
 }
 
 IndexBuffer::~IndexBuffer()

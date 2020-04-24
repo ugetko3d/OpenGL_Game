@@ -1,20 +1,16 @@
 #include <glew.h>
-
-#include "comm.h"
 #include <glfw3.h>
-#include "display.h"
 
 #include "maths.h"
 #include "shader.h"
 #include "texture.h"
-#include "camera.h"
+#include "Player.h"
 
 #include "vertex_array.h"
 #include "vertex_buffer.h"
 #include "index_buffer.h"
 
 // Processes input
-void processInput(GLFWwindow* frame, float deltaTime);
 void resizeWindow(GLFWwindow* frame, int width, int height);
 void mouseMoved(GLFWwindow* frame, double xpos, double ypos);
 void mouseScrolled(GLFWwindow* frame, double xoffset, double yoffset);
@@ -25,13 +21,17 @@ const enum attrib
 };
 
 // Window
-Window window;
+GLFWwindow* window;
+const char* WINDOW_TITLE = "OpenGL Game";
+const int OPENGL_MIN = 4, OPENGL_MAX = 4;
+unsigned int WINDOW_WIDTH = 1200, WINDOW_HEIGHT = 700;
 
-// Camera
-Camera& camera = Camera::instance();
-bool firstMouse = true;
-double lastX = (double) (window.WIDTH / 2.0f);
-double lastY = (double) (window.HEIGHT / 2.0f);
+// Timing
+float deltaTime = 0.0f;	// Time between current frame and last frame
+float lastFrame = 0.0f;
+
+// Player
+Player player((WINDOW_WIDTH / 2.0f), (WINDOW_HEIGHT / 2.0f));
 
 // Lighting
 vec3 lightPos(5.0f, 5.0f, 5.0f);
@@ -89,12 +89,86 @@ float vertices[] = {
 	-0.5f, +0.5f, -0.5f,	0.0f, 1.0f,		0.0f, +0.5f, 0.0f
 };
 
+// Initialize GLFW (window for OpenGL)
+void createDisplay()
+{
+	// Initialize GLFW
+	if (!glfwInit())
+	{
+		exit(EXIT_FAILURE);
+	}
+
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, OPENGL_MAX);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, OPENGL_MIN);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_SAMPLES, 4);
+
+	// Create a windowed mode window and its OpenGL context
+	window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, NULL, NULL);
+	if (!window)
+	{
+		glfwTerminate();
+		exit(EXIT_FAILURE);
+	}
+	// Make the window's context current
+	glfwMakeContextCurrent(window);
+
+	// Tell GLFW to capture our mouse
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+}
+
+// Initialize OpenGL
+void startOpenGL()
+{
+	glewExperimental = true;
+
+	// Initialize GLEW
+	unsigned int glewStatus = glewInit();
+
+	if (glewStatus != GLEW_OK)
+	{
+		// Problem: glewInit failed, something is seriously wrong
+		std::cout << "Error: " << glewGetErrorString(glewStatus) << std::endl;
+		exit(EXIT_FAILURE);
+	}
+
+	// Set global OpenGL state
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_MULTISAMPLE);
+
+	// Printing out useful information to the console
+	std::cout << "Status: Using GLEW " << glewGetString(GLEW_VERSION) << std::endl;
+	std::cout << "Graphics card: " << glGetString(GL_VENDOR) << " " << glGetString(GL_RENDERER) << std::endl;
+}
+
+// GLFW: whenever the window size changed (by OS or user resize), this callback function executes
+void resizeWindow(GLFWwindow* frame, int width, int height)
+{
+	// make sure the viewport matches the new window dimensions; note that width and 
+	// height will be significantly larger than specified on retina displays.
+	glViewport(0, 0, width, height);
+}
+
+// GLFW: whenever the mouse moves, this callback is called
+void mouseMoved(GLFWwindow* frame, double xpos, double ypos)
+{
+	player.mouseMoved(xpos, ypos);
+}
+
+// GLFW: whenever the mouse scroll wheel scrolls, this callback is called
+void mouseScrolled(GLFWwindow* frame, double xoffset, double yoffset)
+{
+	player.mouseScrolled(yoffset);
+}
 
 int main()
 {
-	glfwSetFramebufferSizeCallback(window.frame, resizeWindow);
-	glfwSetCursorPosCallback(window.frame, mouseMoved);
-	glfwSetScrollCallback(window.frame, mouseScrolled);
+	createDisplay();
+	startOpenGL();
+
+	glfwSetFramebufferSizeCallback(window, resizeWindow);
+	glfwSetCursorPosCallback(window, mouseMoved);
+	glfwSetScrollCallback(window, mouseScrolled);
 
 	// OBJECT
 
@@ -115,19 +189,26 @@ int main()
 
 	// Rotation angle that is used for rotating the objects. Value is increased after every iteration of the renderer loop.
 	float angle = 0.0f;
-	
-	// Loop until the user closes the window
-	while (!window.isClosed())
-	{
-		float deltaTime = window.prepareFrame();
 
-		// Process player input
-		processInput(window.frame, deltaTime);
+	// Loop until the user closes the window
+	while (!glfwWindowShouldClose(window))
+	{
+
+		// Per-frame time logic
+		float currentFrame = (float)glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
+
+		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		// Process player input (mouse input is handled automatically by GLFW)
+		player.keyboardInput(window, deltaTime, true);
 
 		// Calculate the view and projection matrix
-		view.makeView(camera.position, camera.front, camera.up);
-		projection.makePerspective(camera.fov, (float)window.WIDTH / (float)window.HEIGHT, 0.1f, 100.0f);
-		
+		view.makeView(player.camera.position, player.camera.front, player.camera.up);
+		projection.makePerspective(player.camera.fov, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 100.0f);
+
 		// The view matrix and projection matrix are changing dynamically, so we pass these matrices to the shader every frame
 		objectShader.use();
 		objectShader.setInt("tex", 0);
@@ -139,7 +220,7 @@ int main()
 		s.scale(vec3(1.0f, 1.0f, 1.0f));
 		model = t * r * s;
 		objectShader.setMat4("model", model);
-		objectShader.setVec3("viewPos", camera.position);
+		objectShader.setVec3("viewPos", player.camera.position);
 		objectShader.setVec3("lightPos", lightPos);
 		objectShader.setVec3("lightColour", vec3(1.0f, 1.0f, 1.0f));
 
@@ -164,69 +245,13 @@ int main()
 		// Draw cube #2
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
-		window.finishFrame();
+		// Swap front and back buffers
+		glfwSwapBuffers(window);
+
+		// Poll for and process events
+		glfwPollEvents();
 	}
 
 	glfwTerminate();
 	return 0;
-}
-
-// ---------------------------------------------------------------------------------------------------------
-// PLAYER INPUT
-// ---------------------------------------------------------------------------------------------------------
-void processInput(GLFWwindow* frame, float deltaTime)
-{
-	if (glfwGetKey(frame, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-	{
-		glfwSetWindowShouldClose(frame, true);
-	}
-	if (glfwGetKey(frame, GLFW_KEY_W) == GLFW_PRESS)
-	{
-		camera.processKeyboard(Camera::Camera_Movement::FORWARD, deltaTime);
-	}
-	if (glfwGetKey(frame, GLFW_KEY_S) == GLFW_PRESS)
-	{
-		camera.processKeyboard(Camera::Camera_Movement::BACKWARD, deltaTime);
-	}
-	if (glfwGetKey(frame, GLFW_KEY_A) == GLFW_PRESS)
-	{
-		camera.processKeyboard(Camera::Camera_Movement::LEFT, deltaTime);
-	}
-	if (glfwGetKey(frame, GLFW_KEY_D) == GLFW_PRESS)
-	{
-		camera.processKeyboard(Camera::Camera_Movement::RIGHT, deltaTime);
-	}
-}
-
-// GLFW: whenever the window size changed (by OS or user resize), this callback function executes
-void resizeWindow(GLFWwindow* frame, int width, int height)
-{
-	// make sure the viewport matches the new window dimensions; note that width and 
-	// height will be significantly larger than specified on retina displays.
-	glViewport(0, 0, width, height);
-}
-
-// GLFW: whenever the mouse moves, this callback is called
-void mouseMoved(GLFWwindow* frame, double xpos, double ypos)
-{
-	if (firstMouse)
-	{
-		lastX = xpos;
-		lastY = ypos;
-		firstMouse = false;
-	}
-
-	float xoffset = (float) (xpos - lastX);
-	float yoffset = (float) (lastY - ypos); // reversed since y-coordinates go from bottom to top
-
-	lastX = xpos;
-	lastY = ypos;
-
-	camera.processMouseMovement(xoffset, yoffset);
-}
-
-// GLFW: whenever the mouse scroll wheel scrolls, this callback is called
-void mouseScrolled(GLFWwindow* frame, double xoffset, double yoffset)
-{
-	camera.setFOV((float)yoffset);
 }

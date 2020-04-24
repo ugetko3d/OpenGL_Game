@@ -22,8 +22,8 @@
     <ClCompile Include="index_buffer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="camera.cpp" />
-    <ClCompile Include="display.cpp" />
     <ClCompile Include="mat4.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="shader.cpp" />
     <ClCompile Include="stb_image.c" />
     <ClCompile Include="texture.cpp" />
@@ -35,8 +35,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera.h" />
-    <ClInclude Include="comm.h" />
-    <ClInclude Include="display.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="vertex_array.h" />
     <ClInclude Include="index_buffer.h" />
     <ClInclude Include="mat4.h" />

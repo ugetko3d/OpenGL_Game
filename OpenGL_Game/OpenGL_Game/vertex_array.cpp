@@ -1,6 +1,5 @@
 #include <glew.h>
 
-#include "comm.h"
 #include "vertex_array.h"
 
 VertexArray::VertexArray()
@@ -14,7 +13,7 @@ VertexArray::~VertexArray()
 	glDeleteVertexArrays(1, &m_VertexID);
 }
 
-void VertexArray::SetAttribPointer(uint32_t attrib, uint32_t nFloats, uint32_t stride, uint32_t start)
+void VertexArray::SetAttribPointer(unsigned int attrib, unsigned int nFloats, unsigned int stride, unsigned int start)
 {
 	glVertexAttribPointer(attrib, nFloats, GL_FLOAT, GL_FALSE, stride * sizeof(float), (void*)(start * sizeof(float)));
 	glEnableVertexAttribArray(attrib);

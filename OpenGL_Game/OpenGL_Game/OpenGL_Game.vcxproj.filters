@@ -17,8 +17,8 @@
     <Filter Include="Misc">
       <UniqueIdentifier>{1b55aace-eb8a-4f13-855f-5d4fa3142751}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Window">
-      <UniqueIdentifier>{d9895be2-68dd-4532-bcfb-acc9afdd0d04}</UniqueIdentifier>
+    <Filter Include="Player">
+      <UniqueIdentifier>{718d1694-d054-4c87-9839-30b443c57b14}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -53,11 +53,11 @@
     <ClCompile Include="vertex_array.cpp">
       <Filter>RenderEngine</Filter>
     </ClCompile>
-    <ClCompile Include="camera.cpp">
-      <Filter>Maths</Filter>
+    <ClCompile Include="Player.cpp">
+      <Filter>Player</Filter>
     </ClCompile>
-    <ClCompile Include="display.cpp">
-      <Filter>Window</Filter>
+    <ClCompile Include="camera.cpp">
+      <Filter>Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -94,17 +94,14 @@
     <ClInclude Include="index_buffer.h">
       <Filter>RenderEngine</Filter>
     </ClInclude>
-    <ClInclude Include="comm.h">
-      <Filter>Misc</Filter>
-    </ClInclude>
     <ClInclude Include="vertex_array.h">
       <Filter>RenderEngine</Filter>
     </ClInclude>
-    <ClInclude Include="camera.h">
-      <Filter>Maths</Filter>
+    <ClInclude Include="Player.h">
+      <Filter>Player</Filter>
     </ClInclude>
-    <ClInclude Include="display.h">
-      <Filter>Window</Filter>
+    <ClInclude Include="camera.h">
+      <Filter>Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -3,9 +3,9 @@
 class IndexBuffer
 {
 private:
-	uint32_t m_BufferID, m_Count;
+	unsigned int m_BufferID, m_Count;
 public:
-	IndexBuffer(uint32_t* indices, uint32_t count);
+	IndexBuffer(unsigned int* indices, unsigned int count);
 	~IndexBuffer();
 
 	void Bind();

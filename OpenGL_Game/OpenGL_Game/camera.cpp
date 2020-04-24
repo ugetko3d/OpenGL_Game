@@ -1,6 +1,3 @@
-#include <glew.h>
-#include <glfw3.h>
-
 #include "camera.h"
 
 Camera::Camera()
@@ -16,9 +13,9 @@ Camera::Camera()
 	updateCameraVectors();
 }
 
-void Camera::processKeyboard(Camera_Movement direction, float deltaTime)
+void Camera::processKeyboard(Camera_Movement direction, float deltaTime, bool sprint)
 {
-	float velocity = movementSpeed * deltaTime;
+	float velocity = (!sprint) ? movementSpeed * deltaTime : movementSpeed * deltaTime * 2;
 	if (direction == Camera_Movement::FORWARD)
 		position = position + (front * velocity);
 	if (direction == Camera_Movement::BACKWARD)
@@ -27,6 +24,33 @@ void Camera::processKeyboard(Camera_Movement direction, float deltaTime)
 		position = position - (right * velocity);
 	if (direction == Camera_Movement::RIGHT)
 		position = position + (right * velocity);
+}
+
+// Same as previous ProcessKeyBoard method, but this locks camera to only be able to move in z and x directions. This is necessary for 
+	// a more first person game control, only way to move in y direction is with space key jumping (method for that further down) 
+void Camera::processKeyboard(Camera_Movement direction, float deltaTime, bool sprint, bool flyingmode)
+{
+
+	if (flyingmode)
+	{
+		processKeyboard(direction, deltaTime, sprint);
+	}
+	else
+	{
+		float velocity = (!sprint) ? movementSpeed * deltaTime : movementSpeed * deltaTime * 2;
+
+		if (direction == Camera_Movement::FORWARD)
+			position = position + (vec3(front.x, 0.0f, front.z) * velocity);
+
+		if (direction == Camera_Movement::BACKWARD)
+			position = position - (vec3(front.x, 0.0f, front.z) * velocity);
+
+		if (direction == Camera_Movement::LEFT)
+			position = position - (right * velocity);
+
+		if (direction == Camera_Movement::RIGHT)
+			position = position + (right * velocity);
+	}
 }
 
 void Camera::processMouseMovement(float xoffset, float yoffset)
@@ -65,12 +89,6 @@ void Camera::setFOV(float yoffset)
 	{
 		fov = 45.0f;
 	}	
-}
-
-// Set camera position
-void Camera::setCameraPosition(vec3 pos)
-{
-	position = pos;
 }
 
 void Camera::updateCameraVectors()
