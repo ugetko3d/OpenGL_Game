@@ -20,6 +20,12 @@
     <Filter Include="Player">
       <UniqueIdentifier>{718d1694-d054-4c87-9839-30b443c57b14}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Tools">
+      <UniqueIdentifier>{0d8c5c46-7aaa-45d4-9c50-2b1d14a04230}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Textures\texture_files">
+      <UniqueIdentifier>{37db9ddb-44c5-4704-9451-afc7bc4bfabc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="shader.cpp">
@@ -36,9 +42,6 @@
     </ClCompile>
     <ClCompile Include="mat4.cpp">
       <Filter>Maths</Filter>
-    </ClCompile>
-    <ClCompile Include="stb_image.c">
-      <Filter>Textures</Filter>
     </ClCompile>
     <ClCompile Include="texture.cpp">
       <Filter>Textures</Filter>
@@ -59,11 +62,11 @@
     <ClCompile Include="camera.cpp">
       <Filter>Player</Filter>
     </ClCompile>
+    <ClCompile Include="stb_image.c">
+      <Filter>Tools</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="stb_image.h">
-      <Filter>Textures</Filter>
-    </ClInclude>
     <ClInclude Include="mat4.h">
       <Filter>Maths</Filter>
     </ClInclude>
@@ -103,6 +106,9 @@
     <ClInclude Include="camera.h">
       <Filter>Player</Filter>
     </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="vertex.shader">
@@ -120,10 +126,10 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="stones.jpg">
-      <Filter>Textures</Filter>
+      <Filter>Textures\texture_files</Filter>
     </Image>
     <Image Include="sun.jpg">
-      <Filter>Textures</Filter>
+      <Filter>Textures\texture_files</Filter>
     </Image>
   </ItemGroup>
 </Project>
