@@ -1,8 +1,6 @@
 #include <glew.h>
-
-#include <iostream>
-#include <string>
 #include "stb_image.h"
+#include <iostream>
 
 #include "texture.h"
 

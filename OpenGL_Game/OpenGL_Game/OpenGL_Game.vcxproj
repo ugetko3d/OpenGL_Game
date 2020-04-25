@@ -19,25 +19,44 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="index_buffer.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Cube.cpp" />
+    <ClCompile Include="CubeMap.cpp" />
+    <ClCompile Include="Diamond.cpp" />
+    <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="Light.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="mat4.cpp" />
+    <ClCompile Include="Material.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PointLight.cpp" />
+    <ClCompile Include="Rectangle.cpp" />
     <ClCompile Include="shader.cpp" />
+    <ClCompile Include="Sphere.cpp" />
+    <ClCompile Include="SpotLight.cpp" />
     <ClCompile Include="stb_image.c" />
     <ClCompile Include="texture.cpp" />
+    <ClCompile Include="Triangle.cpp" />
     <ClCompile Include="vec2.cpp" />
     <ClCompile Include="vec3.cpp" />
     <ClCompile Include="vec4.cpp" />
-    <ClCompile Include="vertex_array.cpp" />
-    <ClCompile Include="vertex_buffer.cpp" />
+    <ClCompile Include="Vertex.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera.h" />
+    <ClInclude Include="Cube.h" />
+    <ClInclude Include="CubeMap.h" />
+    <ClInclude Include="Diamond.h" />
+    <ClInclude Include="DirectionalLight.h" />
+    <ClInclude Include="Light.h" />
+    <ClInclude Include="Material.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="vertex_array.h" />
-    <ClInclude Include="index_buffer.h" />
+    <ClInclude Include="PointLight.h" />
+    <ClInclude Include="Rectangle.h" />
+    <ClInclude Include="Sphere.h" />
+    <ClInclude Include="SpotLight.h" />
+    <ClInclude Include="Triangle.h" />
+    <ClInclude Include="Vertex.h" />
     <ClInclude Include="mat4.h" />
     <ClInclude Include="mathdefinitions.h" />
     <ClInclude Include="maths.h" />
@@ -47,7 +66,6 @@
     <ClInclude Include="vec2.h" />
     <ClInclude Include="vec3.h" />
     <ClInclude Include="vec4.h" />
-    <ClInclude Include="vertex_buffer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fragment.shader" />
@@ -117,7 +135,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\glm;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>

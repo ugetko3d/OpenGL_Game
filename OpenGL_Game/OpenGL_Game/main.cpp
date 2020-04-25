@@ -8,7 +8,6 @@
 
 #include "vertex_array.h"
 #include "vertex_buffer.h"
-#include "index_buffer.h"
 
 // Processes input
 void resizeWindow(GLFWwindow* frame, int width, int height);

@@ -26,6 +26,15 @@
     <Filter Include="Textures\texture_files">
       <UniqueIdentifier>{37db9ddb-44c5-4704-9451-afc7bc4bfabc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\shader_files">
+      <UniqueIdentifier>{de29eeda-d4df-41e0-a565-19030737854e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects">
+      <UniqueIdentifier>{78497a02-ee6b-4745-8db2-c3f6a79b7932}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lights">
+      <UniqueIdentifier>{662f03c0-4497-4218-bca8-db6225021f3f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="shader.cpp">
@@ -46,16 +55,6 @@
     <ClCompile Include="texture.cpp">
       <Filter>Textures</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="vertex_buffer.cpp">
-      <Filter>RenderEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="index_buffer.cpp">
-      <Filter>RenderEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="vertex_array.cpp">
-      <Filter>RenderEngine</Filter>
-    </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>Player</Filter>
     </ClCompile>
@@ -64,6 +63,43 @@
     </ClCompile>
     <ClCompile Include="stb_image.c">
       <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Vertex.cpp">
+      <Filter>RenderEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="SpotLight.cpp">
+      <Filter>Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="Sphere.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Rectangle.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Cube.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Textures</Filter>
+    </ClCompile>
+    <ClCompile Include="Triangle.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Diamond.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLight.cpp">
+      <Filter>Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectionalLight.cpp">
+      <Filter>Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="CubeMap.cpp">
+      <Filter>Textures</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -91,15 +127,6 @@
     <ClInclude Include="texture.h">
       <Filter>Textures</Filter>
     </ClInclude>
-    <ClInclude Include="vertex_buffer.h">
-      <Filter>RenderEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="index_buffer.h">
-      <Filter>RenderEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="vertex_array.h">
-      <Filter>RenderEngine</Filter>
-    </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>Player</Filter>
     </ClInclude>
@@ -109,19 +136,55 @@
     <ClInclude Include="stb_image.h">
       <Filter>Tools</Filter>
     </ClInclude>
+    <ClInclude Include="Vertex.h">
+      <Filter>RenderEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="SpotLight.h">
+      <Filter>Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="Sphere.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Rectangle.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Cube.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Textures</Filter>
+    </ClInclude>
+    <ClInclude Include="Triangle.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Diamond.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLight.h">
+      <Filter>Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectionalLight.h">
+      <Filter>Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="CubeMap.h">
+      <Filter>Textures</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="vertex.shader">
-      <Filter>Shaders</Filter>
-    </None>
     <None Include="fragment.shader">
-      <Filter>Shaders</Filter>
+      <Filter>Shaders\shader_files</Filter>
     </None>
     <None Include="lightfragment.shader">
-      <Filter>Shaders</Filter>
+      <Filter>Shaders\shader_files</Filter>
     </None>
     <None Include="lightvertex.shader">
-      <Filter>Shaders</Filter>
+      <Filter>Shaders\shader_files</Filter>
+    </None>
+    <None Include="vertex.shader">
+      <Filter>Shaders\shader_files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
