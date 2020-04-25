@@ -174,24 +174,111 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="fragment.shader">
+    <None Include="shaders\fragment.shader">
       <Filter>Shaders\shader_files</Filter>
     </None>
-    <None Include="lightfragment.shader">
+    <None Include="shaders\vertex.shader">
       <Filter>Shaders\shader_files</Filter>
     </None>
-    <None Include="lightvertex.shader">
+    <None Include="shaders\object_vert.shader">
       <Filter>Shaders\shader_files</Filter>
     </None>
-    <None Include="vertex.shader">
+    <None Include="shaders\object_frag.shader">
+      <Filter>Shaders\shader_files</Filter>
+    </None>
+    <None Include="shaders\cubemap_vert.shader">
+      <Filter>Shaders\shader_files</Filter>
+    </None>
+    <None Include="shaders\cubemap_frag.shader">
+      <Filter>Shaders\shader_files</Filter>
+    </None>
+    <None Include="resources\textures\noise5.ex5">
+      <Filter>Textures\texture_files</Filter>
+    </None>
+    <None Include="shaders\light_frag.shader">
+      <Filter>Shaders\shader_files</Filter>
+    </None>
+    <None Include="shaders\light_vert.shader">
       <Filter>Shaders\shader_files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="stones.jpg">
+    <Image Include="resources\textures\1857-bump.jpg">
       <Filter>Textures\texture_files</Filter>
     </Image>
-    <Image Include="sun.jpg">
+    <Image Include="resources\textures\1857-diffuse.jpg">
+      <Filter>Textures\texture_files</Filter>
+    </Image>
+    <Image Include="resources\textures\1857-displacement.jpg">
+      <Filter>Textures\texture_files</Filter>
+    </Image>
+    <Image Include="resources\textures\1857-normal.jpg">
+      <Filter>Textures\texture_files</Filter>
+    </Image>
+    <Image Include="resources\textures\1857-specexponent.jpg">
+      <Filter>Textures\texture_files</Filter>
+    </Image>
+    <Image Include="resources\textures\1857-specstrength.jpg">
+      <Filter>Textures\texture_files</Filter>
+    </Image>
+    <Image Include="resources\textures\10744-ambientocclusion.jpg">
+      <Filter>Textures\texture_files</Filter>
+    </Image>
+    <Image Include="resources\textures\10744-bump.jpg">
+      <Filter>Textures\texture_files</Filter>
+    </Image>
+    <Image Include="resources\textures\10744-diffuse.jpg">
+      <Filter>Textures\texture_files</Filter>
+    </Image>
+    <Image Include="resources\textures\10744-displacement.jpg">
+      <Filter>Textures\texture_files</Filter>
+    </Image>
+    <Image Include="resources\textures\10744-normal.jpg">
+      <Filter>Textures\texture_files</Filter>
+    </Image>
+    <Image Include="resources\textures\10744-reflectiveocclusion.jpg">
+      <Filter>Textures\texture_files</Filter>
+    </Image>
+    <Image Include="resources\textures\10744-specstrength.jpg">
+      <Filter>Textures\texture_files</Filter>
+    </Image>
+    <Image Include="resources\skybox\back.jpg">
+      <Filter>Textures\texture_files</Filter>
+    </Image>
+    <Image Include="resources\skybox\bottom.jpg">
+      <Filter>Textures\texture_files</Filter>
+    </Image>
+    <Image Include="resources\skybox\front.jpg">
+      <Filter>Textures\texture_files</Filter>
+    </Image>
+    <Image Include="resources\skybox\left.jpg">
+      <Filter>Textures\texture_files</Filter>
+    </Image>
+    <Image Include="resources\textures\mixedstones-ambientocclusion.jpg">
+      <Filter>Textures\texture_files</Filter>
+    </Image>
+    <Image Include="resources\textures\mixedstones-diffuse.jpg">
+      <Filter>Textures\texture_files</Filter>
+    </Image>
+    <Image Include="resources\textures\mixedstones-displace.jpg">
+      <Filter>Textures\texture_files</Filter>
+    </Image>
+    <Image Include="resources\textures\mixedstones-normal.jpg">
+      <Filter>Textures\texture_files</Filter>
+    </Image>
+    <Image Include="resources\textures\mixedstones-specular.jpg">
+      <Filter>Textures\texture_files</Filter>
+    </Image>
+    <Image Include="resources\skybox\right.jpg">
+      <Filter>Textures\texture_files</Filter>
+    </Image>
+    <Image Include="resources\textures\stones.jpg">
+      <Filter>Textures\texture_files</Filter>
+    </Image>
+    <Image Include="resources\textures\sun.jpg">
+      <Filter>Textures\texture_files</Filter>
+    </Image>
+    <Image Include="resources\skybox\top.jpg">
       <Filter>Textures\texture_files</Filter>
     </Image>
   </ItemGroup>

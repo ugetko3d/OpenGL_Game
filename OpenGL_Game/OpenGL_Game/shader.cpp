@@ -1,15 +1,23 @@
 #include <glew.h>
 
-#include <string>
 #include <fstream>
 #include <sstream>
-#include <iostream>
+#include <string>
 
 #include "maths.h"
 #include "shader.h"
-#include "texture.h"
- 
+
+Shader::Shader()
+{
+
+}
+
 Shader::Shader(const std::string& vertex_shader_path, const std::string& fragment_shader_path)
+{
+	loadShader(vertex_shader_path, fragment_shader_path);
+}
+ 
+void Shader::loadShader(const std::string& vertex_shader_path, const std::string& fragment_shader_path)
 {
 	// Parsing Shader Code
 	std::string vertexCode, fragmentCode;

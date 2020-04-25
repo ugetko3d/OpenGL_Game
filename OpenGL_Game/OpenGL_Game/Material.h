@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Texture.h"
 
 class Material
@@ -16,15 +17,15 @@ public:
 	~Material();
 
 	/* Add a diffuse texture file to this Material object. */
-	void addDiffuse(const Texture &texture);
+	void addDiffuse(const Texture& texture);
 	/* Add a specular texture file to this Material object. */
-	void addSpecular(const Texture &texture);
+	void addSpecular(const Texture& texture);
 	/* Add a normal texture file to this Material object.*/
-	void addNormal(const Texture &texture);
+	void addNormal(const Texture& texture);
 	/* Add a displacement texture file to this Material object. */
-	void addDisplacement(const Texture &texture);
+	void addDisplacement(const Texture& texture);
 	/* Add a ambient oclusion texture file to this Material object. */
-	void addAmbientOcclusion(const Texture &texture);
+	void addAmbientOcclusion(const Texture& texture);
 
 	/* Returns a bool whether this texture object has a diffuse texture file bound or not */
 	const bool hasDiffuse();

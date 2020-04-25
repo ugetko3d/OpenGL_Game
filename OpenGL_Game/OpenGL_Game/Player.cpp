@@ -1,6 +1,6 @@
 #include "Player.h"
 
-Player::Player(double mouseX, double mouseY) : lastX(mouseX), lastY(mouseY)
+Player::Player()
 {
 	
 }
@@ -8,10 +8,12 @@ Player::Player(double mouseX, double mouseY) : lastX(mouseX), lastY(mouseY)
 // ---------------------------------------------------------------------------------------------------------
 // PLAYER INPUT
 // ---------------------------------------------------------------------------------------------------------
-void Player::keyboardInput(GLFWwindow* frame, float deltaTime, bool flyingMode)
+void Player::movementInput(GLFWwindow* frame, float deltaTime, bool flyingMode)
 {
 	if (glfwGetKey(frame, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(frame, true);
+
+
 
 	//Update movement of player
 	if (glfwGetKey(frame, GLFW_KEY_W) == GLFW_PRESS)
@@ -42,7 +44,7 @@ void Player::keyboardInput(GLFWwindow* frame, float deltaTime, bool flyingMode)
 		else
 			camera.processKeyboard(Camera::Camera_Movement::RIGHT, deltaTime, false, isFlying);
 	}
-	if (glfwGetKey(frame, GLFW_KEY_SPACE) == GLFW_PRESS && !isFlying)
+	/*if (glfwGetKey(frame, GLFW_KEY_SPACE) == GLFW_PRESS && !isFlying)
 	{
 		isJumping = true;
 
@@ -78,7 +80,7 @@ void Player::keyboardInput(GLFWwindow* frame, float deltaTime, bool flyingMode)
 	}
 
 	// Set player position in front of camera
-	position = vec3(camera.position.x, camera.position.y - 1.0f, camera.position.z + 5.0f);
+	position = vec3(camera.position.x, camera.position.y - 1.0f, camera.position.z + 5.0f);*/
 }
 
 //Processing movement for y direction
@@ -104,7 +106,12 @@ void Player::mouseMoved(double xpos, double ypos)
 	}
 
 	float xoffset = (float)(xpos - lastX);
-	float yoffset = (float)(lastY - ypos); // reversed since y-coordinates go from bottom to top
+	float yoffset;
+
+	if (invertedMouse)
+		yoffset = (float)(ypos - lastY); // Inverted mouse controls
+	else
+		yoffset = (float)(lastY - ypos); // Not inverted mouse controls
 
 	lastX = xpos;
 	lastY = ypos;
@@ -115,5 +122,19 @@ void Player::mouseMoved(double xpos, double ypos)
 void Player::mouseScrolled(double yoffset)
 {
 	camera.setFOV((float)yoffset);
+}
+
+void Player::keyPressed(int key, int action)
+{
+	if (key == GLFW_KEY_F && action == GLFW_PRESS)
+	{
+		if (flashLight.isEnabled())
+			flashLight.disable();
+		else
+			flashLight.enable();
+	}
+
+	if (key == GLFW_KEY_I && action == GLFW_PRESS)
+		invertedMouse = !invertedMouse;
 }
 

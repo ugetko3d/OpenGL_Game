@@ -2,22 +2,23 @@
 #include <glfw3.h>
 
 #include "maths.h"
+
 #include "shader.h"
-#include "texture.h"
+#include "Material.h"
+#include "CubeMap.h"
+
+#include "Light.h"
+#include "DirectionalLight.h"
+#include "PointLight.h"
+#include "SpotLight.h"
+
 #include "Player.h"
 
-#include "vertex_array.h"
-#include "vertex_buffer.h"
-
-// Processes input
-void resizeWindow(GLFWwindow* frame, int width, int height);
-void mouseMoved(GLFWwindow* frame, double xpos, double ypos);
-void mouseScrolled(GLFWwindow* frame, double xoffset, double yoffset);
-
-const enum attrib
-{
-	POSITION, TEXTURE, NORMAL
-};
+#include "Vertex.h"
+#include "Cube.h"
+#include "Diamond.h"
+#include "Sphere.h"
+#include "Rectangle.h"
 
 // Window
 GLFWwindow* window;
@@ -30,63 +31,36 @@ float deltaTime = 0.0f;	// Time between current frame and last frame
 float lastFrame = 0.0f;
 
 // Player
-Player player((WINDOW_WIDTH / 2.0f), (WINDOW_HEIGHT / 2.0f));
+Player player;
 
-// Lighting
-vec3 lightPos(5.0f, 5.0f, 5.0f);
+// Shaders
+Shader objectShader, lightShader, cubeMapShader;
 
-// Object data
-float vertices[] = {
-	// POSITION COORD    // TEXTURE COORD    // NORMAL VECTOR
+// Materials
+Material metal, tile, mixedstone;
 
-	// Back
-	-0.5f, -0.5f, -0.5f,    1.0f, 0.0f,		0.0f, 0.0f, -0.5f,
-	+0.5f, -0.5f, -0.5f,    0.0f, 0.0f,		0.0f, 0.0f, -0.5f,
-	+0.5f, +0.5f, -0.5f,    0.0f, 1.0f,		0.0f, 0.0f, -0.5f,
-	+0.5f, +0.5f, -0.5f,	0.0f, 1.0f,		0.0f, 0.0f, -0.5f,
-	-0.5f, +0.5f, -0.5f,	1.0f, 1.0f,		0.0f, 0.0f, -0.5f,
-	-0.5f, -0.5f, -0.5f,	1.0f, 0.0f,		0.0f, 0.0f, -0.5f,
+// Cubemap
+CubeMap cubemap;
 
-	// Front
-	-0.5f, -0.5f, +0.5f,	0.0f, 0.0f,		0.0f, 0.0f, +0.5f,
-	+0.5f, -0.5f, +0.5f,	1.0f, 0.0f,		0.0f, 0.0f, +0.5f,
-	+0.5f, +0.5f, +0.5f,	1.0f, 1.0f,		0.0f, 0.0f, +0.5f,
-	+0.5f, +0.5f, +0.5f,	1.0f, 1.0f,		0.0f, 0.0f, +0.5f,
-	-0.5f, +0.5f, +0.5f,	0.0f, 1.0f,		0.0f, 0.0f, +0.5f,
-	-0.5f, -0.5f, +0.5f,	0.0f, 0.0f,		0.0f, 0.0f, +0.5f,
+// Objects
+Cube cube = Cube(1.0f);
+Diamond diamond = Diamond(1.0f);
+Diamond diamondPickUp = Diamond(1.0f);
+Sphere light = Sphere(0.25f, 3);
+Sphere sphere_low = Sphere(1.0f, 1);
+Sphere sphere_medium = Sphere(1.0f, 2);
+Sphere sphere_high = Sphere(1.0f, 4);
+Rect rect = Rect(1.0f, 1.0f);
 
-	// Left
-	-0.5f, +0.5f, +0.5f,	1.0f, 1.0f,		-0.5f, 0.0f, 0.0f,
-	-0.5f, +0.5f, -0.5f,	0.0f, 1.0f,		-0.5f, 0.0f, 0.0f,
-	-0.5f, -0.5f, -0.5f,	0.0f, 0.0f,		-0.5f, 0.0f, 0.0f,
-	-0.5f, -0.5f, -0.5f,	0.0f, 0.0f,		-0.5f, 0.0f, 0.0f,
-	-0.5f, -0.5f, +0.5f,	1.0f, 0.0f,		-0.5f, 0.0f, 0.0f,
-	-0.5f, +0.5f, +0.5f,	1.0f, 1.0f,		-0.5f, 0.0f, 0.0f,
+// Lights
+std::vector<Light> lights;
+vec3 sunDirection(-1.0, -1.0, 0.0f);
+vec3 sunColor(1.0f, 1.0f, 0.5f);
+vec3 lightColour(1.0f, 0.5f, 1.0f);
 
-	// Right
-	+0.5f, +0.5f, +0.5f,	0.0f, 1.0f,		+0.5f, 0.0f, 0.0f,
-	+0.5f, +0.5f, -0.5f,	1.0f, 1.0f,		+0.5f, 0.0f, 0.0f,
-	+0.5f, -0.5f, -0.5f,	1.0f, 0.0f,		+0.5f, 0.0f, 0.0f,
-	+0.5f, -0.5f, -0.5f,	1.0f, 0.0f,		+0.5f, 0.0f, 0.0f,
-	+0.5f, -0.5f, +0.5f,	0.0f, 0.0f,		+0.5f, 0.0f, 0.0f,
-	+0.5f, +0.5f, +0.5f,	0.0f, 1.0f,		+0.5f, 0.0f, 0.0f,
+PointLight pointLight(vec3(1.0f), vec3(0.0f));
+DirectionalLight directionLight(sunColor, sunDirection);
 
-	// Bottom
-	-0.5f, -0.5f, -0.5f,	0.0f, 0.0f,		0.0f, -0.5f, 0.0f,
-	+0.5f, -0.5f, -0.5f,	1.0f, 0.0f,		0.0f, -0.5f, 0.0f,
-	+0.5f, -0.5f, +0.5f,	1.0f, 1.0f,		0.0f, -0.5f, 0.0f,
-	+0.5f, -0.5f, +0.5f,	1.0f, 1.0f,		0.0f, -0.5f, 0.0f,
-	-0.5f, -0.5f, +0.5f,	0.0f, 1.0f,		0.0f, -0.5f, 0.0f,
-	-0.5f, -0.5f, -0.5f,	0.0f, 0.0f,		0.0f, -0.5f, 0.0f,
-
-	// Top
-	-0.5f, +0.5f, -0.5f,	0.0f, 1.0f,		0.0f, +0.5f, 0.0f,
-	+0.5f, +0.5f, -0.5f,	1.0f, 1.0f,		0.0f, +0.5f, 0.0f,
-	+0.5f, +0.5f, +0.5f,	1.0f, 0.0f,		0.0f, +0.5f, 0.0f,
-	+0.5f, +0.5f, +0.5f,	1.0f, 0.0f,		0.0f, +0.5f, 0.0f,
-	-0.5f, +0.5f, +0.5f,	0.0f, 0.0f,		0.0f, +0.5f, 0.0f,
-	-0.5f, +0.5f, -0.5f,	0.0f, 1.0f,		0.0f, +0.5f, 0.0f
-};
 
 // Initialize GLFW (window for OpenGL)
 void createDisplay()
@@ -141,7 +115,7 @@ void startOpenGL()
 }
 
 // GLFW: whenever the window size changed (by OS or user resize), this callback function executes
-void resizeWindow(GLFWwindow* frame, int width, int height)
+void framebuffer_size_callback(GLFWwindow* frame, int width, int height)
 {
 	// make sure the viewport matches the new window dimensions; note that width and 
 	// height will be significantly larger than specified on retina displays.
@@ -149,42 +123,153 @@ void resizeWindow(GLFWwindow* frame, int width, int height)
 }
 
 // GLFW: whenever the mouse moves, this callback is called
-void mouseMoved(GLFWwindow* frame, double xpos, double ypos)
+void mouse_callback(GLFWwindow* frame, double xpos, double ypos)
 {
 	player.mouseMoved(xpos, ypos);
 }
 
 // GLFW: whenever the mouse scroll wheel scrolls, this callback is called
-void mouseScrolled(GLFWwindow* frame, double xoffset, double yoffset)
+void scroll_callback(GLFWwindow* frame, double xoffset, double yoffset)
 {
 	player.mouseScrolled(yoffset);
 }
 
+void key_callback(GLFWwindow* frame, int key, int scancode, int action, int mods)
+{
+	player.keyPressed(key, action);
+}
+
+
+/* DRAW OBJECTS - set up shaders and call vertex draw functions */
+void renderObjects(const mat4& projection, const mat4& view) {
+	// Activate shader when setting uniforms/drawing objects
+	objectShader.use();
+	objectShader.setMat4("projection", projection);
+	objectShader.setMat4("view", view);
+	objectShader.setFloat("material.shininess", 64.0f);
+	objectShader.setVec3("viewPos", player.camera.position);
+
+	// lights
+	objectShader.setInt("directionLightCount", Light::numDirectionalLights());
+	objectShader.setInt("pointLightCount", Light::numPointLights());
+	objectShader.setInt("spotLightCount", Light::numSpotLights());
+	objectShader.setInt("lightCount", lights.size());
+
+	for (int i = 0; i < lights.size(); i++) {
+		objectShader.setVec3("lightPositions[" + std::to_string(i) + "]", lights.at(i).position);
+		lights.at(i).drawLight(objectShader);
+	}
+
+	player.flashLight.drawLight(objectShader);
+
+	cube.drawObject(objectShader, vec3(0.0f, 5.0f, 0.0f), &metal);
+	diamond.drawObject(objectShader, vec3(0.0f, 3.0f, -3.0f), vec3(2.0f, 2.0f, 2.0f), &mixedstone);
+
+	sphere_low.drawObject(objectShader, vec3(20.0f, 2.0f, 0.0f), &tile);
+	sphere_medium.drawObject(objectShader, vec3(20.0f, 2.0f, 2.0f), &tile);
+	sphere_high.drawObject(objectShader, vec3(20.0f, 2.0f, 4.0f), &tile);
+
+}
+
+/* DRAW LIGHTS - set up light shader and call vertex draw functions */
+void renderLights(mat4 projection, mat4 view) {
+	// Activate light shader and configure it
+	lightShader.use();
+	lightShader.setMat4("projection", projection);
+	lightShader.setMat4("view", view);
+	lightShader.setBool("hasLightColor", true);
+
+	// Draw light object
+	for (int i = 0; i < lights.size(); i++) {
+		lightShader.setVec3("lightColour", lightColour);
+		if (lights.at(i).is(Light::Type::POINT)) {
+			light.drawObject(lightShader, lights.at(i).position, nullptr);
+			lights.at(i).color = lightColour;
+		}
+	}
+
+}
+
+
+
 int main()
 {
+	// Setting up OpenGL
 	createDisplay();
 	startOpenGL();
 
-	glfwSetFramebufferSizeCallback(window, resizeWindow);
-	glfwSetCursorPosCallback(window, mouseMoved);
-	glfwSetScrollCallback(window, mouseScrolled);
+	// Enabling interrupts for keyboard/mouse input
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	glfwSetCursorPosCallback(window, mouse_callback);
+	glfwSetScrollCallback(window, scroll_callback);
+	glfwSetKeyCallback(window, key_callback);
 
-	// OBJECT
+	// Set mouse position in the center of the window
+	player.lastX = WINDOW_WIDTH / 2.0f;
+	player.lastY = WINDOW_HEIGHT / 2.0f;
 
-	VertexArray cube;
-	VertexBuffer cubeBuffer(vertices, sizeof(vertices));
+	// Store all objects on GPU
+	cubemap.storeOnGPU();
+	cube.storeOnGPU();
+	diamond.storeOnGPU();
+	diamondPickUp.storeOnGPU();
+	light.storeOnGPU();
+	sphere_low.storeOnGPU();
+	sphere_medium.storeOnGPU();
+	sphere_high.storeOnGPU();
+	rect.storeOnGPU();
 
-	cube.SetAttribPointer(POSITION, 3, 8, 0);
-	cube.SetAttribPointer(TEXTURE, 2, 8, 3);
-	cube.SetAttribPointer(NORMAL, 3, 8, 5);
+	// Load cubemap textures
+	cubemap.loadCubemapTexture(
+		"resources/skybox/right.jpg",
+		"resources/skybox/left.jpg",
+		"resources/skybox/top.jpg",
+		"resources/skybox/bottom.jpg",
+		"resources/skybox/back.jpg",
+		"resources/skybox/front.jpg"
+	);
 
-	mat4 t, r, s, model, view, projection;
+	// Load shaders
+	objectShader.loadShader("shaders/object_vert.shader", "shaders/object_frag.shader");
+	lightShader.loadShader("shaders/light_vert.shader", "shaders/light_frag.shader");
+	cubeMapShader.loadShader("shaders/cubemap_vert.shader", "shaders/cubemap_frag.shader");
 
-	// Setting up shaders
-	Shader objectShader("vertex.shader", "fragment.shader"), lightShader("lightvertex.shader", "lightfragment.shader");
+	// Load metal textures
+	metal.addDiffuse(Texture("resources/textures/1857-diffuse.jpg"));
+	metal.addSpecular(Texture("resources/textures/1857-specexponent.jpg"));
+	metal.addNormal(Texture("resources / textures / 1857 - normal.jpg"));
+	metal.addDisplacement(Texture("resources/textures/1857-displacement.jpg"));
 
-	// Setting up textures
-	Texture stones("stones.jpg");
+	// Load tile textures
+	tile.addDiffuse(Texture("resources/textures/10744-diffuse.jpg"));
+	tile.addSpecular(Texture("resources/textures/10744-specstrength.jpg"));
+	tile.addNormal(Texture("resources/textures/10744-normal.jpg"));
+	tile.addDisplacement(Texture("resources/textures/10744-displacement.jpg"));
+
+	// Load mixedstone textures
+	mixedstone.addDiffuse(Texture("resources/textures/mixedstones-diffuse.jpg"));
+	mixedstone.addSpecular(Texture("resources/textures/mixedstones-specular.jpg"));
+	mixedstone.addNormal(Texture("resources/textures/mixedstones-normal.jpg"));
+	mixedstone.addDisplacement(Texture("resources/textures/mixedstones-displace.jpg"));
+
+	// Add lights to the list
+	lights.push_back(pointLight);
+	lights.push_back(directionLight);
+	lights.push_back(player.flashLight);
+
+	// Set object shader uniforms
+	objectShader.use();
+	objectShader.setInt("material.diffuse", 0);
+	objectShader.setInt("material.specular", 1);
+	objectShader.setInt("material.normal", 2);
+	objectShader.setInt("material.displacement", 3);
+	objectShader.setInt("material.ao", 4);
+
+	// Set cubemap shader uniforms
+	cubeMapShader.use();
+	cubeMapShader.setInt("skybox", 0);
+
+	mat4 view, projection;
 
 	// Rotation angle that is used for rotating the objects. Value is increased after every iteration of the renderer loop.
 	float angle = 0.0f;
@@ -202,47 +287,16 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// Process player input (mouse input is handled automatically by GLFW)
-		player.keyboardInput(window, deltaTime, true);
+		player.movementInput(window, deltaTime, true);
 
-		// Calculate the view and projection matrix
 		view.makeView(player.camera.position, player.camera.front, player.camera.up);
 		projection.makePerspective(player.camera.fov, (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 100.0f);
 
-		// The view matrix and projection matrix are changing dynamically, so we pass these matrices to the shader every frame
-		objectShader.use();
-		objectShader.setInt("tex", 0);
-		objectShader.setMat4("view", view);
-		objectShader.setMat4("projection", projection);
-		t.translate(vec3(0.0f, 0.0f, 0.0f));
-		r.rotate(angle, vec3(0.3f, 0.5f, 0.6f));
-		angle += 0.5f;
-		s.scale(vec3(1.0f, 1.0f, 1.0f));
-		model = t * r * s;
-		objectShader.setMat4("model", model);
-		objectShader.setVec3("viewPos", player.camera.position);
-		objectShader.setVec3("lightPos", lightPos);
-		objectShader.setVec3("lightColour", vec3(1.0f, 1.0f, 1.0f));
+		// Render the objects to the screen
+		renderObjects(projection, view);
 
-		// Bind cube to draw twice
-		cube.Bind();
-
-		// Draw cube #1
-		stones.Bind(0);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-		stones.Unbind();
-
-		lightShader.use();
-		lightShader.setMat4("view", view);
-		lightShader.setMat4("projection", projection);
-		t.translate(lightPos);
-		r.rotate(45.0f, vec3(1.0f, 1.0f, 0.0f));
-		s.scale(vec3(1.0f, 1.0f, 1.0f));
-		model = t * r * s;
-		lightShader.setMat4("model", model);
-		lightShader.setInt("sun", 0);
-
-		// Draw cube #2
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+		// Render the lighting to the screen
+		renderLights(projection, view);
 
 		// Swap front and back buffers
 		glfwSwapBuffers(window);

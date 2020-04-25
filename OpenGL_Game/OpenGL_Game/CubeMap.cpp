@@ -6,15 +6,15 @@ CubeMap::CubeMap()
 
 CubeMap::~CubeMap()
 {
-	glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(1, &VBO);
+	glDeleteVertexArrays(1, &m_VAO);
+	glDeleteBuffers(1, &m_VBO);
 }
 
 void CubeMap::storeOnGPU() {
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-	glBindVertexArray(VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glGenVertexArrays(1, &m_VAO);
+	glGenBuffers(1, &m_VBO);
+	glBindVertexArray(m_VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(VERTICES), &VERTICES, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
@@ -22,8 +22,8 @@ void CubeMap::storeOnGPU() {
 
 void CubeMap::loadCubemapTexture(std::vector<std::string> faces)
 {
-	glGenTextures(1, &texture_id);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
+	glGenTextures(1, &m_id);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, m_id);
 
 	int width, height, nrChannels;
 	for (unsigned int i = 0; i < faces.size(); i++)
@@ -64,9 +64,9 @@ void CubeMap::drawCubemap(Shader& shader, mat4& view, mat4& projection) {
 	shader.setMat4("projection", projection);
 	
 	// Render skybox cube
-	glBindVertexArray(VAO);
+	glBindVertexArray(m_VAO);
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, m_id);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 	glBindVertexArray(0);
 

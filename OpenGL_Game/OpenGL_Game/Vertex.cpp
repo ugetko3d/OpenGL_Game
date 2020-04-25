@@ -230,12 +230,13 @@ void Vertex::scaleTextures(const bool ENABLE)
 	scaleTexture = ENABLE;
 }
 
-bool Vertex::drawObject(const Shader& shader, const vec3& position, const vec3& scale_vector, float rotation_degrees, const vec3&rotation_vector, Material& material)
+bool Vertex::drawObject(const Shader& shader, const vec3& position, const vec3& scale_vector, float rotation_degrees, const vec3&rotation_vector, Material* material)
 {
 	if (storedOnGPU)
 	{
 		// Bind textures
-		material.bind();
+		if(material)
+			material->bind();
 		// Bind VAO
 		glBindVertexArray(VAO);
 		// Calculate the model matrix for each object and pass it to shader before drawing
@@ -254,7 +255,8 @@ bool Vertex::drawObject(const Shader& shader, const vec3& position, const vec3& 
 		else
 			glDrawArrays(draw_mode, 0, size());
 		// Unbind textures
-		material.unbind();
+		if(material)
+			material->unbind();
 
 		return true;
 	}
@@ -265,22 +267,22 @@ bool Vertex::drawObject(const Shader& shader, const vec3& position, const vec3& 
 	}
 }
 
-bool Vertex::drawObject(const Shader& shader, const vec3& position, float rotation_degrees, const vec3& rotation_vector, Material& material)
+bool Vertex::drawObject(const Shader& shader, const vec3& position, float rotation_degrees, const vec3& rotation_vector, Material* material)
 {
 	return drawObject(shader, position, vec3(1.0f), rotation_degrees, rotation_vector, material);
 }
 
-bool Vertex::drawObject(const Shader& shader, const vec3& position, const vec3& scale_vector, Material& material)
+bool Vertex::drawObject(const Shader& shader, const vec3& position, const vec3& scale_vector, Material* material)
 {
 	return drawObject(shader, position, scale_vector, 0.0f, vec3(1.0f), material);
 }
 
-bool Vertex::drawObject(const Shader& shader, const vec3& position, Material& material)
+bool Vertex::drawObject(const Shader& shader, const vec3& position, Material* material)
 {
 	return drawObject(shader, position, vec3(1.0f), 0.0f, vec3(1.0f), material);
 }
 
-bool Vertex::drawObject(const Shader& shader, Material& material)
+bool Vertex::drawObject(const Shader& shader, Material* material)
 {
 	return drawObject(shader, vec3(0.0f), vec3(1.0f), 0.0f, vec3(1.0f), material);
 }
@@ -299,38 +301,38 @@ bool Vertex::deAllocate()
 
 const void Vertex::printVertices()
 {
-	for (int i = 0; i < vertices.size(); i++)
-		std::cout << vertices[i].x << ", " << vertices[i].y << ", " << vertices[i].z << std::endl;
+	for (vec3 v : vertices)
+		std::cout << v << std::endl;
 }
 
 const void Vertex::printNormals()
 {
-	for (int i = 0; i < normals.size(); i++)
-		std::cout << normals[i].x << ", " << normals[i].y << ", " << normals[i].z << std::endl;
+	for (vec3 v : normals)
+		std::cout << v << std::endl;
 }
 
 const void Vertex::printColors()
 {
-	for (int i = 0; i < colors.size(); i++)
-		std::cout << colors[i].x << ", " << colors[i].y << ", " << colors[i].z << std::endl;
+	for (vec3 v : colors)
+		std::cout << v << std::endl;
 }
 
 const void Vertex::printUVs()
 {
-	for (int i = 0; i < uvs.size(); i++)
-		std::cout << uvs[i].x << ", " << uvs[i].y << std::endl;
+	for (vec2 v : uvs)
+		std::cout << v << std::endl;
 }
 
 const void Vertex::printTangents()
 {
-	for (int i = 0; i < tangents.size(); i++)
-		std::cout << tangents[i].x << ", " << tangents[i].y << ", " << tangents[i].z << std::endl;
+	for (vec3 v : tangents)
+		std::cout << v << std::endl;
 }
 
 const void Vertex::printBitangents()
 {
-	for (int i = 0; i < bitangents.size(); i++)
-		std::cout << bitangents[i].x << ", " << bitangents[i].y << ", " << bitangents[i].z << std::endl;
+	for (vec3 v : bitangents)
+		std::cout << v << std::endl;
 }
 
 const void Vertex::printIndices()

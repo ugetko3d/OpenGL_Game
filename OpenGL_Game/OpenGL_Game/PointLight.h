@@ -9,11 +9,11 @@ public:
 	/* Create pointlight */
 	PointLight();
 	/* Create pointlight */
-	PointLight(const vec3 & color, const vec3 & position);
+	PointLight(const vec3& color, const vec3& position);
 	/* Create pointlight */
-	PointLight(const vec3 & color, const vec3 & position, const float & ambient, const float & diffuse, const float & specular);
+	PointLight(const vec3& color, const vec3& position, float ambient, float diffuse, float specular);
 	/* Create pointlight */
-	PointLight(const vec3 & color, const vec3 & position, const float & ambient, const float & diffuse, const float & specular, const float & constant, const float & linear, const float & quadratic);
+	PointLight(const vec3& color, const vec3& position, float ambient, float diffuse, float specular, float constant, float linear, float quadratic);
 	/* De-constructor */
 	~PointLight();
 };

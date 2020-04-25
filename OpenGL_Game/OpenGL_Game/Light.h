@@ -9,23 +9,17 @@
 
 class Light
 {
-private:
-	bool enabled = true;
 public:
-const enum Type : short {
+	
+	const enum class Type : short {
 		UNSET = 0,
 		DIRECTIONAL = 1,
 		POINT = 2,
 		SPOT = 3
 	};
-protected:
-	Type type;
-	unsigned int id;
-	Camera * camera = nullptr;
-	static unsigned int directional_light_counter, point_light_counter, spot_light_counter;
-public:
+
 	vec3 color, position, direction;
-	float ambient = -1.f, diffuse = -1.f, specular = -1.f, constant = -1.f, linear = -1.f, quadratic = -1.f, cutOff = -1.f, outerCutOff = -1.f;
+	float ambient = -1.0f, diffuse = -1.0f, specular = -1.0f, constant = -1.0f, linear = -1.0f, quadratic = -1.0f, cutOff = -1.0f, outerCutOff = -1.0f;
 	/* Constructor */
 	Light();
 	/* De-constructor */
@@ -39,7 +33,7 @@ public:
 	/* Check if light is ON/enabled. */
 	bool isEnabled();
 	/* Draw light with shader (light shader) */
-	bool drawLight(const Shader * shader);
+	bool drawLight(const Shader& shader);
 	/* Get light type */
 	Type getType();
 	bool operator ==(const Light& right) const;
@@ -49,4 +43,12 @@ public:
 	static unsigned int numPointLights();
 	/* Get number of Spot lights */
 	static unsigned int numSpotLights();
+
+protected:
+	Type type;
+	unsigned int id;
+	static unsigned int directional_light_counter, point_light_counter, spot_light_counter;
+
+private:
+	bool enabled = true;
 };

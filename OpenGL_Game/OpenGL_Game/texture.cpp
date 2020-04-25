@@ -1,14 +1,21 @@
-#include <glew.h>
-#include "stb_image.h"
-#include <iostream>
 
 #include "texture.h"
 
-Texture::Texture(const std::string& path) : m_filePath(path), m_texBuffer(nullptr)
+Texture::Texture()
+{
+
+}
+
+Texture::Texture(const std::string& path)
+{
+	loadTexture(path);
+}
+
+void Texture::loadTexture(const std::string& path) 
 {
 	// Bind texture
-	glGenTextures(1, &m_texID);
-	glBindTexture(GL_TEXTURE_2D, m_texID);
+	glGenTextures(1, &id);
+	glBindTexture(GL_TEXTURE_2D, id);
 
 	// Set texture wrapping parameters
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -40,16 +47,16 @@ Texture::Texture(const std::string& path) : m_filePath(path), m_texBuffer(nullpt
 
 Texture::~Texture()
 {
-	glDeleteTextures(1, &m_texID);
+	glDeleteTextures(1, &id);
 }
 
-void Texture::Bind(unsigned int slot)
+void Texture::bind(unsigned int slot)
 {
 	glActiveTexture(slot);
-	glBindTexture(GL_TEXTURE_2D, m_texID);
+	glBindTexture(GL_TEXTURE_2D, id);
 }
 
-void Texture::Unbind()
+void Texture::unbind()
 {
 	glBindTexture(GL_TEXTURE_2D, 0);
 }

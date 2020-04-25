@@ -10,9 +10,9 @@ public:
 	/* Create Directional Light */
 	DirectionalLight();
 	/* Create Directional Light */
-	DirectionalLight(const vec3 & color, const vec3 & direction);
+	DirectionalLight(const vec3& color, const vec3& direction);
 	/* Create Directional Light */
-	DirectionalLight(const vec3 & color, const vec3 & direction, float & ambient, float & diffuse, float & specular);
+	DirectionalLight(const vec3& color, const vec3& direction, float ambient, float diffuse, float specular);
 	/* De-constructor */
 	~DirectionalLight();
 };

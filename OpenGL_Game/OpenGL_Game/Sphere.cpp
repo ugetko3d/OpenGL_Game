@@ -23,10 +23,10 @@ void Sphere::createSphere(float width, unsigned int quality) {
 	uvs = diamond.uvs;
 	subdivide(quality);
 
-	for (int i = 0; i < vertices.size(); i++)
+	for (vec3 v: vertices)
 	{
-		vertices.at(i).normalize();
-		vertices.at(i) = vec3::scale(vertices.at(i), width);
+		v.normalize();
+		v = vec3::scale(v, width);
 	}
 		
 }

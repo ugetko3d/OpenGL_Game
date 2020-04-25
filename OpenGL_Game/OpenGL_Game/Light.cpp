@@ -1,5 +1,9 @@
 #include "Light.h"
 
+unsigned int Light::directional_light_counter = 0;
+unsigned int Light::point_light_counter = 0;
+unsigned int Light::spot_light_counter = 0;
+
 Light::Light()
 {
 }
@@ -23,12 +27,12 @@ void Light::enable()
 	enabled = true;
 	switch (type)
 	{
-	case DIRECTIONAL:
-		++directional_light_counter;
-	case POINT:
-		++point_light_counter;
-	case SPOT:
-		++spot_light_counter;
+	case Type::DIRECTIONAL:
+		directional_light_counter++;
+	case Type::POINT:
+		point_light_counter++;
+	case Type::SPOT:
+		spot_light_counter++;
 	}
 
 }
@@ -38,12 +42,12 @@ void Light::disable()
 	enabled = false;
 	switch (type)
 	{
-	case DIRECTIONAL:
-		--directional_light_counter;
-	case POINT:
-		--point_light_counter;
-	case SPOT:
-		--spot_light_counter;
+	case Type::DIRECTIONAL:
+		directional_light_counter--;
+	case Type::POINT:
+		point_light_counter--;
+	case Type::SPOT:
+		spot_light_counter--;
 	}
 }
 
@@ -51,71 +55,60 @@ bool Light::isEnabled() {
 	return enabled;
 }
 
-bool Light::drawLight(const Shader * shader)
+bool Light::drawLight(const Shader& shader)
 {
-	if (shader == nullptr)
-		return false;
-
-	if (is(DIRECTIONAL) && enabled)
+	if (is(Type::DIRECTIONAL) && enabled)
 	{
-		shader->setVec3("directionalLights[" + std::to_string(id) + "].direction", direction);
-		shader->setVec3("directionalLights[" + std::to_string(id) + "].ambient", vec3::scale(color, ambient));
-		shader->setVec3("directionalLights[" + std::to_string(id) + "].diffuse", vec3::scale(color, diffuse));
-		shader->setVec3("directionalLights[" + std::to_string(id) + "].specular", vec3::scale(color, specular));
+		shader.setVec3("directionalLights[" + std::to_string(id) + "].direction", direction);
+		shader.setVec3("directionalLights[" + std::to_string(id) + "].ambient", vec3::scale(color, ambient));
+		shader.setVec3("directionalLights[" + std::to_string(id) + "].diffuse", vec3::scale(color, diffuse));
+		shader.setVec3("directionalLights[" + std::to_string(id) + "].specular", vec3::scale(color, specular));
 		return true;
 	}
-	else if (is(DIRECTIONAL) && !enabled)
+	else if (is(Type::DIRECTIONAL) && !enabled)
 	{
-		shader->setVec3("directionalLights[" + std::to_string(id) + "].ambient", DISABLED);
-		shader->setVec3("directionalLights[" + std::to_string(id) + "].diffuse", DISABLED);
-		shader->setVec3("directionalLights[" + std::to_string(id) + "].specular", DISABLED);
+		shader.setVec3("directionalLights[" + std::to_string(id) + "].ambient", DISABLED);
+		shader.setVec3("directionalLights[" + std::to_string(id) + "].diffuse", DISABLED);
+		shader.setVec3("directionalLights[" + std::to_string(id) + "].specular", DISABLED);
 		return true;
 	}
-	else if (is(POINT) && enabled)
+	else if (is(Type::POINT) && enabled)
 	{
-		shader->setVec3("pointLights[" + std::to_string(id) + "].position", position);
-		shader->setVec3("pointLights[" + std::to_string(id) + "].ambient", vec3::scale(color, ambient));
-		shader->setVec3("pointLights[" + std::to_string(id) + "].diffuse", vec3::scale(color, diffuse));
-		shader->setVec3("pointLights[" + std::to_string(id) + "].specular", vec3::scale(color, specular));
-		shader->setFloat("pointLights[" + std::to_string(id) + "].constant", constant);
-		shader->setFloat("pointLights[" + std::to_string(id) + "].linear", linear);
-		shader->setFloat("pointLights[" + std::to_string(id) + "].quadratic", quadratic);
+		shader.setVec3("pointLights[" + std::to_string(id) + "].position", position);
+		shader.setVec3("pointLights[" + std::to_string(id) + "].ambient", vec3::scale(color, ambient));
+		shader.setVec3("pointLights[" + std::to_string(id) + "].diffuse", vec3::scale(color, diffuse));
+		shader.setVec3("pointLights[" + std::to_string(id) + "].specular", vec3::scale(color, specular));
+		shader.setFloat("pointLights[" + std::to_string(id) + "].constant", constant);
+		shader.setFloat("pointLights[" + std::to_string(id) + "].linear", linear);
+		shader.setFloat("pointLights[" + std::to_string(id) + "].quadratic", quadratic);
 		return true;
 	}
-	else if (is(POINT) && !enabled)
+	else if (is(Type::POINT) && !enabled)
 	{
-		shader->setVec3("pointLights[" + std::to_string(id) + "].ambient", DISABLED);
-		shader->setVec3("pointLights[" + std::to_string(id) + "].diffuse", DISABLED);
-		shader->setVec3("pointLights[" + std::to_string(id) + "].specular", DISABLED);
+		shader.setVec3("pointLights[" + std::to_string(id) + "].ambient", DISABLED);
+		shader.setVec3("pointLights[" + std::to_string(id) + "].diffuse", DISABLED);
+		shader.setVec3("pointLights[" + std::to_string(id) + "].specular", DISABLED);
 		return true;
 	}
-	else if (is(SPOT) && enabled)
+	else if (is(Type::SPOT) && enabled)
 	{
-		if (camera != nullptr)
-		{
-			shader->setVec3("spotLights[" + std::to_string(id) + "].position", camera->position);
-			shader->setVec3("spotLights[" + std::to_string(id) + "].direction", camera->front);
-		}
-		else
-		{
-			shader->setVec3("spotLights[" + std::to_string(id) + "].position", position);
-			shader->setVec3("spotLights[" + std::to_string(id) + "].direction", direction);
-		}
-		shader->setVec3("spotLights[" + std::to_string(id) + "].ambient", ambient);
-		shader->setVec3("spotLights[" + std::to_string(id) + "].diffuse", diffuse);
-		shader->setVec3("spotLights[" + std::to_string(id) + "].specular", specular);
-		shader->setFloat("spotLights[" + std::to_string(id) + "].constant", constant);
-		shader->setFloat("spotLights[" + std::to_string(id) + "].linear", linear);
-		shader->setFloat("spotLights[" + std::to_string(id) + "].quadratic", quadratic);
-		shader->setFloat("spotLights[" + std::to_string(id) + "].cutOff", glm::cos(glm::radians(cutOff)));
-		shader->setFloat("spotLights[" + std::to_string(id) + "].outerCutOff", glm::cos(glm::radians(outerCutOff)));
+		shader.setVec3("spotLights[" + std::to_string(id) + "].position", position);
+		shader.setVec3("spotLights[" + std::to_string(id) + "].direction", direction);
+		shader.setVec3("spotLights[" + std::to_string(id) + "].ambient", ambient);
+		shader.setVec3("spotLights[" + std::to_string(id) + "].diffuse", diffuse);
+		shader.setVec3("spotLights[" + std::to_string(id) + "].specular", specular);
+		shader.setFloat("spotLights[" + std::to_string(id) + "].constant", constant);
+		shader.setFloat("spotLights[" + std::to_string(id) + "].linear", linear);
+		shader.setFloat("spotLights[" + std::to_string(id) + "].quadratic", quadratic);
+		shader.setFloat("spotLights[" + std::to_string(id) + "].cutOff", glm::cos(glm::radians(cutOff)));
+		shader.setFloat("spotLights[" + std::to_string(id) + "].outerCutOff", glm::cos(glm::radians(outerCutOff)));
 		return true;
 	}
-	else if (is(SPOT) && !enabled)
+	else if (is(Type::SPOT) && !enabled)
 	{
-		shader->setVec3("spotLights[" + std::to_string(id) + "].ambient", DISABLED);
-		shader->setVec3("spotLights[" + std::to_string(id) + "].diffuse", DISABLED);
-		shader->setVec3("spotLights[" + std::to_string(id) + "].specular", DISABLED);
+		shader.setVec3("spotLights[" + std::to_string(id) + "].ambient", DISABLED);
+		shader.setVec3("spotLights[" + std::to_string(id) + "].diffuse", DISABLED);
+		shader.setVec3("spotLights[" + std::to_string(id) + "].specular", DISABLED);
 		return true;
 	}
 	return false;

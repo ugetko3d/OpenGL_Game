@@ -68,14 +68,43 @@
     <ClInclude Include="vec4.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="fragment.shader" />
-    <None Include="lightfragment.shader" />
-    <None Include="lightvertex.shader" />
-    <None Include="vertex.shader" />
+    <None Include="resources\textures\noise5.ex5" />
+    <None Include="shaders\cubemap_frag.shader" />
+    <None Include="shaders\cubemap_vert.shader" />
+    <None Include="shaders\fragment.shader" />
+    <None Include="shaders\light_frag.shader" />
+    <None Include="shaders\light_vert.shader" />
+    <None Include="shaders\object_frag.shader" />
+    <None Include="shaders\object_vert.shader" />
+    <None Include="shaders\vertex.shader" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="stones.jpg" />
-    <Image Include="sun.jpg" />
+    <Image Include="resources\skybox\back.jpg" />
+    <Image Include="resources\skybox\bottom.jpg" />
+    <Image Include="resources\skybox\front.jpg" />
+    <Image Include="resources\skybox\left.jpg" />
+    <Image Include="resources\skybox\right.jpg" />
+    <Image Include="resources\skybox\top.jpg" />
+    <Image Include="resources\textures\10744-ambientocclusion.jpg" />
+    <Image Include="resources\textures\10744-bump.jpg" />
+    <Image Include="resources\textures\10744-diffuse.jpg" />
+    <Image Include="resources\textures\10744-displacement.jpg" />
+    <Image Include="resources\textures\10744-normal.jpg" />
+    <Image Include="resources\textures\10744-reflectiveocclusion.jpg" />
+    <Image Include="resources\textures\10744-specstrength.jpg" />
+    <Image Include="resources\textures\1857-bump.jpg" />
+    <Image Include="resources\textures\1857-diffuse.jpg" />
+    <Image Include="resources\textures\1857-displacement.jpg" />
+    <Image Include="resources\textures\1857-normal.jpg" />
+    <Image Include="resources\textures\1857-specexponent.jpg" />
+    <Image Include="resources\textures\1857-specstrength.jpg" />
+    <Image Include="resources\textures\mixedstones-ambientocclusion.jpg" />
+    <Image Include="resources\textures\mixedstones-diffuse.jpg" />
+    <Image Include="resources\textures\mixedstones-displace.jpg" />
+    <Image Include="resources\textures\mixedstones-normal.jpg" />
+    <Image Include="resources\textures\mixedstones-specular.jpg" />
+    <Image Include="resources\textures\stones.jpg" />
+    <Image Include="resources\textures\sun.jpg" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

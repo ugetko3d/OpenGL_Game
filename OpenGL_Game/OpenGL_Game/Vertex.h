@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <iterator>
 #include <glew.h>
 #include <glfw3.h>
 #include "maths.h"
@@ -89,15 +90,15 @@ public:
 	/* Set if textures should scale with object or not. False by default. */
 	void scaleTextures(const bool ENABLE);
 	/* Draw vertex data from GPU */
-	bool drawObject(const Shader& shader, const vec3& position, const vec3& scale_vector, float rotation_degrees, const vec3& rotation_vector, Material& material);
+	bool drawObject(const Shader& shader, const vec3& position, const vec3& scale_vector, float rotation_degrees, const vec3& rotation_vector, Material* material = nullptr);
 	/* Draw vertex data from GPU */
-	bool drawObject(const Shader& shader, const vec3& position, float rotation_degrees, const vec3& rotation_vector, Material& material);
+	bool drawObject(const Shader& shader, const vec3& position, float rotation_degrees, const vec3& rotation_vector, Material* material);
 	/* Draw vertex data from GPU */
-	bool drawObject(const Shader& shader, const vec3& position, const vec3& scale_vector, Material& material);
+	bool drawObject(const Shader& shader, const vec3& position, const vec3& scale_vector, Material* material);
 	/* Draw vertex data from GPU */
-	bool drawObject(const Shader& shader, const vec3& position, Material& material);
+	bool drawObject(const Shader& shader, const vec3& position, Material* material);
 	/* Draw vertex data from GPU */
-	bool drawObject(const Shader& shader, Material& material);
+	bool drawObject(const Shader& shader, Material* material);
 	/* De-allocate vertex data once it has outlived it's purpose */
 	bool deAllocate();
 

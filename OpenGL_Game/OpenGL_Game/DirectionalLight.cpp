@@ -2,7 +2,7 @@
 
 DirectionalLight::DirectionalLight()
 {
-	this->type = DIRECTIONAL;
+	this->type = Type::DIRECTIONAL;
 	this->id = directional_light_counter++;
 	this->color = COLOR;
 	this->direction = DIRECTION;
@@ -11,9 +11,9 @@ DirectionalLight::DirectionalLight()
 	this->specular = SPECULAR;
 }
 
-DirectionalLight::DirectionalLight(const vec3 & color, const vec3 & direction)
+DirectionalLight::DirectionalLight(const vec3& color, const vec3& direction)
 {
-	this->type = DIRECTIONAL;
+	this->type = Type::DIRECTIONAL;
 	this->id = directional_light_counter++;
 	this->color = color;
 	this->direction = direction;
@@ -22,9 +22,9 @@ DirectionalLight::DirectionalLight(const vec3 & color, const vec3 & direction)
 	this->specular = SPECULAR;
 }
 
-DirectionalLight::DirectionalLight(const vec3 & color, const vec3 & direction, float & ambient, float & diffuse, float & specular)
+DirectionalLight::DirectionalLight(const vec3& color, const vec3& direction, float ambient, float diffuse, float specular)
 {
-	this->type = DIRECTIONAL;
+	this->type = Type::DIRECTIONAL;
 	this->id = directional_light_counter++;
 	this->color = color;
 	this->direction = direction;

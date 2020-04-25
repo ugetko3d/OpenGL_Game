@@ -1,7 +1,9 @@
 #include "Material.h"
 
+
 Material::Material()
 {
+
 }
 
 Material::~Material()
@@ -65,37 +67,37 @@ const bool Material::hasAO()
 void Material::bind()
 {
 	if (diffuseBound) {
-		diffuse.Bind(0);
+		diffuse.bind(0);
 	}
 	if (specularBound) {
-		specular.Bind(1);
+		specular.bind(1);
 	}
 	if (normalBound) {
-		normal.Bind(2);
+		normal.bind(2);
 	}
 	if (displacementBound) {
-		displacement.Bind(3);
+		displacement.bind(3);
 	}
 	if (AOBound) {
-		ambient_occlusion.Bind(4);
+		ambient_occlusion.bind(4);
 	}
 }
 
 void Material::unbind()
 {
 	if (diffuseBound) {
-		diffuse.Unbind();
+		diffuse.unbind();
 	}
 	if (specularBound) {
-		specular.Unbind();
+		specular.unbind();
 	}
 	if (normalBound) {
-		normal.Unbind();
+		normal.unbind();
 	}
 	if (displacementBound) {
-		displacement.Unbind();
+		displacement.unbind();
 	}
 	if (AOBound) {
-		ambient_occlusion.Unbind();
+		ambient_occlusion.unbind();
 	}
 }

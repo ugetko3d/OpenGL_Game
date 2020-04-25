@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "Camera.h"
+#include "SpotLight.h"
 
 
 class Player {
@@ -20,15 +21,19 @@ public:
 
 	// Mouse
 	bool firstMouse = true;
+	bool invertedMouse = false;
 	double lastX;
 	double lastY;
 
-	Player(double width, double height);
-	Camera& camera = Camera::instance();
+	Player();
 
-	void keyboardInput(GLFWwindow* window, float deltaTime, bool flyingMode);
+	Camera& camera = Camera::instance();
+	SpotLight flashLight = SpotLight(vec3(0.8f, 0.8f, 0.1f), camera.position, camera.front);
+
+	void movementInput(GLFWwindow* window, float deltaTime, bool flyingMode);
 	void mouseMoved(double xpos, double ypos);
 	void mouseScrolled(double yoffset);
+	void keyPressed(int key, int action);
 
 private:
 	float jumpStrength = 7.0f;

@@ -2,17 +2,15 @@
 #include <glew.h>
 #include <glfw3.h>
 #include "stb_image.h"
-#include <cmath>
+#include "maths.h"
 #include "Shader.h"
-#include "Camera.h"
 #include <iostream>
-#include <iomanip>
 #include <vector>
 
 class CubeMap
 {
 private:
-	unsigned int texture_id, VAO, VBO;
+	unsigned int m_id, m_VAO, m_VBO;
 	const float VERTICES[108] = {
 		-1.0f,	+1.0f,	-1.0f,
 		-1.0f,	-1.0f,	-1.0f,

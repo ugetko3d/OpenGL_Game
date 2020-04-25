@@ -17,7 +17,7 @@ public:
 	const vec3 WORLD_UP = vec3(0.0f, 1.0f, 0.0f);
 
 	// Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods
-	enum class Camera_Movement
+	const enum class Camera_Movement
 	{
 		FORWARD,
 		BACKWARD,

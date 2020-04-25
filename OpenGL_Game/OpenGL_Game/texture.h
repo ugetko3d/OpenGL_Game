@@ -1,5 +1,9 @@
 #pragma once
 
+#include <glew.h>
+#include "stb_image.h"
+#include <iostream>
+
 class Texture
 {
 private:
@@ -7,12 +11,14 @@ private:
 	std::string m_filePath;
 	unsigned char* m_texBuffer;
 public:
-	unsigned int m_texID;
+	unsigned int id;
 
+	Texture();
 	Texture(const std::string& path);
 	~Texture();
 
-	void Bind(unsigned int slot);
-	void Unbind();
+	void loadTexture(const std::string& path);
+	void bind(unsigned int slot);
+	void unbind();
 };
 

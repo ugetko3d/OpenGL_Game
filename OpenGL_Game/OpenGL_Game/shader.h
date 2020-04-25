@@ -3,9 +3,15 @@
 class Shader {
 public:
 	// Constructor
-	Shader(const std::string& vertex_shader_path, const std::string& fragment_shader_path);
+	Shader();
 
+	Shader(const std::string& vertex_shader_path, const std::string& fragment_shader_path);
+	
+	// Desctructor
 	~Shader();
+
+	// Method to load shader from file
+	void loadShader(const std::string& vertex_shader_path, const std::string& fragment_shader_path);
 
 	// Use this program
 	void use();
