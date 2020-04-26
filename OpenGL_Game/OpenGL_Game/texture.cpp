@@ -13,10 +13,10 @@ Texture::Texture(const std::string& path)
 
 Texture::~Texture()
 {
-	
+
 }
 
-void Texture::loadTexture(const std::string& path) 
+void Texture::loadTexture(const std::string& path)
 {
 	// Bind texture
 	glGenTextures(1, &id);
@@ -33,13 +33,15 @@ void Texture::loadTexture(const std::string& path)
 	// Load texture data to buffer
 	m_texBuffer = stbi_load(path.c_str(), &m_width, &m_height, &m_channels, 0);
 
-	if (m_texBuffer) {
+	if (m_texBuffer)
+	{
 		// Send texture data to GPU
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_width, m_height, 0, GL_RGB, GL_UNSIGNED_BYTE, m_texBuffer);
 		// Generate mipmap
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
-	else {
+	else
+	{
 		std::cout << "Error: Texture failed to load at path: " << path << std::endl;
 	}
 

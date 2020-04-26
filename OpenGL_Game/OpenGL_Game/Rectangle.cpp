@@ -14,7 +14,8 @@ Rect::~Rect()
 {
 }
 
-void Rect::createRectangle(float width, float height) {
+void Rect::createRectangle(float width, float height)
+{
 	float widthRadius = width / 2.0f;
 	float heightRadius = height / 2.0f;
 

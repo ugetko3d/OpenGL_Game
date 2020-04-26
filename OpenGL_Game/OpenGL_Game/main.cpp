@@ -54,7 +54,7 @@ Sphere sphere(1.0f, 4);
 
 // Lights
 std::vector<Light> lights;
-vec3 sunDirection(-1.0, -1.0, 0.0f);
+vec3 sunDirection(0.0, 1.0, 0.0f);
 vec3 sunColour(1.0f, 1.0f, 0.5f);
 vec3 lightColour(0.8f, 0.8f, 0.1f);
 
@@ -141,7 +141,8 @@ void key_callback(GLFWwindow* frame, int key, int scancode, int action, int mods
 
 
 /* DRAW OBJECTS - set up shaders and call vertex draw functions */
-void renderObjects(const mat4& projection, const mat4& view) {
+void renderObjects(const mat4& projection, const mat4& view)
+{
 	// Activate shader when setting uniforms/drawing objects
 	objectShader.use();
 	objectShader.setMat4("projection", projection);
@@ -155,7 +156,8 @@ void renderObjects(const mat4& projection, const mat4& view) {
 	objectShader.setInt("spotLightCount", Light::numSpotLights());
 	objectShader.setInt("lightCount", lights.size());
 
-	for (int i = 0; i < lights.size(); i++) {
+	for (unsigned int i = 0; i < lights.size(); i++)
+	{
 		objectShader.setVec3("lightPositions[" + std::to_string(i) + "]", lights.at(i).position);
 		lights.at(i).drawLight(objectShader);
 	}
@@ -166,7 +168,8 @@ void renderObjects(const mat4& projection, const mat4& view) {
 
 }
 
-void renderLights(mat4 projection, mat4 view) {
+void renderLights(mat4 projection, mat4 view)
+{
 	// Activate light shader and configure it
 	lightShader.use();
 	lightShader.setMat4("projection", projection);
@@ -174,9 +177,11 @@ void renderLights(mat4 projection, mat4 view) {
 	lightShader.setBool("hasLightColour", true);
 
 	// Draw light object
-	for (Light l : lights) {
+	for (Light l : lights)
+	{
 		lightShader.setVec3("lightColour", lightColour);
-		if (l.is(Light::Type::POINT)) {
+		if (l.is(Light::Type::POINT))
+		{
 			sphere.drawObject(lightShader, l.position, nullptr);
 			l.colour = lightColour;
 		}

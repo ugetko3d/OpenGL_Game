@@ -1,12 +1,13 @@
 #pragma once
 
-class Shader {
+class Shader
+{
 public:
 	// Constructor
 	Shader();
 
 	Shader(const std::string& vertex_shader_path, const std::string& fragment_shader_path);
-	
+
 	// Desctructor
 	~Shader();
 
@@ -24,13 +25,13 @@ public:
 
 	// Set uniform: float
 	void setFloat(const std::string& name, float value) const;
-	
+
 	// Set uniform: vec2
 	void setVec2(const std::string& name, const vec2& value) const;
-	
+
 	// Set uniform: vec3
 	void setVec3(const std::string& name, const vec3& value) const;
-	
+
 	// Set uniform: vec4
 	void setVec4(const std::string& name, const vec4& value) const;
 

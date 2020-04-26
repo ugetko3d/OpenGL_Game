@@ -1,7 +1,8 @@
 #include "mat4.h"
 #include <iostream>
 
-mat4::mat4() : data{0.0f} {
+mat4::mat4() : data{ 0.0f }
+{
 
 }
 
@@ -10,7 +11,8 @@ void mat4::reset()
 	*data = { 0 };
 }
 
-void mat4::identity() {
+void mat4::identity()
+{
 
 	reset();
 
@@ -21,7 +23,8 @@ void mat4::identity() {
 
 }
 
-void mat4::scale(const vec3& scale) {
+void mat4::scale(const vec3& scale)
+{
 
 	reset();
 
@@ -32,7 +35,8 @@ void mat4::scale(const vec3& scale) {
 
 }
 
-void mat4::rotate(float angle, vec3 v) {
+void mat4::rotate(float angle, vec3 v)
+{
 
 	float r = (float)(angle * (M_PI / 180.0f));
 
@@ -55,11 +59,12 @@ void mat4::rotate(float angle, vec3 v) {
 	data[8] = omc * v.z * v.x + s * v.y;
 	data[9] = omc * v.z * v.y - s * v.x;
 	data[10] = c + omc * v.z * v.z;
-	 
+
 	data[15] = 1.0f;
 }
 
-void mat4::translate(const vec3& translation) {
+void mat4::translate(const vec3& translation)
+{
 
 	identity();
 
@@ -97,7 +102,8 @@ void mat4::makeView(const vec3& position, const vec3& front, const vec3& up)
 	data[15] = 1.0f;
 }
 
-void mat4::makePerspective(float angle, float aspectRatio, float n, float f) {
+void mat4::makePerspective(float angle, float aspectRatio, float n, float f)
+{
 
 	float a = (float)(angle * (M_PI / 180.0f));
 
@@ -117,8 +123,9 @@ void mat4::makePerspective(float angle, float aspectRatio, float n, float f) {
 	data[14] = -((2.0f * f * n) / (f - n));
 }
 
-void mat4::makeOrtho(float l, float r, float b, float t) {
-	
+void mat4::makeOrtho(float l, float r, float b, float t)
+{
+
 	reset();
 
 	data[0] = 2.0f / (r - l);
@@ -130,7 +137,8 @@ void mat4::makeOrtho(float l, float r, float b, float t) {
 
 }
 
-void mat4::removeTranslation() {
+void mat4::removeTranslation()
+{
 
 	data[12] = 0.0f;
 	data[13] = 0.0f;
@@ -138,7 +146,8 @@ void mat4::removeTranslation() {
 
 }
 
-mat4 mat4::multiply(const mat4& m1, const mat4& m2) {
+mat4 mat4::multiply(const mat4& m1, const mat4& m2)
+{
 
 	mat4 result;
 
@@ -303,15 +312,17 @@ void mat4::inverse()
 		data[i] = b[i] * det;
 }
 
-mat4 operator*(const mat4& left, const mat4& right) {
+mat4 operator*(const mat4& left, const mat4& right)
+{
 	return mat4::multiply(left, right);
 }
 
-std::ostream& operator<<(std::ostream& stream, const mat4& m) {
+std::ostream& operator<<(std::ostream& stream, const mat4& m)
+{
 	stream << "mat4: \n" <<
-	m.data[0] << "\t" << m.data[1] << "\t" << m.data[2] << "\t" << m.data[3] << "\n" << 
-	m.data[4] << "\t" << m.data[5] << "\t" << m.data[6] << "\t" << m.data[7] << "\n" <<
-	m.data[8] << "\t" << m.data[9] << "\t" << m.data[10] << "\t" << m.data[11] << "\n" <<
-	m.data[12] << "\t" << m.data[13] << "\t" << m.data[14] << "\t" << m.data[15];
+		m.data[0] << "\t" << m.data[1] << "\t" << m.data[2] << "\t" << m.data[3] << "\n" <<
+		m.data[4] << "\t" << m.data[5] << "\t" << m.data[6] << "\t" << m.data[7] << "\n" <<
+		m.data[8] << "\t" << m.data[9] << "\t" << m.data[10] << "\t" << m.data[11] << "\n" <<
+		m.data[12] << "\t" << m.data[13] << "\t" << m.data[14] << "\t" << m.data[15];
 	return stream;
 }

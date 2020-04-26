@@ -7,10 +7,12 @@ uniform bool hasLightColour;
 
 void main()
 {
-	if (hasLightColour) {
+	if (hasLightColour)
+	{
 		FragColour = vec4(lightColour, 1.0);
 	}
-	else {
+	else
+	{
 		FragColour = vec4(1.0);
 	}
 }

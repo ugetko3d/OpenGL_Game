@@ -8,7 +8,7 @@ Material::Material()
 
 Material::~Material()
 {
-	/*if(diffuseBound)
+	if (diffuseBound)
 		glDeleteTextures(1, &diffuse.id);
 	if (specularBound)
 		glDeleteTextures(1, &specular.id);
@@ -17,7 +17,7 @@ Material::~Material()
 	if (displacementBound)
 		glDeleteTextures(1, &displacement.id);
 	if (AOBound)
-		glDeleteTextures(1, &ambient_occlusion.id);*/
+		glDeleteTextures(1, &ambient_occlusion.id);
 }
 
 void Material::addDiffuse(const Texture& texture)
@@ -50,7 +50,8 @@ void Material::addAmbientOcclusion(const Texture& texture)
 	this->AOBound = true;
 }
 
-const bool Material::hasDiffuse() {
+const bool Material::hasDiffuse()
+{
 	return diffuseBound;
 }
 
@@ -76,23 +77,28 @@ const bool Material::hasAO()
 
 void Material::bind()
 {
-	if (diffuseBound) {
+	if (diffuseBound)
+	{
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, diffuse.id);
 	}
-	if (specularBound) {
+	if (specularBound)
+	{
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, specular.id);
 	}
-	if (normalBound) {
+	if (normalBound)
+	{
 		glActiveTexture(GL_TEXTURE2);
 		glBindTexture(GL_TEXTURE_2D, normal.id);
 	}
-	if (displacementBound) {
+	if (displacementBound)
+	{
 		glActiveTexture(GL_TEXTURE3);
 		glBindTexture(GL_TEXTURE_2D, displacement.id);
 	}
-	if (AOBound) {
+	if (AOBound)
+	{
 		glActiveTexture(GL_TEXTURE4);
 		glBindTexture(GL_TEXTURE_2D, ambient_occlusion.id);
 	}
@@ -100,23 +106,28 @@ void Material::bind()
 
 void Material::unbind()
 {
-	if (diffuseBound) {
+	if (diffuseBound)
+	{
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
-	if (specularBound) {
+	if (specularBound)
+	{
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
-	if (normalBound) {
+	if (normalBound)
+	{
 		glActiveTexture(GL_TEXTURE2);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
-	if (displacementBound) {
+	if (displacementBound)
+	{
 		glActiveTexture(GL_TEXTURE3);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
-	if (AOBound) {
+	if (AOBound)
+	{
 		glActiveTexture(GL_TEXTURE4);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}

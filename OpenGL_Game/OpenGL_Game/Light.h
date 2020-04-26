@@ -10,8 +10,9 @@
 class Light
 {
 public:
-	
-	const enum class Type : short {
+
+	const enum class Type : short
+	{
 		UNSET = 0,
 		DIRECTIONAL = 1,
 		POINT = 2,

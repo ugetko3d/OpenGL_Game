@@ -2,7 +2,7 @@
 
 Player::Player()
 {
-	
+
 }
 
 // ---------------------------------------------------------------------------------------------------------
@@ -50,7 +50,7 @@ void Player::movementInput(GLFWwindow* frame, float deltaTime, bool flyingMode)
 		isJumping = true;
 
 	}
-	
+
 	if (isFlying && gravityPlayer != 0)
 		gravityPlayer = 0;
 

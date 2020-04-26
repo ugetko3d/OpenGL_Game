@@ -16,7 +16,7 @@ Shader::Shader(const std::string& vertex_shader_path, const std::string& fragmen
 {
 	loadShader(vertex_shader_path, fragment_shader_path);
 }
- 
+
 void Shader::loadShader(const std::string& vertex_shader_path, const std::string& fragment_shader_path)
 {
 	// Parsing Shader Code
@@ -70,7 +70,7 @@ void Shader::use()
 
 void Shader::setBool(const std::string& name, bool value) const
 {
-	glUniform1i(glGetUniformLocation(m_program, name.c_str()), (int) value);
+	glUniform1i(glGetUniformLocation(m_program, name.c_str()), (int)value);
 }
 
 void Shader::setInt(const std::string& name, int value) const

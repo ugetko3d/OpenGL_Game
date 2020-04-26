@@ -20,7 +20,8 @@ Cube::~Cube()
 
 }
 
-void Cube::createCube(float width, float height) {
+void Cube::createCube(float width, float height)
+{
 	float widthRadius = width / 2.0f;
 	float heightRadius = height / 2.0f;
 

@@ -2,16 +2,18 @@
 
 out vec4 FragColour;
 
-struct Material {
+struct Material
+{
 	sampler2D diffuse;
 	sampler2D specular;
 	sampler2D normal;
 	sampler2D displacement;
 	sampler2D AO;
 	float shininess;
-}; 
+};
 
-struct DirectionLight {
+struct DirectionLight
+{
 	vec3 direction;
 
 	vec3 ambient;
@@ -19,19 +21,21 @@ struct DirectionLight {
 	vec3 specular;
 };
 
-struct PointLight {
-    vec3 position;
-    
-    float constant;
-    float linear;
-    float quadratic;
-	
-    vec3 ambient;
-    vec3 diffuse;
-    vec3 specular;
+struct PointLight
+{
+	vec3 position;
+
+	float constant;
+	float linear;
+	float quadratic;
+
+	vec3 ambient;
+	vec3 diffuse;
+	vec3 specular;
 };
 
-struct SpotLight {
+struct SpotLight
+{
 	vec3 position;
 	vec3 direction;
 	float cutOff;
@@ -56,14 +60,14 @@ struct SpotLight {
 #define NORMAL_STRENGTH 0.5
 #define blinn true
 
-in vec3 Point;  
-in vec3 Normal;  
+in vec3 Point;
+in vec3 Normal;
 in vec3 Colour;
 in vec2 UV;
 in vec3 TangentLightPos[MAX_LIGHTS];
 in vec3 TangentViewPos;
 in vec3 TangentPoint;
-  
+
 uniform vec3 viewPos;
 uniform Material material;
 uniform DirectionLight directionalLights[MAX_DIRECTIONAL_LIGHTS];
@@ -84,7 +88,7 @@ void main()
 	// Make sure normals and view_direction is normalized for angle comparisons.
 	vec3 normal = normalize(Normal);
 	vec3 view_direction = normalize(viewPos - Point);
-	
+
 	vec3 result = vec3(0.0f);
 	// Calculate directional light(s)
 	for (int i = 0; i < directionLightCount; i++)
@@ -101,7 +105,7 @@ void main()
 
 	// Result output
 	FragColour = vec4(result, 1.0);
-} 
+}
 
 // calculates the colour when using a directional light.
 
@@ -175,7 +179,7 @@ vec3 CalcNormals(vec3 tangentLightPos)
 	// obtain normal from normal map in range [0,1]
 	vec3 normal = texture(material.normal, UV).rgb;
 	// transform normal vector to range [-1,1], normal is in tangent space
-	normal = normalize(normal * 2.0 - 1.0);  
+	normal = normalize(normal * 2.0 - 1.0);
 	// angle
 	vec3 light_direction = normalize(tangentLightPos - TangentPoint);
 	float angle = max(dot(light_direction, normal), 0.0);

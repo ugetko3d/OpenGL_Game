@@ -14,7 +14,8 @@ Diamond::~Diamond()
 {
 }
 
-void Diamond::createDiamond(float width) {
+void Diamond::createDiamond(float width)
+{
 	float radius = width / 2.0f;
 	vertices = {
 		vec3(-radius, 0.0f, -radius),

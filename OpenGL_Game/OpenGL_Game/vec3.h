@@ -2,7 +2,8 @@
 
 #include <iostream>
 
-class vec3 {
+class vec3
+{
 
 public:
 	float x;

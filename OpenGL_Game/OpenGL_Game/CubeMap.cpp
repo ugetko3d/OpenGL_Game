@@ -10,7 +10,8 @@ CubeMap::~CubeMap()
 	glDeleteBuffers(1, &m_VBO);
 }
 
-void CubeMap::storeOnGPU() {
+void CubeMap::storeOnGPU()
+{
 	glGenVertexArrays(1, &m_VAO);
 	glGenBuffers(1, &m_VBO);
 	glBindVertexArray(m_VAO);
@@ -47,16 +48,17 @@ void CubeMap::loadCubemapTexture(const std::vector<std::string>& faces)
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 }
 
-void CubeMap::loadCubemapTexture(const std::string& right, const std::string& left, const std::string& top, const std::string& bottom, const std::string& front, const std::string&back)
+void CubeMap::loadCubemapTexture(const std::string& right, const std::string& left, const std::string& top, const std::string& bottom, const std::string& front, const std::string& back)
 {
 	std::vector<std::string> faces = { right , left, top, bottom, front, back };
 	loadCubemapTexture(faces);
 }
 
-void CubeMap::drawCubemap(Shader& shader, mat4& view, mat4& projection) {
+void CubeMap::drawCubemap(Shader& shader, mat4& view, mat4& projection)
+{
 	// Change depth function so depth test passes when values are equal to depth buffer's content
-	glDepthFunc(GL_LEQUAL);  
-	
+	glDepthFunc(GL_LEQUAL);
+
 	shader.use();
 
 	// Remove translation from the view matrix
@@ -64,7 +66,7 @@ void CubeMap::drawCubemap(Shader& shader, mat4& view, mat4& projection) {
 
 	shader.setMat4("view", view);
 	shader.setMat4("projection", projection);
-	
+
 	// Render skybox cube
 	glBindVertexArray(m_VAO);
 	glActiveTexture(GL_TEXTURE0);
@@ -73,5 +75,5 @@ void CubeMap::drawCubemap(Shader& shader, mat4& view, mat4& projection) {
 	glBindVertexArray(0);
 
 	// Set depth function back to default
-	glDepthFunc(GL_LESS); 
+	glDepthFunc(GL_LESS);
 }

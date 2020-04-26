@@ -6,7 +6,8 @@
 #include "SpotLight.h"
 
 
-class Player {
+class Player
+{
 
 public:
 

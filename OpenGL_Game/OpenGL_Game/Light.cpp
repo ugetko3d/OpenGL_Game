@@ -51,7 +51,8 @@ void Light::disable()
 	}
 }
 
-bool Light::isEnabled() {
+bool Light::isEnabled()
+{
 	return enabled;
 }
 
@@ -114,7 +115,7 @@ bool Light::drawLight(const Shader& shader)
 	return false;
 }
 
-bool Light::operator==(const Light & right) const
+bool Light::operator==(const Light& right) const
 {
 	return (this->type == right.type);
 }

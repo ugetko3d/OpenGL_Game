@@ -2,7 +2,8 @@
 
 #include <iostream>
 
-class vec4 {
+class vec4
+{
 
 public:
 	float x;
@@ -72,7 +73,7 @@ public:
 	static vec4 scale(const vec4& v, float k);
 
 	/**
-		These methods overwrites the arithmetic operators when they are used between two vec4 objects 
+		These methods overwrites the arithmetic operators when they are used between two vec4 objects
 	@param v1 Vector 1.
 	@param v2 Vector 2.
 	@return The resulting vector of the arithmetic operation
@@ -88,4 +89,4 @@ public:
 	*/
 	friend std::ostream& operator<<(std::ostream& stream, const vec4& v);
 
-}; 
+};

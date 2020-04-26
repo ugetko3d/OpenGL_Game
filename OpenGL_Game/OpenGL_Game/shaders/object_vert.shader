@@ -1,11 +1,11 @@
 #version 450 core
 
-layout (location = 0) in vec3 aPoints;
-layout (location = 1) in vec3 aNormals;
-layout (location = 2) in vec3 aColours;
-layout (location = 3) in vec2 aUVs;
-layout (location = 4) in vec3 aTangent;
-layout (location = 5) in vec3 aBitangent;
+layout(location = 0) in vec3 aPoints;
+layout(location = 1) in vec3 aNormals;
+layout(location = 2) in vec3 aColours;
+layout(location = 3) in vec2 aUVs;
+layout(location = 4) in vec3 aTangent;
+layout(location = 5) in vec3 aBitangent;
 
 #define MAX_LIGHTS 20
 
@@ -28,11 +28,11 @@ uniform vec3 viewPos;
 
 void main()
 {
-    Point = vec3(model * vec4(aPoints, 1.0));
+	Point = vec3(model * vec4(aPoints, 1.0));
 	UV = aUVs;
-    Normal = mat3(transpose(inverse(model))) * aNormals; 
+	Normal = mat3(transpose(inverse(model))) * aNormals;
 	Colour = aColours;
-    
+
 	mat3 normalMatrix = transpose(inverse(mat3(model)));
 	vec3 T = normalize(normalMatrix * aTangent);
 	vec3 B = normalize(vec3(model * vec4(aBitangent, 0.0)));
@@ -44,5 +44,5 @@ void main()
 	TangentViewPos = TBN * viewPos;
 	TangentPoint = TBN * Point;
 
-    gl_Position = projection * view * vec4(Point, 1.0);
+	gl_Position = projection * view * vec4(Point, 1.0);
 }

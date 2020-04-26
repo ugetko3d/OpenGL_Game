@@ -3,7 +3,8 @@
 #include "vec3.h"
 #include "mathdefinitions.h"
 
-class mat4 {
+class mat4
+{
 
 public:
 	float data[16];

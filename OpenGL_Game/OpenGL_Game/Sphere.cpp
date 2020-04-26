@@ -14,18 +14,19 @@ Sphere::~Sphere()
 {
 }
 
-void Sphere::createSphere(float width, unsigned int quality) {
+void Sphere::createSphere(float width, unsigned int quality)
+{
 	float radius = width / 2.0f;
 
 	Diamond diamond = Diamond(width);
-	
+
 	vertices = diamond.vertices;
 	uvs = diamond.uvs;
 	subdivide(quality);
 
-	for (int i = 0; i < vertices.size(); i++)
+	for (unsigned int i = 0; i < vertices.size(); i++)
 	{
 		vertices.at(i).normalize();
 		vertices.at(i).scale(width);
-	}	
+	}
 }

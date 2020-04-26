@@ -2,7 +2,8 @@
 
 #include <iostream>
 
-class vec2 {
+class vec2
+{
 
 public:
 	float x;
@@ -14,12 +15,12 @@ public:
 
 	static float dot(const vec2& v1, const vec2& v2);
 
-	static float length(const vec2 & v);
+	static float length(const vec2& v);
 
 	void normalize();
 	void scale(float k);
 
-	static vec2 midpoint(const vec2 & a, const vec2 & b);
+	static vec2 midpoint(const vec2& a, const vec2& b);
 
 	static vec2 add(const vec2& v1, const vec2& v2);
 	static vec2 subtract(const vec2& v1, const vec2& v2);

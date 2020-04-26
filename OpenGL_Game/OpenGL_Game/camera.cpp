@@ -69,7 +69,7 @@ void Camera::processMouseMovement(float xoffset, float yoffset)
 	if (pitch < -89.0f)
 	{
 		pitch = -89.0f;
-	}		
+	}
 
 	// Update front, right and up vectors using the updated Eular angles
 	updateCameraVectors();
@@ -80,15 +80,15 @@ void Camera::setFOV(float yoffset)
 	if (fov >= 1.0f && fov <= 45.0f)
 	{
 		fov -= yoffset;
-	}	
+	}
 	if (fov <= 1.0f)
 	{
 		fov = 1.0f;
-	}	
+	}
 	if (fov >= 45.0f)
 	{
 		fov = 45.0f;
-	}	
+	}
 }
 
 void Camera::updateCameraVectors()

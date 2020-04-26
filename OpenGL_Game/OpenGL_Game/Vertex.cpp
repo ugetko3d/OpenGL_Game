@@ -13,7 +13,7 @@ Vertex::Vertex(const std::vector<vec3>& vertices, const std::vector<vec3>& norma
 
 Vertex::~Vertex()
 {
-	if(storedOnGPU)
+	if (storedOnGPU)
 	{
 		glDeleteVertexArrays(1, &VAO);
 		glDeleteBuffers(1, &VBO);
@@ -103,7 +103,8 @@ bool Vertex::hasIndices()
 	return !indices.empty();
 }
 
-const unsigned int Vertex::stride() {
+const unsigned int Vertex::stride()
+{
 	unsigned int stride = 0;
 	if (hasVertices()) stride += 3;
 	if (hasNormals()) stride += 3;
@@ -114,24 +115,28 @@ const unsigned int Vertex::stride() {
 	return stride;
 }
 
-const unsigned int Vertex::verticeStride() {
+const unsigned int Vertex::verticeStride()
+{
 	return 0;
 }
 
-const unsigned int Vertex::normalStride() {
+const unsigned int Vertex::normalStride()
+{
 	unsigned int stride = 3;
 	if (!hasVertices()) stride -= 3;
 	return stride;
 }
 
-const unsigned int Vertex::colourStride() {
+const unsigned int Vertex::colourStride()
+{
 	unsigned int stride = 6;
 	if (!hasVertices()) stride -= 3;
 	if (!hasNormals()) stride -= 3;
 	return stride;
 }
 
-const unsigned int Vertex::uvStride() {
+const unsigned int Vertex::uvStride()
+{
 	unsigned int stride = 9;
 	if (!hasVertices()) stride -= 3;
 	if (!hasNormals()) stride -= 3;
@@ -139,7 +144,8 @@ const unsigned int Vertex::uvStride() {
 	return stride;
 }
 
-const unsigned int Vertex::tangentStride() {
+const unsigned int Vertex::tangentStride()
+{
 	unsigned int stride = 11;
 	if (!hasVertices()) stride -= 3;
 	if (!hasNormals()) stride -= 3;
@@ -173,7 +179,8 @@ bool Vertex::storeOnGPU()
 
 		const unsigned int stride = this->stride() * sizeof(float);
 
-		if (hasVertices()) {
+		if (hasVertices())
+		{
 			// Position attribute
 			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, (void*)(verticeStride() * sizeof(float)));
 			glEnableVertexAttribArray(0);
@@ -208,7 +215,8 @@ bool Vertex::storeOnGPU()
 			glVertexAttribPointer(5, 3, GL_FLOAT, GL_FALSE, stride, (void*)(bitangentStride() * sizeof(float)));
 			glEnableVertexAttribArray(5);
 		}
-		if (hasIndices()) {
+		if (hasIndices())
+		{
 			// Bind the EBO to the GL_ELEMENT_ARRAY_BUFFER target
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 			// Copy indices data into the EBO currently bound to the GL_ELEMENT_ARRAY_BUFFER target
@@ -260,14 +268,14 @@ bool Vertex::drawObject(const Shader& shader, const vec3& position, const vec3& 
 		else
 			shader.setVec2("scale", vec2(1.0f, 1.0f));*/
 
-		// Draw mesh
+			// Draw mesh
 		if (hasIndices())
 			glDrawElements(draw_mode, indices.size(), GL_UNSIGNED_INT, 0);
 		else
 			glDrawArrays(draw_mode, 0, size());
 
 		// Unbind textures
-		if(material)
+		if (material)
 			material->unbind();
 
 		return true;
@@ -337,7 +345,7 @@ void Vertex::printBitangents()
 
 void Vertex::printIndices()
 {
-	for (int i = 0; i < indices.size(); i += 3)
+	for (unsigned int i = 0; i < indices.size(); i += 3)
 		std::cout << indices[i] << ", " << indices[i + 1] << ", " << indices[i + 2] << std::endl;
 }
 
@@ -405,7 +413,7 @@ std::vector<float> Vertex::data()
 			raw_data.push_back(tangents.at(i).x);
 			raw_data.push_back(tangents.at(i).y);
 			raw_data.push_back(tangents.at(i).z);
-		}	
+		}
 		if (hasBitangents())
 		{
 			raw_data.push_back(bitangents.at(i).x);
@@ -416,12 +424,14 @@ std::vector<float> Vertex::data()
 	return raw_data;
 }
 
-void Vertex::createNormals() {
+void Vertex::createNormals()
+{
 	normals.clear();
 
 	if (hasIndices())
 	{
-		for (unsigned int i = 0; i < indices.size(); i += 3) {
+		for (unsigned int i = 0; i < indices.size(); i += 3)
+		{
 			vec3 p1 = vertices.at(indices.at(i + 0));
 			vec3 p2 = vertices.at(indices.at(i + 1));
 			vec3 p3 = vertices.at(indices.at(i + 2));
@@ -434,8 +444,10 @@ void Vertex::createNormals() {
 			normals.insert(normals.end(), 3, normal);
 		}
 	}
-	else {
-		for (unsigned int i = 0; i < size(); i += 3) {
+	else
+	{
+		for (unsigned int i = 0; i < size(); i += 3)
+		{
 			vec3 p1 = vertices.at(i + 0);
 			vec3 p2 = vertices.at(i + 1);
 			vec3 p3 = vertices.at(i + 2);
@@ -450,11 +462,13 @@ void Vertex::createNormals() {
 	}
 }
 
-void Vertex::setColour(const vec3& colour) {
+void Vertex::setColour(const vec3& colour)
+{
 	colours = std::vector<vec3>(size(), colour);
 }
 
-void Vertex::calculateTangents() {
+void Vertex::calculateTangents()
+{
 
 	// Remove any previous tangents and bitangents
 	tangents.clear();
@@ -462,7 +476,8 @@ void Vertex::calculateTangents() {
 
 	if (hasIndices())
 	{
-		for (unsigned int i = 0; i < indices.size(); i += 3) {
+		for (unsigned int i = 0; i < indices.size(); i += 3)
+		{
 			// Shortcuts for vertices
 			vec3 p1 = vertices.at(indices.at(i + 0));
 			vec3 p2 = vertices.at(indices.at(i + 1));
@@ -482,8 +497,8 @@ void Vertex::calculateTangents() {
 			vec2 deltaUV2 = uv3 - uv1;
 
 			float r = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV1.y * deltaUV2.x);
-			vec3 tangent = (deltaPos1 * deltaUV2.y - deltaPos2 * deltaUV1.y)*r;
-			vec3 bitangent = (deltaPos2 * deltaUV1.x - deltaPos1 * deltaUV2.x)*r;
+			vec3 tangent = (deltaPos1 * deltaUV2.y - deltaPos2 * deltaUV1.y) * r;
+			vec3 bitangent = (deltaPos2 * deltaUV1.x - deltaPos1 * deltaUV2.x) * r;
 
 			// Set the same tangent for all three vertices of the triangle.
 			// They will be merged later, in vboindexer.cpp
@@ -497,8 +512,10 @@ void Vertex::calculateTangents() {
 			bitangents.push_back(bitangent);
 		}
 	}
-	else {
-		for (unsigned int i = 0; i < size(); i += 3) {
+	else
+	{
+		for (unsigned int i = 0; i < size(); i += 3)
+		{
 			// Shortcuts for vertices
 			vec3 p1 = vertices.at(i + 0);
 			vec3 p2 = vertices.at(i + 1);
@@ -518,8 +535,8 @@ void Vertex::calculateTangents() {
 			vec2 deltaUV2 = uv3 - uv1;
 
 			float r = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV1.y * deltaUV2.x);
-			vec3 tangent = (deltaPos1 * deltaUV2.y - deltaPos2 * deltaUV1.y)*r;
-			vec3 bitangent = (deltaPos2 * deltaUV1.x - deltaPos1 * deltaUV2.x)*r;
+			vec3 tangent = (deltaPos1 * deltaUV2.y - deltaPos2 * deltaUV1.y) * r;
+			vec3 bitangent = (deltaPos2 * deltaUV1.x - deltaPos1 * deltaUV2.x) * r;
 
 			// Set the same tangent for all three vertices of the triangle.
 			// They will be merged later, in vboindexer.cpp
@@ -535,19 +552,23 @@ void Vertex::calculateTangents() {
 	}
 }
 
-std::vector<vec3> Vertex::unwrap(const std::vector<vec3>& vertex_data) {
+std::vector<vec3> Vertex::unwrap(const std::vector<vec3>& vertex_data)
+{
 	std::vector<vec3> unwrapped_data;
 	unwrapped_data.reserve(indices.size());
-	for (unsigned int indice : indices) {
+	for (unsigned int indice : indices)
+	{
 		unwrapped_data.push_back(vertex_data.at(indice));
 	}
 	return unwrapped_data;
 }
 
-std::vector<vec2> Vertex::unwrap(const std::vector<vec2>& vertex_data) {
+std::vector<vec2> Vertex::unwrap(const std::vector<vec2>& vertex_data)
+{
 	std::vector<vec2> unwrapped_data;
 	unwrapped_data.reserve(indices.size());
-	for (unsigned int indice : indices) {
+	for (unsigned int indice : indices)
+	{
 		unwrapped_data.push_back(vertex_data.at(indice));
 	}
 	return unwrapped_data;
@@ -564,11 +585,11 @@ void Vertex::subdivide(unsigned int divitions)
 		if (hasTangents()) tangents = unwrap(tangents);
 		if (hasBitangents()) bitangents = unwrap(bitangents);
 		indices.clear();
-	}	
+	}
 
 	unsigned int times = (divitions < 7) ? divitions : 6;
 
-	for (int d = 0; d < times; d++)
+	for (unsigned int d = 0; d < times; d++)
 	{
 		if (hasVertices()) vertices = subdivide(vertices);
 		if (hasNormals()) normals = subdivide(normals);
