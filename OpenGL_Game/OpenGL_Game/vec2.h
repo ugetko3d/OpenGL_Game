@@ -2,8 +2,6 @@
 
 #include <iostream>
 
-static int copyCounter2 = 0;
-
 class vec2 {
 
 public:
@@ -14,13 +12,12 @@ public:
 	vec2(float a);
 	vec2(float a, float b);
 
-	vec2(const vec2& v);
-
 	static float dot(const vec2& v1, const vec2& v2);
 
 	static float length(const vec2 & v);
 
 	void normalize();
+	void scale(float k);
 
 	static vec2 midpoint(const vec2 & a, const vec2 & b);
 

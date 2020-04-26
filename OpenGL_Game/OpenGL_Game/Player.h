@@ -39,6 +39,7 @@ private:
 	float jumpStrength = 7.0f;
 	float gravityPlayer = 0.0f;
 
+	void updateFlashlight();
 	void processPlayerJump(float deltaTime, float jumpStrength);
 	bool collision(const vec3& objectPos);
 

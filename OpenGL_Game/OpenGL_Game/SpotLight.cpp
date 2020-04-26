@@ -4,7 +4,7 @@ SpotLight::SpotLight()
 {
 	this->type = Type::SPOT;
 	this->id = spot_light_counter++;
-	this->color = COLOR;
+	this->colour = COLOUR;
 	this->position = POSITION;
 	this->direction = DIRECTION;
 	this->ambient = AMBIENT;
@@ -17,11 +17,11 @@ SpotLight::SpotLight()
 	this->outerCutOff = OUTERCUTOFF;
 }
 
-SpotLight::SpotLight(const vec3& color, const vec3& position, const vec3& direction)
+SpotLight::SpotLight(const vec3& colour, const vec3& position, const vec3& direction)
 {
 	this->type = Type::SPOT;
 	this->id = spot_light_counter++;
-	this->color = color;
+	this->colour = colour;
 	this->position = position;
 	this->direction = direction;
 	this->ambient = AMBIENT;
@@ -34,11 +34,11 @@ SpotLight::SpotLight(const vec3& color, const vec3& position, const vec3& direct
 	this->outerCutOff = OUTERCUTOFF;
 }
 
-SpotLight::SpotLight(const vec3& color, const vec3& position, const vec3& direction, float ambient, float diffuse, float specular)
+SpotLight::SpotLight(const vec3& colour, const vec3& position, const vec3& direction, float ambient, float diffuse, float specular)
 {
 	this->type = Type::SPOT;
 	this->id = spot_light_counter++;
-	this->color = color;
+	this->colour = colour;
 	this->position = position;
 	this->direction = direction;
 	this->ambient = ambient;
@@ -51,11 +51,11 @@ SpotLight::SpotLight(const vec3& color, const vec3& position, const vec3& direct
 	this->outerCutOff = OUTERCUTOFF;
 }
 
-SpotLight::SpotLight(const vec3& color, const vec3& position, const vec3& direction, float ambient, float diffuse, float specular, float constant, float linear, float quadratic)
+SpotLight::SpotLight(const vec3& colour, const vec3& position, const vec3& direction, float ambient, float diffuse, float specular, float constant, float linear, float quadratic)
 {
 	this->type = Type::SPOT;
 	this->id = spot_light_counter++;
-	this->color = color;
+	this->colour = colour;
 	this->position = position;
 	this->direction = direction;
 	this->ambient = ambient;
@@ -68,11 +68,11 @@ SpotLight::SpotLight(const vec3& color, const vec3& position, const vec3& direct
 	this->outerCutOff = OUTERCUTOFF;
 }
 
-SpotLight::SpotLight(const vec3& color, const vec3& position, const vec3& direction, float ambient, float diffuse, float specular, float constant, float linear, float quadratic, float cutOff, float outerCutOff)
+SpotLight::SpotLight(const vec3& colour, const vec3& position, const vec3& direction, float ambient, float diffuse, float specular, float constant, float linear, float quadratic, float cutOff, float outerCutOff)
 {
 	this->type = Type::SPOT;
 	this->id = spot_light_counter++;
-	this->color = color;
+	this->colour = colour;
 	this->position = position;
 	this->direction = direction;
 	this->ambient = ambient;
@@ -83,6 +83,16 @@ SpotLight::SpotLight(const vec3& color, const vec3& position, const vec3& direct
 	this->quadratic = quadratic;
 	this->cutOff = cutOff;
 	this->outerCutOff = outerCutOff;
+}
+
+void SpotLight::setPosition(const vec3& position)
+{
+	this->position = position;
+}
+
+void SpotLight::setDirection(const vec3& direction)
+{
+	this->direction = direction;
 }
 
 SpotLight::~SpotLight()

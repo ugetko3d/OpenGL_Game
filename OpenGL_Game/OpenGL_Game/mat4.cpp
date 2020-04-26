@@ -5,13 +5,6 @@ mat4::mat4() : data{0.0f} {
 
 }
 
-mat4::mat4(const mat4& m1) {
-	copyCounter++;
-	std::cout << "We have copied: " << copyCounter << " number of 4x4 matrixes so far..." << std::endl;
-
-	*this = m1;
-}
-
 void mat4::reset()
 {
 	*data = { 0 };

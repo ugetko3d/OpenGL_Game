@@ -47,6 +47,6 @@ void Rect::createRectangle(float width, float height) {
 		vec2(0.0f, 1.0f)
 	};
 
-	setColor();
+	setColour();
 	calculateTangents();
 }

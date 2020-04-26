@@ -60,9 +60,9 @@ bool Light::drawLight(const Shader& shader)
 	if (is(Type::DIRECTIONAL) && enabled)
 	{
 		shader.setVec3("directionalLights[" + std::to_string(id) + "].direction", direction);
-		shader.setVec3("directionalLights[" + std::to_string(id) + "].ambient", vec3::scale(color, ambient));
-		shader.setVec3("directionalLights[" + std::to_string(id) + "].diffuse", vec3::scale(color, diffuse));
-		shader.setVec3("directionalLights[" + std::to_string(id) + "].specular", vec3::scale(color, specular));
+		shader.setVec3("directionalLights[" + std::to_string(id) + "].ambient", vec3::scale(colour, ambient));
+		shader.setVec3("directionalLights[" + std::to_string(id) + "].diffuse", vec3::scale(colour, diffuse));
+		shader.setVec3("directionalLights[" + std::to_string(id) + "].specular", vec3::scale(colour, specular));
 		return true;
 	}
 	else if (is(Type::DIRECTIONAL) && !enabled)
@@ -75,9 +75,9 @@ bool Light::drawLight(const Shader& shader)
 	else if (is(Type::POINT) && enabled)
 	{
 		shader.setVec3("pointLights[" + std::to_string(id) + "].position", position);
-		shader.setVec3("pointLights[" + std::to_string(id) + "].ambient", vec3::scale(color, ambient));
-		shader.setVec3("pointLights[" + std::to_string(id) + "].diffuse", vec3::scale(color, diffuse));
-		shader.setVec3("pointLights[" + std::to_string(id) + "].specular", vec3::scale(color, specular));
+		shader.setVec3("pointLights[" + std::to_string(id) + "].ambient", vec3::scale(colour, ambient));
+		shader.setVec3("pointLights[" + std::to_string(id) + "].diffuse", vec3::scale(colour, diffuse));
+		shader.setVec3("pointLights[" + std::to_string(id) + "].specular", vec3::scale(colour, specular));
 		shader.setFloat("pointLights[" + std::to_string(id) + "].constant", constant);
 		shader.setFloat("pointLights[" + std::to_string(id) + "].linear", linear);
 		shader.setFloat("pointLights[" + std::to_string(id) + "].quadratic", quadratic);

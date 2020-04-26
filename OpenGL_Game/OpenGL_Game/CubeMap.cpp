@@ -20,7 +20,7 @@ void CubeMap::storeOnGPU() {
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 }
 
-void CubeMap::loadCubemapTexture(std::vector<std::string> faces)
+void CubeMap::loadCubemapTexture(const std::vector<std::string>& faces)
 {
 	glGenTextures(1, &m_id);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, m_id);
@@ -47,7 +47,7 @@ void CubeMap::loadCubemapTexture(std::vector<std::string> faces)
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 }
 
-void CubeMap::loadCubemapTexture(const std::string right, const std::string left, const std::string top, const std::string bottom, const std::string front, const std::string back)
+void CubeMap::loadCubemapTexture(const std::string& right, const std::string& left, const std::string& top, const std::string& bottom, const std::string& front, const std::string&back)
 {
 	std::vector<std::string> faces = { right , left, top, bottom, front, back };
 	loadCubemapTexture(faces);
@@ -60,6 +60,8 @@ void CubeMap::drawCubemap(Shader& shader, mat4& view, mat4& projection) {
 	shader.use();
 
 	// Remove translation from the view matrix
+	view.removeTranslation();
+
 	shader.setMat4("view", view);
 	shader.setMat4("projection", projection);
 	

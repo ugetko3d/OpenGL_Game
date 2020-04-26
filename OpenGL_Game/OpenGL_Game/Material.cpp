@@ -8,33 +8,43 @@ Material::Material()
 
 Material::~Material()
 {
+	/*if(diffuseBound)
+		glDeleteTextures(1, &diffuse.id);
+	if (specularBound)
+		glDeleteTextures(1, &specular.id);
+	if (normalBound)
+		glDeleteTextures(1, &normal.id);
+	if (displacementBound)
+		glDeleteTextures(1, &displacement.id);
+	if (AOBound)
+		glDeleteTextures(1, &ambient_occlusion.id);*/
 }
 
-void Material::addDiffuse(const Texture & texture)
+void Material::addDiffuse(const Texture& texture)
 {
 	this->diffuse = texture;
 	this->diffuseBound = true;
 }
 
-void Material::addSpecular(const Texture & texture)
+void Material::addSpecular(const Texture& texture)
 {
 	this->specular = texture;
 	this->specularBound = true;
 }
 
-void Material::addNormal(const Texture & texture)
+void Material::addNormal(const Texture& texture)
 {
 	this->normal = texture;
 	this->normalBound = true;
 }
 
-void Material::addDisplacement(const Texture & texture)
+void Material::addDisplacement(const Texture& texture)
 {
 	this->displacement = texture;
 	this->displacementBound = true;
 }
 
-void Material::addAmbientOcclusion(const Texture & texture)
+void Material::addAmbientOcclusion(const Texture& texture)
 {
 	this->ambient_occlusion = texture;
 	this->AOBound = true;
@@ -67,37 +77,47 @@ const bool Material::hasAO()
 void Material::bind()
 {
 	if (diffuseBound) {
-		diffuse.bind(0);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, diffuse.id);
 	}
 	if (specularBound) {
-		specular.bind(1);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, specular.id);
 	}
 	if (normalBound) {
-		normal.bind(2);
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, normal.id);
 	}
 	if (displacementBound) {
-		displacement.bind(3);
+		glActiveTexture(GL_TEXTURE3);
+		glBindTexture(GL_TEXTURE_2D, displacement.id);
 	}
 	if (AOBound) {
-		ambient_occlusion.bind(4);
+		glActiveTexture(GL_TEXTURE4);
+		glBindTexture(GL_TEXTURE_2D, ambient_occlusion.id);
 	}
 }
 
 void Material::unbind()
 {
 	if (diffuseBound) {
-		diffuse.unbind();
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 	if (specularBound) {
-		specular.unbind();
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 	if (normalBound) {
-		normal.unbind();
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 	if (displacementBound) {
-		displacement.unbind();
+		glActiveTexture(GL_TEXTURE3);
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 	if (AOBound) {
-		ambient_occlusion.unbind();
+		glActiveTexture(GL_TEXTURE4);
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 }

@@ -17,6 +17,7 @@ Cube::Cube(float width, float height)
 
 Cube::~Cube()
 {
+
 }
 
 void Cube::createCube(float width, float height) {
@@ -136,6 +137,6 @@ void Cube::createCube(float width, float height) {
 		vec2(1.0f, 0.0f),
 		vec2(0.0f, 0.0f)
 	};
-	setColor();
+	setColour();
 	calculateTangents();
 }

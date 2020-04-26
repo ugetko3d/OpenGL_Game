@@ -19,24 +19,24 @@ private:
 	bool storedOnGPU = false, scaleTexture = false;
 	GLenum draw_mode = GL_TRIANGLES;
 	/* Private function: Split up vec3 data into smaller pieces */
-	std::vector<vec3> subdivide(const std::vector<vec3> & vertex_data);
+	std::vector<vec3> subdivide(const std::vector<vec3>& vertex_data);
 	/* Private function: Split up vec2 data into smaller pieces */
-	std::vector<vec2> subdivide(const std::vector<vec2> & vertex_data);
+	std::vector<vec2> subdivide(const std::vector<vec2>& vertex_data);
 protected:
 	/* Set draw mode. Defaults to GL_TRIANGLES */
 	void setDrawMode(GLenum mode);
 public:
-	std::vector<vec3> vertices, normals, colors, tangents, bitangents;
+	std::vector<vec3> vertices, normals, colours, tangents, bitangents;
 	std::vector<vec2> uvs;
 	std::vector<unsigned int> indices;
 
 	/* Cosntructor */
-	Vertex(const std::vector<vec3>& vertices = std::vector<vec3>(), const std::vector<vec3>& normal = std::vector<vec3>(), const std::vector<vec3>& color = std::vector<vec3>(), const std::vector<vec2>& uv = std::vector<vec2>(), const std::vector<vec3>& tangent = std::vector<vec3>(), const std::vector<vec3>& bitangents = std::vector<vec3>(), const std::vector<unsigned int>& indices = std::vector<unsigned int>());
+	Vertex(const std::vector<vec3>& vertices = std::vector<vec3>(), const std::vector<vec3>& normal = std::vector<vec3>(), const std::vector<vec3>& colour = std::vector<vec3>(), const std::vector<vec2>& uv = std::vector<vec2>(), const std::vector<vec3>& tangent = std::vector<vec3>(), const std::vector<vec3>& bitangents = std::vector<vec3>(), const std::vector<unsigned int>& indices = std::vector<unsigned int>());
 	/* De-constructor */
 	~Vertex();
 
 	/* Set scale (creates scale model) */
-	void setScale(const vec3 &scale_vector);
+	void setScale(const vec3& scale_vector);
 	/* Returns scale model */
 	mat4& getScale();
 	/* Returns UV scale */
@@ -46,7 +46,7 @@ public:
 	/* Returns rotation model */
 	mat4& getRotation();
 	/* Set position (create translation model) */
-	void setTranslate(const vec3 &position_vector);
+	void setTranslate(const vec3& position_vector);
 	/* Returns translation model */
 	mat4& getTranslate();
 
@@ -59,8 +59,8 @@ public:
 	bool hasVertices();
 	/* Returns wheter this vertex has normals or not */
 	bool hasNormals();
-	/* Returns wheter this vertex has colors or not */
-	bool hasColors();
+	/* Returns wheter this vertex has colours or not */
+	bool hasColours();
 	/* Returns wheter this vertex has uvs or not */
 	bool hasUVs();
 	/* Returns wheter this vertex has tangents or not */
@@ -76,8 +76,8 @@ public:
 	const unsigned int verticeStride();
 	/* Returns the first index of the first normal in the vertex data. */
 	const unsigned int normalStride();
-	/* Returns the first index of the first color in the vertex data. */
-	const unsigned int colorStride();
+	/* Returns the first index of the first colour in the vertex data. */
+	const unsigned int colourStride();
 	/* Returns the first index of the first texture in the vertex data. */
 	const unsigned int uvStride();
 	/* Returns the first index of the first tangent in the vertex data. */
@@ -99,34 +99,32 @@ public:
 	bool drawObject(const Shader& shader, const vec3& position, Material* material);
 	/* Draw vertex data from GPU */
 	bool drawObject(const Shader& shader, Material* material);
-	/* De-allocate vertex data once it has outlived it's purpose */
-	bool deAllocate();
 
 	/* Prints all vertices in a human-readable format */
-	const void printVertices();
+	void printVertices();
 	/* Prints all normals in a human-readable format */
-	const void printNormals();
-	/* Prints all colors in a human-readable format */
-	const void printColors();
+	void printNormals();
+	/* Prints all colours in a human-readable format */
+	void printColours();
 	/* Prints all uvs in a human-readable format */
-	const void printUVs();
+	void printUVs();
 	/* Prints all tangents in a human-readable format */
-	const void printTangents();
+	void printTangents();
 	/* Prints all bitangents in a human-readable format */
-	const void printBitangents();
+	void printBitangents();
 	/* Prints all indices in a human-readable format */
-	const void printIndices();
+	void printIndices();
 	/* Prints vertex data in a human-readable format */
-	const void printVertexData();
+	void printVertexData();
 	/* Prints vertex data sizes in a human-readable format */
-	const void printDataSizes();
+	void printDataSizes();
 
 	/* Return the combined vertex data */
 	std::vector<float> data();
 	/* Calculate the normals of each triangle, https://www.khronos.org/opengl/wiki/Calculating_a_Surface_Normal */
 	void createNormals();
-	/* Set color of on all vertices */
-	void setColor(const vec3 & color = vec3(1.0f, 1.0f, 1.0f));
+	/* Set colour of on all vertices */
+	void setColour(const vec3& colour = vec3(1.0f, 1.0f, 1.0f));
 	/* Calculate tangent vectors for all triangles */
 	void calculateTangents();
 	/* Unwrap vertex data with indices. */
@@ -134,5 +132,5 @@ public:
 	/* Unwrap vertex data with indices. */
 	std::vector<vec2> unwrap(const std::vector<vec2>& vertex_data);
 	/* Split up mesh into smaller pieces. Keep @param divitions below 10 */
-	void subdivide(const unsigned int & divitions);
+	void subdivide(unsigned int divitions);
 };

@@ -13,8 +13,6 @@ void Player::movementInput(GLFWwindow* frame, float deltaTime, bool flyingMode)
 	if (glfwGetKey(frame, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(frame, true);
 
-
-
 	//Update movement of player
 	if (glfwGetKey(frame, GLFW_KEY_W) == GLFW_PRESS)
 	{
@@ -44,6 +42,9 @@ void Player::movementInput(GLFWwindow* frame, float deltaTime, bool flyingMode)
 		else
 			camera.processKeyboard(Camera::Camera_Movement::RIGHT, deltaTime, false, isFlying);
 	}
+
+	updateFlashlight();
+
 	/*if (glfwGetKey(frame, GLFW_KEY_SPACE) == GLFW_PRESS && !isFlying)
 	{
 		isJumping = true;
@@ -83,11 +84,19 @@ void Player::movementInput(GLFWwindow* frame, float deltaTime, bool flyingMode)
 	position = vec3(camera.position.x, camera.position.y - 1.0f, camera.position.z + 5.0f);*/
 }
 
+// Updates the position and direction of flash light whenever the camera is updated
+void Player::updateFlashlight()
+{
+	flashLight.position = camera.position;
+	flashLight.direction = camera.front;
+}
+
 //Processing movement for y direction
 void Player::processPlayerJump(float deltaTime, float jumpStrength)
 {
 	float velocity = jumpStrength * deltaTime;
 	camera.position = camera.position + vec3(0.0f, velocity, 0.0f);
+	updateFlashlight();
 }
 
 bool Player::collision(const vec3& objectPos)
@@ -117,11 +126,13 @@ void Player::mouseMoved(double xpos, double ypos)
 	lastY = ypos;
 
 	camera.processMouseMovement(xoffset, yoffset);
+	updateFlashlight();
 }
 
 void Player::mouseScrolled(double yoffset)
 {
 	camera.setFOV((float)yoffset);
+	updateFlashlight();
 }
 
 void Player::keyPressed(int key, int action)

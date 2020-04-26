@@ -71,12 +71,10 @@
     <None Include="resources\textures\noise5.ex5" />
     <None Include="shaders\cubemap_frag.shader" />
     <None Include="shaders\cubemap_vert.shader" />
-    <None Include="shaders\fragment.shader" />
     <None Include="shaders\light_frag.shader" />
     <None Include="shaders\light_vert.shader" />
     <None Include="shaders\object_frag.shader" />
     <None Include="shaders\object_vert.shader" />
-    <None Include="shaders\vertex.shader" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\skybox\back.jpg" />

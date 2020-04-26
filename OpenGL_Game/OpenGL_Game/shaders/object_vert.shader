@@ -1,7 +1,8 @@
 #version 450 core
+
 layout (location = 0) in vec3 aPoints;
 layout (location = 1) in vec3 aNormals;
-layout (location = 2) in vec3 aColors;
+layout (location = 2) in vec3 aColours;
 layout (location = 3) in vec2 aUVs;
 layout (location = 4) in vec3 aTangent;
 layout (location = 5) in vec3 aBitangent;
@@ -10,7 +11,7 @@ layout (location = 5) in vec3 aBitangent;
 
 out vec3 Point;
 out vec3 Normal;
-out vec3 Color;
+out vec3 Colour;
 out vec2 UV;
 out vec3 TangentLightPos[MAX_LIGHTS];
 out vec3 TangentViewPos;
@@ -28,10 +29,9 @@ uniform vec3 viewPos;
 void main()
 {
     Point = vec3(model * vec4(aPoints, 1.0));
+	UV = aUVs;
     Normal = mat3(transpose(inverse(model))) * aNormals; 
-	Color = aColors;
-    
-	UV = vec2(aUVs.x * scale.x, aUVs.y * scale.y);
+	Colour = aColours;
     
 	mat3 normalMatrix = transpose(inverse(mat3(model)));
 	vec3 T = normalize(normalMatrix * aTangent);

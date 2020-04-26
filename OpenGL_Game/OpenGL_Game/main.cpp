@@ -43,23 +43,23 @@ Material metal, tile, mixedstone;
 CubeMap cubemap;
 
 // Objects
-Cube cube = Cube(1.0f);
-Diamond diamond = Diamond(1.0f);
-Diamond diamondPickUp = Diamond(1.0f);
-Sphere light = Sphere(0.25f, 3);
-Sphere sphere_low = Sphere(1.0f, 1);
-Sphere sphere_medium = Sphere(1.0f, 2);
-Sphere sphere_high = Sphere(1.0f, 4);
-Rect rect = Rect(1.0f, 1.0f);
+Cube cube(1.0f);
+//Diamond diamond(1.0f);
+//Diamond diamondPickUp(1.0f);
+Sphere sphere(1.0f, 4);
+//Sphere sphere_low(1.0f, 1);
+//Sphere sphere_medium(1.0f, 2);
+//Sphere sphere_high(1.0f, 4);
+//Rect rect(1.0f, 1.0f);
 
 // Lights
 std::vector<Light> lights;
 vec3 sunDirection(-1.0, -1.0, 0.0f);
-vec3 sunColor(1.0f, 1.0f, 0.5f);
-vec3 lightColour(1.0f, 0.5f, 1.0f);
+vec3 sunColour(1.0f, 1.0f, 0.5f);
+vec3 lightColour(0.8f, 0.8f, 0.1f);
 
-PointLight pointLight(vec3(1.0f), vec3(0.0f));
-DirectionalLight directionLight(sunColor, sunDirection);
+PointLight pointLight(vec3(1.0f), vec3(0.0f, 5.0f, 0.0f));
+DirectionalLight directionLight(sunColour, sunDirection);
 
 
 // Initialize GLFW (window for OpenGL)
@@ -162,35 +162,26 @@ void renderObjects(const mat4& projection, const mat4& view) {
 
 	player.flashLight.drawLight(objectShader);
 
-	cube.drawObject(objectShader, vec3(0.0f, 5.0f, 0.0f), &metal);
-	diamond.drawObject(objectShader, vec3(0.0f, 3.0f, -3.0f), vec3(2.0f, 2.0f, 2.0f), &mixedstone);
-
-	sphere_low.drawObject(objectShader, vec3(20.0f, 2.0f, 0.0f), &tile);
-	sphere_medium.drawObject(objectShader, vec3(20.0f, 2.0f, 2.0f), &tile);
-	sphere_high.drawObject(objectShader, vec3(20.0f, 2.0f, 4.0f), &tile);
+	cube.drawObject(objectShader, vec3(0.0f, 0.0f, 5.0f), &metal);
 
 }
 
-/* DRAW LIGHTS - set up light shader and call vertex draw functions */
 void renderLights(mat4 projection, mat4 view) {
 	// Activate light shader and configure it
 	lightShader.use();
 	lightShader.setMat4("projection", projection);
 	lightShader.setMat4("view", view);
-	lightShader.setBool("hasLightColor", true);
+	lightShader.setBool("hasLightColour", true);
 
 	// Draw light object
-	for (int i = 0; i < lights.size(); i++) {
+	for (Light l : lights) {
 		lightShader.setVec3("lightColour", lightColour);
-		if (lights.at(i).is(Light::Type::POINT)) {
-			light.drawObject(lightShader, lights.at(i).position, nullptr);
-			lights.at(i).color = lightColour;
+		if (l.is(Light::Type::POINT)) {
+			sphere.drawObject(lightShader, l.position, nullptr);
+			l.colour = lightColour;
 		}
 	}
-
 }
-
-
 
 int main()
 {
@@ -208,16 +199,27 @@ int main()
 	player.lastX = WINDOW_WIDTH / 2.0f;
 	player.lastY = WINDOW_HEIGHT / 2.0f;
 
+	// Load shaders
+	objectShader.loadShader("shaders/object_vert.shader", "shaders/object_frag.shader");
+	lightShader.loadShader("shaders/light_vert.shader", "shaders/light_frag.shader");
+	cubeMapShader.loadShader("shaders/cubemap_vert.shader", "shaders/cubemap_frag.shader");
+
+	// Set object shader uniforms
+	objectShader.use();
+	objectShader.setInt("material.diffuse", 0);
+	objectShader.setInt("material.specular", 1);
+	objectShader.setInt("material.normal", 2);
+	objectShader.setInt("material.displacement", 3);
+	objectShader.setInt("material.AO", 4);
+
+	// Set cubemap shader uniforms
+	cubeMapShader.use();
+	cubeMapShader.setInt("skybox", 0);
+
 	// Store all objects on GPU
 	cubemap.storeOnGPU();
 	cube.storeOnGPU();
-	diamond.storeOnGPU();
-	diamondPickUp.storeOnGPU();
-	light.storeOnGPU();
-	sphere_low.storeOnGPU();
-	sphere_medium.storeOnGPU();
-	sphere_high.storeOnGPU();
-	rect.storeOnGPU();
+	sphere.storeOnGPU();
 
 	// Load cubemap textures
 	cubemap.loadCubemapTexture(
@@ -229,15 +231,10 @@ int main()
 		"resources/skybox/front.jpg"
 	);
 
-	// Load shaders
-	objectShader.loadShader("shaders/object_vert.shader", "shaders/object_frag.shader");
-	lightShader.loadShader("shaders/light_vert.shader", "shaders/light_frag.shader");
-	cubeMapShader.loadShader("shaders/cubemap_vert.shader", "shaders/cubemap_frag.shader");
-
 	// Load metal textures
 	metal.addDiffuse(Texture("resources/textures/1857-diffuse.jpg"));
 	metal.addSpecular(Texture("resources/textures/1857-specexponent.jpg"));
-	metal.addNormal(Texture("resources / textures / 1857 - normal.jpg"));
+	metal.addNormal(Texture("resources/textures/1857-normal.jpg"));
 	metal.addDisplacement(Texture("resources/textures/1857-displacement.jpg"));
 
 	// Load tile textures
@@ -255,19 +252,6 @@ int main()
 	// Add lights to the list
 	lights.push_back(pointLight);
 	lights.push_back(directionLight);
-	lights.push_back(player.flashLight);
-
-	// Set object shader uniforms
-	objectShader.use();
-	objectShader.setInt("material.diffuse", 0);
-	objectShader.setInt("material.specular", 1);
-	objectShader.setInt("material.normal", 2);
-	objectShader.setInt("material.displacement", 3);
-	objectShader.setInt("material.ao", 4);
-
-	// Set cubemap shader uniforms
-	cubeMapShader.use();
-	cubeMapShader.setInt("skybox", 0);
 
 	mat4 view, projection;
 
@@ -297,6 +281,9 @@ int main()
 
 		// Render the lighting to the screen
 		renderLights(projection, view);
+
+		// Render the skybox at the end
+		cubemap.drawCubemap(cubeMapShader, view, projection);
 
 		// Swap front and back buffers
 		glfwSwapBuffers(window);

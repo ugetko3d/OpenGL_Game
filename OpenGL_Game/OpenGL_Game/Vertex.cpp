@@ -1,10 +1,10 @@
 #include "Vertex.h"
 
-Vertex::Vertex(const std::vector<vec3>& vertices, const std::vector<vec3>& normals, const std::vector<vec3>& colors, const std::vector<vec2>& uvs, const std::vector<vec3>& tangents, const std::vector<vec3>& bitangents, const std::vector<unsigned int>& indices)
+Vertex::Vertex(const std::vector<vec3>& vertices, const std::vector<vec3>& normals, const std::vector<vec3>& colours, const std::vector<vec2>& uvs, const std::vector<vec3>& tangents, const std::vector<vec3>& bitangents, const std::vector<unsigned int>& indices)
 {
 	this->vertices = vertices;
 	this->normals = normals;
-	this->colors = colors;
+	this->colours = colours;
 	this->uvs = uvs;
 	this->tangents = tangents;
 	this->bitangents = bitangents;
@@ -13,7 +13,12 @@ Vertex::Vertex(const std::vector<vec3>& vertices, const std::vector<vec3>& norma
 
 Vertex::~Vertex()
 {
-	deAllocate();
+	if(storedOnGPU)
+	{
+		glDeleteVertexArrays(1, &VAO);
+		glDeleteBuffers(1, &VBO);
+		glDeleteBuffers(1, &EBO);
+	}
 }
 
 void Vertex::setScale(const vec3& scale_vector)
@@ -23,12 +28,12 @@ void Vertex::setScale(const vec3& scale_vector)
 	uv_scale.y = scale_vector.y;
 }
 
-mat4 & Vertex::getScale()
+mat4& Vertex::getScale()
 {
 	return scale;
 }
 
-vec2 & Vertex::getUVScale()
+vec2& Vertex::getUVScale()
 {
 	return uv_scale;
 }
@@ -38,7 +43,7 @@ void Vertex::setRotate(float rotate_degrees, const vec3& rotate_vector)
 	rotate.rotate(rotate_degrees, rotate_vector);
 }
 
-mat4 & Vertex::getRotation()
+mat4& Vertex::getRotation()
 {
 	return rotate;
 }
@@ -48,7 +53,7 @@ void Vertex::setTranslate(const vec3& position_vector)
 	translate.translate(position_vector);
 }
 
-mat4 & Vertex::getTranslate()
+mat4& Vertex::getTranslate()
 {
 	return translate;
 }
@@ -60,49 +65,49 @@ const unsigned int Vertex::size()
 
 const unsigned int Vertex::dataSize()
 {
-	return vertices.size() * 3 + normals.size() * 3 + colors.size() * 3 + uvs.size() * 2 + tangents.size() * 3 + bitangents.size() * 3;
+	return vertices.size() * 3 + normals.size() * 3 + colours.size() * 3 + uvs.size() * 2 + tangents.size() * 3 + bitangents.size() * 3;
 }
 
 bool Vertex::hasVertices()
 {
-	return (vertices.size() > 0);
+	return !vertices.empty();
 }
 
 bool Vertex::hasNormals()
 {
-	return (normals.size() > 0);
+	return !normals.empty();
 }
 
-bool Vertex::hasColors()
+bool Vertex::hasColours()
 {
-	return (colors.size() > 0);
+	return !colours.empty();
 }
 
 bool Vertex::hasUVs()
 {
-	return (uvs.size() > 0);
+	return !uvs.empty();
 }
 
 bool Vertex::hasTangents()
 {
-	return (tangents.size() > 0);
+	return !tangents.empty();
 }
 
 bool Vertex::hasBitangents()
 {
-	return (bitangents.size() > 0);
+	return !bitangents.empty();
 }
 
 bool Vertex::hasIndices()
 {
-	return (indices.size() > 0);
+	return !indices.empty();
 }
 
 const unsigned int Vertex::stride() {
 	unsigned int stride = 0;
 	if (hasVertices()) stride += 3;
 	if (hasNormals()) stride += 3;
-	if (hasColors()) stride += 3;
+	if (hasColours()) stride += 3;
 	if (hasUVs()) stride += 2;
 	if (hasTangents()) stride += 3;
 	if (hasBitangents()) stride += 3;
@@ -119,7 +124,7 @@ const unsigned int Vertex::normalStride() {
 	return stride;
 }
 
-const unsigned int Vertex::colorStride() {
+const unsigned int Vertex::colourStride() {
 	unsigned int stride = 6;
 	if (!hasVertices()) stride -= 3;
 	if (!hasNormals()) stride -= 3;
@@ -130,7 +135,7 @@ const unsigned int Vertex::uvStride() {
 	unsigned int stride = 9;
 	if (!hasVertices()) stride -= 3;
 	if (!hasNormals()) stride -= 3;
-	if (!hasColors()) stride -= 3;
+	if (!hasColours()) stride -= 3;
 	return stride;
 }
 
@@ -138,7 +143,7 @@ const unsigned int Vertex::tangentStride() {
 	unsigned int stride = 11;
 	if (!hasVertices()) stride -= 3;
 	if (!hasNormals()) stride -= 3;
-	if (!hasColors()) stride -= 3;
+	if (!hasColours()) stride -= 3;
 	if (!hasUVs()) stride -= 2;
 	return stride;
 }
@@ -148,7 +153,7 @@ const unsigned int Vertex::bitangentStride()
 	unsigned int stride = 14;
 	if (!hasVertices()) stride -= 3;
 	if (!hasNormals()) stride -= 3;
-	if (!hasColors()) stride -= 3;
+	if (!hasColours()) stride -= 3;
 	if (!hasUVs()) stride -= 2;
 	if (!hasTangents()) stride -= 3;
 	return stride;
@@ -179,10 +184,10 @@ bool Vertex::storeOnGPU()
 			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, stride, (void*)(normalStride() * sizeof(float)));
 			glEnableVertexAttribArray(1);
 		}
-		if (hasColors())
+		if (hasColours())
 		{
-			// Colors coordinate attribute
-			glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, stride, (void*)(colorStride() * sizeof(float)));
+			// Colours coordinate attribute
+			glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, stride, (void*)(colourStride() * sizeof(float)));
 			glEnableVertexAttribArray(2);
 		}
 		if (hasUVs())
@@ -225,35 +230,42 @@ void Vertex::setDrawMode(GLenum mode)
 	draw_mode = mode;
 }
 
-void Vertex::scaleTextures(const bool ENABLE)
+void Vertex::scaleTextures(bool enable)
 {
-	scaleTexture = ENABLE;
+	scaleTexture = enable;
 }
 
-bool Vertex::drawObject(const Shader& shader, const vec3& position, const vec3& scale_vector, float rotation_degrees, const vec3&rotation_vector, Material* material)
+bool Vertex::drawObject(const Shader& shader, const vec3& position, const vec3& scale_vector, float rotation_degrees, const vec3& rotation_vector, Material* material)
 {
 	if (storedOnGPU)
 	{
 		// Bind textures
-		if(material)
+		if (material)
 			material->bind();
+
 		// Bind VAO
 		glBindVertexArray(VAO);
+
 		// Calculate the model matrix for each object and pass it to shader before drawing
 		translate.translate(position);
 		rotate.rotate(rotation_degrees, rotation_vector);
 		scale.scale(scale_vector);
 		mat4 model = translate * rotate * scale;
 		shader.setMat4("model", model);
-		if (!scaleTexture)
+
+		//shader.setVec2("scale", vec2(1.0f, 1.0f));
+
+		/*if (scaleTexture)
 			shader.setVec2("scale", vec2(scale_vector.x * uv_scale.x, scale_vector.y * uv_scale.y));
 		else
-			shader.setVec2("scale", vec2(1.0f, 1.0f));
+			shader.setVec2("scale", vec2(1.0f, 1.0f));*/
+
 		// Draw mesh
 		if (hasIndices())
 			glDrawElements(draw_mode, indices.size(), GL_UNSIGNED_INT, 0);
 		else
 			glDrawArrays(draw_mode, 0, size());
+
 		// Unbind textures
 		if(material)
 			material->unbind();
@@ -287,61 +299,49 @@ bool Vertex::drawObject(const Shader& shader, Material* material)
 	return drawObject(shader, vec3(0.0f), vec3(1.0f), 0.0f, vec3(1.0f), material);
 }
 
-bool Vertex::deAllocate()
-{
-	if (storedOnGPU)
-	{
-		glDeleteVertexArrays(1, &VAO);
-		glDeleteBuffers(1, &VBO);
-		glDeleteBuffers(1, &EBO);
-		return true;
-	}
-	else return false;
-}
-
-const void Vertex::printVertices()
+void Vertex::printVertices()
 {
 	for (vec3 v : vertices)
 		std::cout << v << std::endl;
 }
 
-const void Vertex::printNormals()
+void Vertex::printNormals()
 {
 	for (vec3 v : normals)
 		std::cout << v << std::endl;
 }
 
-const void Vertex::printColors()
+void Vertex::printColours()
 {
-	for (vec3 v : colors)
+	for (vec3 v : colours)
 		std::cout << v << std::endl;
 }
 
-const void Vertex::printUVs()
+void Vertex::printUVs()
 {
 	for (vec2 v : uvs)
 		std::cout << v << std::endl;
 }
 
-const void Vertex::printTangents()
+void Vertex::printTangents()
 {
 	for (vec3 v : tangents)
 		std::cout << v << std::endl;
 }
 
-const void Vertex::printBitangents()
+void Vertex::printBitangents()
 {
 	for (vec3 v : bitangents)
 		std::cout << v << std::endl;
 }
 
-const void Vertex::printIndices()
+void Vertex::printIndices()
 {
 	for (int i = 0; i < indices.size(); i += 3)
 		std::cout << indices[i] << ", " << indices[i + 1] << ", " << indices[i + 2] << std::endl;
 }
 
-const void Vertex::printVertexData()
+void Vertex::printVertexData()
 {
 	for (unsigned int i = 0; i < vertices.size(); i++)
 	{
@@ -349,8 +349,8 @@ const void Vertex::printVertexData()
 			std::cout << "Vertices(" << vertices[i].x << ", " << vertices[i].y << ", " << vertices[i].z << "), ";
 		if (hasNormals())
 			std::cout << "Normals(" << normals[i].x << ", " << normals[i].y << ", " << normals[i].z << "), ";
-		if (hasColors())
-			std::cout << "Colors(" << colors[i].x << ", " << colors[i].y << ", " << colors[i].z << "), ";
+		if (hasColours())
+			std::cout << "Colours(" << colours[i].x << ", " << colours[i].y << ", " << colours[i].z << "), ";
 		if (hasUVs())
 			std::cout << "UVs(" << uvs[i].x << ", " << uvs[i].y << "), ";
 		if (hasTangents())
@@ -361,11 +361,11 @@ const void Vertex::printVertexData()
 	}
 }
 
-const void Vertex::printDataSizes()
+void Vertex::printDataSizes()
 {
 	std::cout << "Vertices: " << vertices.size() << std::endl;
 	std::cout << "Normals: " << normals.size() << std::endl;
-	std::cout << "Color: " << colors.size() << std::endl;
+	std::cout << "Colour: " << colours.size() << std::endl;
 	std::cout << "UVs: " << uvs.size() << std::endl;
 	std::cout << "Tangents: " << tangents.size() << std::endl;
 	std::cout << "Bitangents: " << bitangents.size() << std::endl;
@@ -389,11 +389,11 @@ std::vector<float> Vertex::data()
 			raw_data.push_back(normals.at(i).y);
 			raw_data.push_back(normals.at(i).z);
 		}
-		if (hasColors())
+		if (hasColours())
 		{
-			raw_data.push_back(colors.at(i).x);
-			raw_data.push_back(colors.at(i).y);
-			raw_data.push_back(colors.at(i).z);
+			raw_data.push_back(colours.at(i).x);
+			raw_data.push_back(colours.at(i).y);
+			raw_data.push_back(colours.at(i).z);
 		}
 		if (hasUVs())
 		{
@@ -450,8 +450,8 @@ void Vertex::createNormals() {
 	}
 }
 
-void Vertex::setColor(const vec3&color) {
-	colors = std::vector<vec3>(size(), color);
+void Vertex::setColour(const vec3& colour) {
+	colours = std::vector<vec3>(size(), colour);
 }
 
 void Vertex::calculateTangents() {
@@ -535,7 +535,7 @@ void Vertex::calculateTangents() {
 	}
 }
 
-std::vector<vec3> Vertex::unwrap(const std::vector<vec3> & vertex_data) {
+std::vector<vec3> Vertex::unwrap(const std::vector<vec3>& vertex_data) {
 	std::vector<vec3> unwrapped_data;
 	unwrapped_data.reserve(indices.size());
 	for (unsigned int indice : indices) {
@@ -544,7 +544,7 @@ std::vector<vec3> Vertex::unwrap(const std::vector<vec3> & vertex_data) {
 	return unwrapped_data;
 }
 
-std::vector<vec2> Vertex::unwrap(const std::vector<vec2> & vertex_data) {
+std::vector<vec2> Vertex::unwrap(const std::vector<vec2>& vertex_data) {
 	std::vector<vec2> unwrapped_data;
 	unwrapped_data.reserve(indices.size());
 	for (unsigned int indice : indices) {
@@ -553,13 +553,13 @@ std::vector<vec2> Vertex::unwrap(const std::vector<vec2> & vertex_data) {
 	return unwrapped_data;
 }
 
-void Vertex::subdivide(const unsigned int & divitions)
+void Vertex::subdivide(unsigned int divitions)
 {
 	if (hasIndices())
 	{
 		if (hasVertices()) vertices = unwrap(vertices);
 		if (hasNormals()) normals = unwrap(normals);
-		if (hasColors()) colors = unwrap(colors);
+		if (hasColours()) colours = unwrap(colours);
 		if (hasUVs()) uvs = unwrap(uvs);
 		if (hasTangents()) tangents = unwrap(tangents);
 		if (hasBitangents()) bitangents = unwrap(bitangents);
@@ -572,7 +572,7 @@ void Vertex::subdivide(const unsigned int & divitions)
 	{
 		if (hasVertices()) vertices = subdivide(vertices);
 		if (hasNormals()) normals = subdivide(normals);
-		if (hasColors()) colors = subdivide(colors);
+		if (hasColours()) colours = subdivide(colours);
 		if (hasUVs()) uvs = subdivide(uvs);
 		if (hasTangents()) tangents = subdivide(tangents);
 		if (hasBitangents()) bitangents = subdivide(bitangents);

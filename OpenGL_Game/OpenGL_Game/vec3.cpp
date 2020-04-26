@@ -12,13 +12,6 @@ vec3::vec3(float a, float b, float c) : x(a), y(b), z(c) {
 
 }
 
-vec3::vec3(const vec3& v)
-{
-	copyCounter3++;
-	std::cout << "We have copied: " << copyCounter3 << " number of vec3 so far..." << std::endl;
-	*this = v;
-}
-
 vec3 vec3::cross(const vec3& v1, const vec3& v2) {
 	vec3 result;
 	result.x = (v1.y * v2.z) - (v2.y * v1.z);
@@ -40,6 +33,13 @@ void vec3::normalize() {
 	x /= vectorLength;
 	y /= vectorLength;
 	z /= vectorLength;
+}
+
+void vec3::scale(float k)
+{
+	x *= k;
+	y *= k;
+	z *= k;
 }
 
 vec3 vec3::midpoint(const vec3& a, const vec3& b) {

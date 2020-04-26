@@ -111,6 +111,6 @@ void Diamond::createDiamond(float width) {
 		vec2(0.5f, 1.0f)
 	};
 
-	setColor();
+	setColour();
 	calculateTangents();
 }

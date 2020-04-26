@@ -2,8 +2,6 @@
 
 #include <iostream>
 
-static int copyCounter4 = 0;
-
 class vec4 {
 
 public:
@@ -16,8 +14,6 @@ public:
 	vec4(float a);
 	vec4(float a, float b, float c);
 	vec4(float a, float b, float c, float d);
-
-	vec4(const vec4& v);
 
 	/**
 		Multiplies a vector with a matrix
@@ -49,6 +45,12 @@ public:
 	@return The normalized vector v
 	*/
 	void normalize();
+
+	/**
+		Scales the vector v by factor k
+	@param k The factor.
+	*/
+	void scale(float k);
 
 	/**
 		Arithmetic operations on vectors

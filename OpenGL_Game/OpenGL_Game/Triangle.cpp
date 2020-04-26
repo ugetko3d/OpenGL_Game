@@ -36,7 +36,7 @@ void Triangle::createTriangle(float base, float height)
 		vec2(1.0f, 0.0f),
 		vec2(0.5f, 1.0f)
 	};
-	setColor();
+	setColour();
 	calculateTangents();
 }
 

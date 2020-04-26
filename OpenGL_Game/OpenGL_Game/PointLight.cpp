@@ -4,7 +4,7 @@ PointLight::PointLight()
 {
 	this->type = Type::POINT;
 	this->id = point_light_counter++;
-	this->color = COLOR;
+	this->colour = COLOUR;
 	this->position = POSITION;
 	this->ambient = AMBIENT;
 	this->diffuse = DIFFUSE;
@@ -14,11 +14,11 @@ PointLight::PointLight()
 	this->quadratic = QUADRATIC;
 }
 
-PointLight::PointLight(const vec3& color, const vec3& position)
+PointLight::PointLight(const vec3& colour, const vec3& position)
 {
 	this->type = Type::POINT;
 	this->id = point_light_counter++;
-	this->color = color;
+	this->colour = colour;
 	this->position = position;
 	this->ambient = AMBIENT;
 	this->diffuse = DIFFUSE;
@@ -28,11 +28,11 @@ PointLight::PointLight(const vec3& color, const vec3& position)
 	this->quadratic = QUADRATIC;
 }
 
-PointLight::PointLight(const vec3& color, const vec3& position, float ambient, float diffuse, float specular)
+PointLight::PointLight(const vec3& colour, const vec3& position, float ambient, float diffuse, float specular)
 {
 	this->type = Type::POINT;
 	this->id = point_light_counter++;
-	this->color = color;
+	this->colour = colour;
 	this->position = position;
 	this->ambient = ambient;
 	this->diffuse = diffuse;
@@ -42,11 +42,11 @@ PointLight::PointLight(const vec3& color, const vec3& position, float ambient, f
 	this->quadratic = QUADRATIC;
 }
 
-PointLight::PointLight(const vec3& color, const vec3& position, float ambient, float diffuse, float specular, float constant, float linear, float quadratic)
+PointLight::PointLight(const vec3& colour, const vec3& position, float ambient, float diffuse, float specular, float constant, float linear, float quadratic)
 {
 	this->type = Type::POINT;
 	this->id = point_light_counter++;
-	this->color = color;
+	this->colour = colour;
 	this->position = position;
 	this->ambient = ambient;
 	this->diffuse = diffuse;

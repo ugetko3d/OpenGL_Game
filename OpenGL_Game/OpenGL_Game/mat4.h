@@ -1,11 +1,7 @@
 #pragma once
 
-//#include <iostream>
-
 #include "vec3.h"
 #include "mathdefinitions.h"
-
-static int copyCounter = 0;
 
 class mat4 {
 
@@ -14,11 +10,8 @@ public:
 
 	mat4();
 
-	mat4(const mat4& m1);
-
 	/**
 	Sets all the elements in the matrix to zero (0)
-	@return An empty matrix
 */
 	void reset();
 

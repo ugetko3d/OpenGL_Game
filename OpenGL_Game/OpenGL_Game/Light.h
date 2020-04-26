@@ -18,7 +18,7 @@ public:
 		SPOT = 3
 	};
 
-	vec3 color, position, direction;
+	vec3 colour, position, direction;
 	float ambient = -1.0f, diffuse = -1.0f, specular = -1.0f, constant = -1.0f, linear = -1.0f, quadratic = -1.0f, cutOff = -1.0f, outerCutOff = -1.0f;
 	/* Constructor */
 	Light();

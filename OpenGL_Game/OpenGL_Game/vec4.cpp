@@ -17,13 +17,6 @@ vec4::vec4(float a, float b, float c, float d) : x(a), y(b), z(c), w(d) {
 
 }
 
-vec4::vec4(const vec4& v)
-{
-	copyCounter4++;
-	std::cout << "We have copied: " << copyCounter4 << " number of vec4 so far..." << std::endl;
-	*this = v;
-}
-
 vec4 vec4::multiply(const mat4& m, const vec4& v) {
 	return vec4(m.data[0] * v.x + m.data[4] * v.y + m.data[8] * v.z + m.data[12] * v.w,
 				m.data[1] * v.x + m.data[5] * v.y + m.data[9] * v.z + m.data[13] * v.w,
@@ -45,6 +38,13 @@ void vec4::normalize() {
 	y /= vectorLength;
 	z /= vectorLength;
 	w = 1.0f;
+}
+
+void vec4::scale(float k)
+{
+	x *= k;
+	y *= k;
+	z *= k;
 }
 
 vec4 vec4::add(const vec4& v1, const vec4& v2) {

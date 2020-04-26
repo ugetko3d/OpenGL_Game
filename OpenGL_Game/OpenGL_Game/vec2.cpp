@@ -12,13 +12,6 @@ vec2::vec2(float a, float b) : x(a), y(b) {
 
 }
 
-vec2::vec2(const vec2& v)
-{
-	copyCounter2++;
-	std::cout << "We have copied: " << copyCounter2 << " number of vec4 so far..." << std::endl;
-	*this = v;
-}
-
 float vec2::dot(const vec2& v1, const vec2& v2) {
 	return (v1.x * v2.x) + (v1.y * v2.y);
 }
@@ -31,6 +24,12 @@ void vec2::normalize() {
 	float vectorLength = sqrt((x * x) + (y * y));
 	x /= vectorLength;
 	y /= vectorLength;
+}
+
+void vec2::scale(float k)
+{
+	x *= k;
+	y *= k;
 }
 
 vec2 vec2::midpoint(const vec2 &a, const vec2 &b) {

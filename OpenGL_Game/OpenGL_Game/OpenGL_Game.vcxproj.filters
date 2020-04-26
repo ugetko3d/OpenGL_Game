@@ -174,12 +174,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\fragment.shader">
-      <Filter>Shaders\shader_files</Filter>
-    </None>
-    <None Include="shaders\vertex.shader">
-      <Filter>Shaders\shader_files</Filter>
-    </None>
     <None Include="shaders\object_vert.shader">
       <Filter>Shaders\shader_files</Filter>
     </None>

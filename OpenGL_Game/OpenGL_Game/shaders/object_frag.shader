@@ -1,7 +1,6 @@
 #version 450 core
 
-layout(location = 0) out vec4 FragColor;
-layout(location = 1) out vec4 BrightColor;
+out vec4 FragColour;
 
 struct Material {
 	sampler2D diffuse;
@@ -59,7 +58,7 @@ struct SpotLight {
 
 in vec3 Point;  
 in vec3 Normal;  
-in vec3 Color;
+in vec3 Colour;
 in vec2 UV;
 in vec3 TangentLightPos[MAX_LIGHTS];
 in vec3 TangentViewPos;
@@ -100,17 +99,12 @@ void main()
 	for (int i = 0; i < lightCount; i++)
 		result += CalcNormals(TangentLightPos[i]) * NORMAL_STRENGTH;
 
-	float brightness = dot(result, vec3(0.2126, 0.7152, 0.0722));
-	if (brightness > 1.0)
-		BrightColor = vec4(result, 1.0);
-	else
-		BrightColor = vec4(0.0, 0.0, 0.0, 1.0);
-
 	// Result output
-	FragColor = vec4(result, 1.0);
+	FragColour = vec4(result, 1.0);
 } 
 
-// calculates the color when using a directional light.
+// calculates the colour when using a directional light.
+
 vec3 CalcDirectionLight(DirectionLight light, vec3 normal, vec3 view_direction)
 {
 	vec3 light_direction = normalize(-light.direction);
@@ -126,7 +120,7 @@ vec3 CalcDirectionLight(DirectionLight light, vec3 normal, vec3 view_direction)
 	return (ambient + diffuse + specular);
 }
 
-// calculates the color when using a point light.
+// calculates the colour when using a point light.
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 Point, vec3 view_direction)
 {
 	vec3 light_direction = normalize(light.position - Point);
@@ -151,7 +145,7 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 Point, vec3 view_directi
 	return (ambient + diffuse + specular);
 }
 
-// calculates the color when using a spot light.
+// calculates the colour when using a spot light.
 vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 Point, vec3 view_direction)
 {
 	vec3 light_direction = normalize(light.position - Point);
@@ -185,11 +179,11 @@ vec3 CalcNormals(vec3 tangentLightPos)
 	// angle
 	vec3 light_direction = normalize(tangentLightPos - TangentPoint);
 	float angle = max(dot(light_direction, normal), 0.0);
-	// get diffuse color
-	vec3 color = texture(material.diffuse, UV).rgb;
+	// get diffuse colour
+	vec3 colour = texture(material.diffuse, UV).rgb;
 	// ambient & diffuse
-	vec3 ambient = 0.1 * color;
-	vec3 diffuse = 0.5 * color;
+	vec3 ambient = 0.1 * colour;
+	vec3 diffuse = 0.5 * colour;
 	// specular
 	vec3 view_direction = normalize(TangentViewPos - TangentPoint);
 	vec3 reflect_direction = reflect(-light_direction, normal);
