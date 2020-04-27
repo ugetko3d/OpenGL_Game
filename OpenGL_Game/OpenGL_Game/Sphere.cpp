@@ -22,6 +22,10 @@ void Sphere::createSphere(float width, unsigned int quality)
 
 	vertices = diamond.vertices;
 	uvs = diamond.uvs;
+	normals = diamond.normals;
+	tangents = diamond.tangents;
+	bitangents = diamond.bitangents;
+
 	subdivide(quality);
 
 	for (unsigned int i = 0; i < vertices.size(); i++)

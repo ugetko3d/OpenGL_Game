@@ -88,7 +88,7 @@ public:
 	/* Generate buffers and store vertex data on the GPU. Call drawObject(...) to draw it */
 	bool storeOnGPU();
 	/* Set if textures should scale with object or not. False by default. */
-	void scaleTextures(const bool ENABLE);
+	void scaleTextures(bool enable);
 	/* Draw vertex data from GPU */
 	bool drawObject(const Shader& shader, const vec3& position, const vec3& scale_vector, float rotation_degrees, const vec3& rotation_vector, Material* material = nullptr);
 	/* Draw vertex data from GPU */

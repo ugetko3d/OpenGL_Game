@@ -261,12 +261,10 @@ bool Vertex::drawObject(const Shader& shader, const vec3& position, const vec3& 
 		mat4 model = translate * rotate * scale;
 		shader.setMat4("model", model);
 
-		//shader.setVec2("scale", vec2(1.0f, 1.0f));
-
-		/*if (scaleTexture)
+		if (scaleTexture)
 			shader.setVec2("scale", vec2(scale_vector.x * uv_scale.x, scale_vector.y * uv_scale.y));
 		else
-			shader.setVec2("scale", vec2(1.0f, 1.0f));*/
+			shader.setVec2("scale", vec2(1.0f, 1.0f));
 
 			// Draw mesh
 		if (hasIndices())

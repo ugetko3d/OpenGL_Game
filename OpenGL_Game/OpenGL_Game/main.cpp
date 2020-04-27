@@ -42,21 +42,22 @@ Material metal, tile, mixedstone;
 // Cubemap
 CubeMap cubemap;
 
+// Sun
+Sphere sun(1.0f, 4);
+
 // Objects
 Cube cube(1.0f);
-//Diamond diamond(1.0f);
-//Diamond diamondPickUp(1.0f);
-Sphere sphere(1.0f, 4);
-//Sphere sphere_low(1.0f, 1);
-//Sphere sphere_medium(1.0f, 2);
-//Sphere sphere_high(1.0f, 4);
-//Rect rect(1.0f, 1.0f);
+Diamond diamond(1.0f);
+Sphere small_ball(1.0f, 4);
+Sphere medium_ball(2.0f, 10);
+Sphere large_ball(3.0f, 4);
+Rect wall(20.0f, 10.0f);
 
 // Lights
 std::vector<Light> lights;
 vec3 sunDirection(0.0, 1.0, 0.0f);
-vec3 sunColour(1.0f, 1.0f, 0.5f);
-vec3 lightColour(0.8f, 0.8f, 0.1f);
+vec3 sunColour(1.0f, 1.0f, 0.0f);
+vec3 lightColour(0.9f, 0.7f, 0.3f);
 
 PointLight pointLight(vec3(1.0f), vec3(0.0f, 5.0f, 0.0f));
 DirectionalLight directionLight(sunColour, sunDirection);
@@ -165,7 +166,11 @@ void renderObjects(const mat4& projection, const mat4& view)
 	player.flashLight.drawLight(objectShader);
 
 	cube.drawObject(objectShader, vec3(0.0f, 0.0f, 5.0f), &metal);
-
+	diamond.drawObject(objectShader, vec3(-5.0f, 0.0f, 0.0f), &tile);
+	small_ball.drawObject(objectShader, vec3(0.0f, 0.0f, -5.0f), &mixedstone);
+	medium_ball.drawObject(objectShader, vec3(6.0f, 8.0f, 0.0f), &metal);
+	large_ball.drawObject(objectShader, vec3(8.0f, 0.0f, 0.0f), &tile);
+	wall.drawObject(objectShader, vec3(0.0f, 0.0f, -10.0f), 90.0f, vec3(1.0f, 0.0f, 0.0f), &mixedstone);
 }
 
 void renderLights(mat4 projection, mat4 view)
@@ -182,7 +187,7 @@ void renderLights(mat4 projection, mat4 view)
 		lightShader.setVec3("lightColour", lightColour);
 		if (l.is(Light::Type::POINT))
 		{
-			sphere.drawObject(lightShader, l.position, nullptr);
+			sun.drawObject(lightShader, l.position, nullptr);
 			l.colour = lightColour;
 		}
 	}
@@ -223,8 +228,13 @@ int main()
 
 	// Store all objects on GPU
 	cubemap.storeOnGPU();
+	sun.storeOnGPU();
 	cube.storeOnGPU();
-	sphere.storeOnGPU();
+	diamond.storeOnGPU();
+	small_ball.storeOnGPU();
+	medium_ball.storeOnGPU();
+	large_ball.storeOnGPU();
+	wall.storeOnGPU();
 
 	// Load cubemap textures
 	cubemap.loadCubemapTexture(
