@@ -1,6 +1,6 @@
 #pragma once
-#include <string>
 #include <vector>
+#include <string>
 #include <iterator>
 #include <glew.h>
 #include <glfw3.h>
@@ -10,6 +10,11 @@
 #include "Texture.h"
 #include "Maths.h"
 
+// Includes for parsing .obj files
+#include <fstream>
+#include <sstream>
+#include <algorithm>
+
 class Vertex
 {
 private:
@@ -18,11 +23,12 @@ private:
 	unsigned int VBO, VAO, EBO;
 	bool storedOnGPU = false, scaleTexture = false;
 	GLenum draw_mode = GL_TRIANGLES;
-	/* Private function: Split up vec3 data into smaller pieces */
-	std::vector<vec3> subdivide(const std::vector<vec3>& vertex_data);
-	/* Private function: Split up vec2 data into smaller pieces */
-	std::vector<vec2> subdivide(const std::vector<vec2>& vertex_data);
+
+	// Private method used by the loadObjectFile method
+	void processLoadedVertex(const vec3& vertexData);
 protected:
+	/* Loads vertex data from an .obj file generated in Blender */
+	void loadObjectFile(const std::string& filePath);
 	/* Set draw mode. Defaults to GL_TRIANGLES */
 	void setDrawMode(GLenum mode);
 public:
@@ -121,16 +127,8 @@ public:
 
 	/* Return the combined vertex data */
 	std::vector<float> data();
-	/* Calculate the normals of each triangle, https://www.khronos.org/opengl/wiki/Calculating_a_Surface_Normal */
-	void createNormals();
 	/* Set colour of on all vertices */
 	void setColour(const vec3& colour = vec3(1.0f, 1.0f, 1.0f));
 	/* Calculate tangent vectors for all triangles */
 	void calculateTangents();
-	/* Unwrap vertex data with indices. */
-	std::vector<vec3> unwrap(const std::vector<vec3>& vertex_data);
-	/* Unwrap vertex data with indices. */
-	std::vector<vec2> unwrap(const std::vector<vec2>& vertex_data);
-	/* Split up mesh into smaller pieces. Keep @param divitions below 10 */
-	void subdivide(unsigned int divitions);
 };

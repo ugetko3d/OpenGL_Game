@@ -35,6 +35,9 @@
     <Filter Include="Lights">
       <UniqueIdentifier>{662f03c0-4497-4218-bca8-db6225021f3f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Objects\object_files">
+      <UniqueIdentifier>{70b3d886-f93c-4e24-95a9-79811ca2f7a8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="shader.cpp">
@@ -74,9 +77,6 @@
     <ClCompile Include="Light.cpp">
       <Filter>Lights</Filter>
     </ClCompile>
-    <ClCompile Include="Sphere.cpp">
-      <Filter>Objects</Filter>
-    </ClCompile>
     <ClCompile Include="Rectangle.cpp">
       <Filter>Objects</Filter>
     </ClCompile>
@@ -100,6 +100,9 @@
     </ClCompile>
     <ClCompile Include="CubeMap.cpp">
       <Filter>Textures</Filter>
+    </ClCompile>
+    <ClCompile Include="Sphere.cpp">
+      <Filter>Objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -145,9 +148,6 @@
     <ClInclude Include="Light.h">
       <Filter>Lights</Filter>
     </ClInclude>
-    <ClInclude Include="Sphere.h">
-      <Filter>Objects</Filter>
-    </ClInclude>
     <ClInclude Include="Rectangle.h">
       <Filter>Objects</Filter>
     </ClInclude>
@@ -172,6 +172,9 @@
     <ClInclude Include="CubeMap.h">
       <Filter>Textures</Filter>
     </ClInclude>
+    <ClInclude Include="Sphere.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\object_vert.shader">
@@ -194,6 +197,9 @@
     </None>
     <None Include="shaders\light_vert.shader">
       <Filter>Shaders\shader_files</Filter>
+    </None>
+    <None Include="resources\models\icosphere.model">
+      <Filter>Objects\object_files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

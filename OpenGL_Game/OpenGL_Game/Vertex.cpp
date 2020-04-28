@@ -422,44 +422,6 @@ std::vector<float> Vertex::data()
 	return raw_data;
 }
 
-void Vertex::createNormals()
-{
-	normals.clear();
-
-	if (hasIndices())
-	{
-		for (unsigned int i = 0; i < indices.size(); i += 3)
-		{
-			vec3 p1 = vertices.at(indices.at(i + 0));
-			vec3 p2 = vertices.at(indices.at(i + 1));
-			vec3 p3 = vertices.at(indices.at(i + 2));
-
-			vec3 U = vec3(p2 - p1);
-			vec3 V = vec3(p3 - p1);
-
-			vec3 normal = vec3::cross(U, V);
-
-			normals.insert(normals.end(), 3, normal);
-		}
-	}
-	else
-	{
-		for (unsigned int i = 0; i < size(); i += 3)
-		{
-			vec3 p1 = vertices.at(i + 0);
-			vec3 p2 = vertices.at(i + 1);
-			vec3 p3 = vertices.at(i + 2);
-
-			vec3 U = vec3(p2 - p1);
-			vec3 V = vec3(p3 - p1);
-
-			vec3 normal = vec3::cross(U, V);
-
-			normals.insert(normals.end(), 3, normal);
-		}
-	}
-}
-
 void Vertex::setColour(const vec3& colour)
 {
 	colours = std::vector<vec3>(size(), colour);
@@ -550,118 +512,95 @@ void Vertex::calculateTangents()
 	}
 }
 
-std::vector<vec3> Vertex::unwrap(const std::vector<vec3>& vertex_data)
+
+void Vertex::loadObjectFile(const std::string& filePath)
 {
-	std::vector<vec3> unwrapped_data;
-	unwrapped_data.reserve(indices.size());
-	for (unsigned int indice : indices)
-	{
-		unwrapped_data.push_back(vertex_data.at(indice));
-	}
-	return unwrapped_data;
-}
+	std::stringstream ss;
+	std::ifstream in_file(filePath);
+	std::string line = "";
+	std::string prefix = "";
 
-std::vector<vec2> Vertex::unwrap(const std::vector<vec2>& vertex_data)
-{
-	std::vector<vec2> unwrapped_data;
-	unwrapped_data.reserve(indices.size());
-	for (unsigned int indice : indices)
-	{
-		unwrapped_data.push_back(vertex_data.at(indice));
-	}
-	return unwrapped_data;
-}
+	std::stringstream temp_ss;
+	std::string temp_string;
+	vec3 temp_vec3;
+	vec2 temp_vec2;
+	std::vector<vec3> temp_vertices;
+	std::vector<vec3> temp_normals;
+	std::vector<vec2> temp_uvs;
+	
+	vec3 vertex1, vertex2, vertex3;
 
-void Vertex::subdivide(unsigned int divitions)
-{
-	if (hasIndices())
+	// File open check
+	if (!in_file.is_open())
 	{
-		if (hasVertices()) vertices = unwrap(vertices);
-		if (hasNormals()) normals = unwrap(normals);
-		if (hasColours()) colours = unwrap(colours);
-		if (hasUVs()) uvs = unwrap(uvs);
-		if (hasTangents()) tangents = unwrap(tangents);
-		if (hasBitangents()) bitangents = unwrap(bitangents);
-		indices.clear();
+		std::cout << "ERROR! Could not open .obj file!" << std::endl;
 	}
 
-	unsigned int times = (divitions < 7) ? divitions : 6;
-
-	for (unsigned int d = 0; d < times; d++)
+	// Read one line at a time
+	while (std::getline(in_file, line))
 	{
-		if (hasVertices()) vertices = subdivide(vertices);
-		if (hasNormals()) normals = subdivide(normals);
-		if (hasColours()) colours = subdivide(colours);
-		if (hasUVs()) uvs = subdivide(uvs);
-		if (hasTangents()) tangents = subdivide(tangents);
-		if (hasBitangents()) bitangents = subdivide(bitangents);
+		// Get the prefix of the line (v = vertext position, vt = vertex texture coordinate, vn = vertex normal, f = face (a triangle))
+		ss.clear();
+		ss.str(line);
+		ss >> prefix;
+
+		if (prefix == "v") // Vertex position
+		{
+			ss >> temp_vec3.x >> temp_vec3.y >> temp_vec3.z;
+			temp_vertices.push_back(temp_vec3);
+		}
+		else if (prefix == "vt") // Vertex texture coordinate
+		{
+			ss >> temp_vec2.x >> temp_vec2.y;
+			temp_uvs.push_back(temp_vec2);
+		}
+		else if (prefix == "vn") // Vertex normal
+		{
+			ss >> temp_vec3.x >> temp_vec3.y >> temp_vec3.z;
+			temp_normals.push_back(temp_vec3);
+		}
+		else if (prefix == "f")
+		{
+			temp_string = line.substr(2, line.length() - 2);
+			std::replace(temp_string.begin(), temp_string.end(), '/', ' ');
+
+			temp_ss.clear();
+			temp_ss.str(temp_string);
+
+			temp_ss >> vertex1.x >> vertex1.y >> vertex1.z >> vertex2.x >> vertex2.y >> vertex2.z >> vertex3.x >> vertex3.y >> vertex3.z;
+
+			unsigned int x1 = static_cast<int>(vertex1.x);
+			unsigned int x2 = static_cast<int>(vertex2.x);
+			unsigned int x3 = static_cast<int>(vertex3.x);
+
+			vertices.push_back(temp_vertices.at(x1 - 1));
+			vertices.push_back(temp_vertices.at(x2 - 1));
+			vertices.push_back(temp_vertices.at(x3 - 1));
+
+			unsigned int t1 = static_cast<int>(vertex1.y);
+			unsigned int t2 = static_cast<int>(vertex2.y);
+			unsigned int t3 = static_cast<int>(vertex3.y);
+
+			uvs.push_back(temp_uvs.at(t1 -1));
+			uvs.push_back(temp_uvs.at(t2 -1));
+			uvs.push_back(temp_uvs.at(t3 -1));
+
+			unsigned int n1 = static_cast<int>(vertex1.z);
+			unsigned int n2 = static_cast<int>(vertex2.z);
+			unsigned int n3 = static_cast<int>(vertex3.z);
+
+			normals.push_back(temp_normals.at(n1 - 1));
+			normals.push_back(temp_normals.at(n2 - 1));
+			normals.push_back(temp_normals.at(n3 - 1));
+
+			indices.push_back(indices.size());
+			indices.push_back(indices.size());
+			indices.push_back(indices.size());
+	
+		}
+		else
+		{
+			// Don't care, do nothing...
+		}
 	}
-}
-
-std::vector<vec3> Vertex::subdivide(const std::vector<vec3>& vertex_data)
-{
-	std::vector<vec3> subdivided;
-	for (unsigned int index = 0; index < vertex_data.size(); index += 3)
-	{
-		// Vertices
-
-		vec3 v1 = vertex_data.at(index + 0);
-		vec3 v2 = vertex_data.at(index + 1);
-		vec3 v3 = vertex_data.at(index + 2);
-
-		vec3 va = vec3::midpoint(v1, v2);
-		vec3 vb = vec3::midpoint(v2, v3);
-		vec3 vc = vec3::midpoint(v1, v3);
-
-		subdivided.push_back(v1);
-		subdivided.push_back(va);
-		subdivided.push_back(vc);
-
-		subdivided.push_back(va);
-		subdivided.push_back(vb);
-		subdivided.push_back(vc);
-
-		subdivided.push_back(va);
-		subdivided.push_back(v2);
-		subdivided.push_back(vb);
-
-		subdivided.push_back(vc);
-		subdivided.push_back(vb);
-		subdivided.push_back(v3);
-	}
-	return subdivided;
-}
-
-std::vector<vec2> Vertex::subdivide(const std::vector<vec2>& vertex_data)
-{
-	std::vector<vec2> subdivided;
-	for (unsigned int index = 0; index < vertex_data.size(); index += 3)
-	{
-		// Vertices
-
-		vec2 v1 = vertex_data.at(index + 0);
-		vec2 v2 = vertex_data.at(index + 1);
-		vec2 v3 = vertex_data.at(index + 2);
-
-		vec2 va = vec2::midpoint(v1, v2);
-		vec2 vb = vec2::midpoint(v2, v3);
-		vec2 vc = vec2::midpoint(v1, v3);
-
-		subdivided.push_back(v1);
-		subdivided.push_back(va);
-		subdivided.push_back(vc);
-
-		subdivided.push_back(va);
-		subdivided.push_back(vb);
-		subdivided.push_back(vc);
-
-		subdivided.push_back(va);
-		subdivided.push_back(v2);
-		subdivided.push_back(vb);
-
-		subdivided.push_back(vc);
-		subdivided.push_back(vb);
-		subdivided.push_back(v3);
-	}
-	return subdivided;
 }

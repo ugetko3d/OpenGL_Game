@@ -68,6 +68,7 @@
     <ClInclude Include="vec4.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="resources\models\icosphere.model" />
     <None Include="resources\textures\noise5.ex5" />
     <None Include="shaders\cubemap_frag.shader" />
     <None Include="shaders\cubemap_vert.shader" />

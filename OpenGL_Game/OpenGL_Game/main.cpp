@@ -43,14 +43,12 @@ Material metal, tile, mixedstone;
 CubeMap cubemap;
 
 // Sun
-Sphere sun(1.0f, 4);
+Sphere sun;
 
 // Objects
 Cube cube(1.0f);
 Diamond diamond(1.0f);
-Sphere small_ball(1.0f, 4);
-Sphere medium_ball(2.0f, 10);
-Sphere large_ball(3.0f, 4);
+Sphere medium_ball;
 Rect wall(20.0f, 10.0f);
 
 // Lights
@@ -167,9 +165,7 @@ void renderObjects(const mat4& projection, const mat4& view)
 
 	cube.drawObject(objectShader, vec3(0.0f, 0.0f, 5.0f), &metal);
 	diamond.drawObject(objectShader, vec3(-5.0f, 0.0f, 0.0f), &tile);
-	small_ball.drawObject(objectShader, vec3(0.0f, 0.0f, -5.0f), &mixedstone);
-	medium_ball.drawObject(objectShader, vec3(6.0f, 8.0f, 0.0f), &metal);
-	large_ball.drawObject(objectShader, vec3(8.0f, 0.0f, 0.0f), &tile);
+	medium_ball.drawObject(objectShader, vec3(6.0f, 8.0f, 0.0f), &mixedstone);
 	wall.drawObject(objectShader, vec3(0.0f, 0.0f, -10.0f), 90.0f, vec3(1.0f, 0.0f, 0.0f), &mixedstone);
 }
 
@@ -231,9 +227,7 @@ int main()
 	sun.storeOnGPU();
 	cube.storeOnGPU();
 	diamond.storeOnGPU();
-	small_ball.storeOnGPU();
 	medium_ball.storeOnGPU();
-	large_ball.storeOnGPU();
 	wall.storeOnGPU();
 
 	// Load cubemap textures
