@@ -21,6 +21,10 @@ Triangle::~Triangle()
 
 void Triangle::createTriangle(float base, float height)
 {
+	indices = {
+		0, 1, 2
+	};
+
 	vertices = {
 		vec3(-(base / 2.0f), -(height / 2.0f), 0.0f),
 		vec3((base / 2.0f), -(height / 2.0f), 0.0f),
