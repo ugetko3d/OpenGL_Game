@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <string>
-#include <iterator>
+#include <map>
 #include <glew.h>
 #include <glfw3.h>
 #include "maths.h"
@@ -10,10 +10,9 @@
 #include "Texture.h"
 #include "Maths.h"
 
-// Includes for parsing .obj files
-#include <fstream>
-#include <sstream>
-#include <algorithm>
+// For parsing .obj files
+#include <stdio.h>
+
 
 class Vertex
 {
@@ -21,37 +20,38 @@ private:
 	mat4 scale, rotate, translate;
 	vec2 uv_scale = vec2(1.0f, 1.0f);
 	unsigned int VBO, VAO, EBO;
-	bool storedOnGPU = false, scaleTexture = false;
+	bool storedOnGPU = false, scaleTexture = false, m_isModelParsed = true;
 	GLenum draw_mode = GL_TRIANGLES;
 
-	// Private method used by the loadObjectFile method
-	void processLoadedVertex(const vec3& vertexData);
 protected:
+
 	/* Loads vertex data from an .obj file generated in Blender */
 	void loadObjectFile(const std::string& filePath);
+
 	/* Set draw mode. Defaults to GL_TRIANGLES */
 	void setDrawMode(GLenum mode);
+
 public:
 	std::vector<vec3> vertices, normals, colours, tangents, bitangents;
 	std::vector<vec2> uvs;
-	std::vector<unsigned int> indices;
+	std::vector<unsigned short> indices;
 
-	/* Cosntructor */
-	Vertex(const std::vector<vec3>& vertices = std::vector<vec3>(), const std::vector<vec3>& normal = std::vector<vec3>(), const std::vector<vec3>& colour = std::vector<vec3>(), const std::vector<vec2>& uv = std::vector<vec2>(), const std::vector<vec3>& tangent = std::vector<vec3>(), const std::vector<vec3>& bitangents = std::vector<vec3>(), const std::vector<unsigned int>& indices = std::vector<unsigned int>());
+	/* Constructor */
+	Vertex(const std::vector<vec3>& vertices = std::vector<vec3>(), const std::vector<vec3>& normal = std::vector<vec3>(), const std::vector<vec3>& colour = std::vector<vec3>(), const std::vector<vec2>& uv = std::vector<vec2>(), const std::vector<vec3>& tangent = std::vector<vec3>(), const std::vector<vec3>& bitangents = std::vector<vec3>(), const std::vector<unsigned short>& indices = std::vector<unsigned short>());
 	/* De-constructor */
 	~Vertex();
 
-	/* Set scale (creates scale model) */
+	/* Set scale */
 	void setScale(const vec3& scale_vector);
 	/* Returns scale model */
 	mat4& getScale();
 	/* Returns UV scale */
 	vec2& getUVScale();
-	/* Set rotation (creates rotation model) */
+	/* Set rotation */
 	void setRotate(float rotate_degrees, const vec3& rotate_vector);
 	/* Returns rotation model */
 	mat4& getRotation();
-	/* Set position (create translation model) */
+	/* Set translation */
 	void setTranslate(const vec3& position_vector);
 	/* Returns translation model */
 	mat4& getTranslate();

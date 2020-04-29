@@ -1,6 +1,6 @@
 #include "Vertex.h"
 
-Vertex::Vertex(const std::vector<vec3>& vertices, const std::vector<vec3>& normals, const std::vector<vec3>& colours, const std::vector<vec2>& uvs, const std::vector<vec3>& tangents, const std::vector<vec3>& bitangents, const std::vector<unsigned int>& indices)
+Vertex::Vertex(const std::vector<vec3>& vertices, const std::vector<vec3>& normals, const std::vector<vec3>& colours, const std::vector<vec2>& uvs, const std::vector<vec3>& tangents, const std::vector<vec3>& bitangents, const std::vector<unsigned short>& indices)
 {
 	this->vertices = vertices;
 	this->normals = normals;
@@ -167,7 +167,7 @@ const unsigned int Vertex::bitangentStride()
 
 bool Vertex::storeOnGPU()
 {
-	if (hasVertices())
+	if (hasVertices() && m_isModelParsed)
 	{
 		glGenVertexArrays(1, &VAO); // Create VAO that stores the buffer objects.
 		glGenBuffers(1, &VBO); // Create VBO that stores vertex data
@@ -220,7 +220,7 @@ bool Vertex::storeOnGPU()
 			// Bind the EBO to the GL_ELEMENT_ARRAY_BUFFER target
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 			// Copy indices data into the EBO currently bound to the GL_ELEMENT_ARRAY_BUFFER target
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indices.size(), indices.data(), GL_STATIC_DRAW);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned short) * indices.size(), indices.data(), GL_STATIC_DRAW);
 		}
 
 		storedOnGPU = true;
@@ -266,11 +266,8 @@ bool Vertex::drawObject(const Shader& shader, const vec3& position, const vec3& 
 		else
 			shader.setVec2("scale", vec2(1.0f, 1.0f));
 
-			// Draw mesh
-		if (hasIndices())
-			glDrawElements(draw_mode, indices.size(), GL_UNSIGNED_INT, 0);
-		else
-			glDrawArrays(draw_mode, 0, size());
+		// Draw mesh
+		glDrawElements(draw_mode, indices.size(), GL_UNSIGNED_SHORT, 0);
 
 		// Unbind textures
 		if (material)
@@ -381,6 +378,7 @@ void Vertex::printDataSizes()
 std::vector<float> Vertex::data()
 {
 	std::vector<float> raw_data;
+	
 	for (unsigned int i = 0; i < vertices.size(); i++)
 	{
 		if (hasVertices())
@@ -419,6 +417,7 @@ std::vector<float> Vertex::data()
 			raw_data.push_back(bitangents.at(i).z);
 		}
 	}
+
 	return raw_data;
 }
 
@@ -515,92 +514,100 @@ void Vertex::calculateTangents()
 
 void Vertex::loadObjectFile(const std::string& filePath)
 {
-	std::stringstream ss;
-	std::ifstream in_file(filePath);
-	std::string line = "";
-	std::string prefix = "";
-
-	std::stringstream temp_ss;
-	std::string temp_string;
-	vec3 temp_vec3;
-	vec2 temp_vec2;
-	std::vector<vec3> temp_vertices;
-	std::vector<vec3> temp_normals;
+	std::vector<vec3> temp_vertices, temp_normals;
 	std::vector<vec2> temp_uvs;
-	
-	vec3 vertex1, vertex2, vertex3;
+	std::vector<unsigned int> vertexIndices, uvIndices, normalIndices;
 
-	// File open check
-	if (!in_file.is_open())
+	FILE* file = fopen(filePath.c_str(), "r");
+	if (file == NULL)
 	{
-		std::cout << "ERROR! Could not open .obj file!" << std::endl;
+		std::cout << "Unable to open .obj file at: " << filePath << std::endl;
+		m_isModelParsed = false;
+		return;
 	}
 
-	// Read one line at a time
-	while (std::getline(in_file, line))
+	while(1)
 	{
-		// Get the prefix of the line (v = vertext position, vt = vertex texture coordinate, vn = vertex normal, f = face (a triangle))
-		ss.clear();
-		ss.str(line);
-		ss >> prefix;
 
-		if (prefix == "v") // Vertex position
+		char lineHeader[128];
+		// read the first word of the line
+		int res = fscanf(file, "%s", lineHeader);
+		if (res == EOF)
+			break; // EOF = End Of File. Quit the loop.
+
+
+		if (strcmp(lineHeader, "v") == 0) // Vertex position
 		{
-			ss >> temp_vec3.x >> temp_vec3.y >> temp_vec3.z;
-			temp_vertices.push_back(temp_vec3);
+			vec3 vertex;
+			fscanf(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z);
+			temp_vertices.push_back(vertex);
 		}
-		else if (prefix == "vt") // Vertex texture coordinate
+		else if (strcmp(lineHeader, "vt") == 0) // Vertex texture coordinate
 		{
-			ss >> temp_vec2.x >> temp_vec2.y;
-			temp_uvs.push_back(temp_vec2);
+			vec2 uv;
+			fscanf(file, "%f %f\n", &uv.x, &uv.y);
+			//uv.y = -uv.y; // Invert V coordinate since we will only use DDS texture, which are inverted. Remove if you want to use TGA or BMP loaders.
+			temp_uvs.push_back(uv);
 		}
-		else if (prefix == "vn") // Vertex normal
+		else if (strcmp(lineHeader, "vn") == 0) // Vertex normal
 		{
-			ss >> temp_vec3.x >> temp_vec3.y >> temp_vec3.z;
-			temp_normals.push_back(temp_vec3);
+			vec3 normal;
+			fscanf(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z);
+			temp_normals.push_back(normal);
 		}
-		else if (prefix == "f")
+		else if (strcmp(lineHeader, "f") == 0)
 		{
-			temp_string = line.substr(2, line.length() - 2);
-			std::replace(temp_string.begin(), temp_string.end(), '/', ' ');
-
-			temp_ss.clear();
-			temp_ss.str(temp_string);
-
-			temp_ss >> vertex1.x >> vertex1.y >> vertex1.z >> vertex2.x >> vertex2.y >> vertex2.z >> vertex3.x >> vertex3.y >> vertex3.z;
-
-			unsigned int x1 = static_cast<int>(vertex1.x);
-			unsigned int x2 = static_cast<int>(vertex2.x);
-			unsigned int x3 = static_cast<int>(vertex3.x);
-
-			vertices.push_back(temp_vertices.at(x1 - 1));
-			vertices.push_back(temp_vertices.at(x2 - 1));
-			vertices.push_back(temp_vertices.at(x3 - 1));
-
-			unsigned int t1 = static_cast<int>(vertex1.y);
-			unsigned int t2 = static_cast<int>(vertex2.y);
-			unsigned int t3 = static_cast<int>(vertex3.y);
-
-			uvs.push_back(temp_uvs.at(t1 -1));
-			uvs.push_back(temp_uvs.at(t2 -1));
-			uvs.push_back(temp_uvs.at(t3 -1));
-
-			unsigned int n1 = static_cast<int>(vertex1.z);
-			unsigned int n2 = static_cast<int>(vertex2.z);
-			unsigned int n3 = static_cast<int>(vertex3.z);
-
-			normals.push_back(temp_normals.at(n1 - 1));
-			normals.push_back(temp_normals.at(n2 - 1));
-			normals.push_back(temp_normals.at(n3 - 1));
-
-			indices.push_back(indices.size());
-			indices.push_back(indices.size());
-			indices.push_back(indices.size());
+			unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];
+			int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n", &vertexIndex[0], &uvIndex[0], &normalIndex[0], &vertexIndex[1], &uvIndex[1], &normalIndex[1], &vertexIndex[2], &uvIndex[2], &normalIndex[2]);
+			if (matches != 9)
+			{
+				std::cout << "A line starting with \"f\" does not seem to contain 9 float values. Check the .obj file!" << std::endl;
+				fclose(file);
+				m_isModelParsed = false;
+				return;
+			}
+			vertexIndices.push_back(vertexIndex[0]);
+			vertexIndices.push_back(vertexIndex[1]);
+			vertexIndices.push_back(vertexIndex[2]);
+			uvIndices.push_back(uvIndex[0]);
+			uvIndices.push_back(uvIndex[1]);
+			uvIndices.push_back(uvIndex[2]);
+			normalIndices.push_back(normalIndex[0]);
+			normalIndices.push_back(normalIndex[1]);
+			normalIndices.push_back(normalIndex[2]);
 	
 		}
 		else
 		{
-			// Don't care, do nothing...
+			// Probably a comment, store the rest of the line in a dummy buffer
+			char stupidBuffer[1000];
+			fgets(stupidBuffer, 1000, file);
 		}
 	}
+
+	fclose(file);
+
+	m_isModelParsed = true;
+
+	// For each vertex of each triangle
+	for (unsigned int i = 0; i < vertexIndices.size(); i++)
+	{
+		// Get the indices of its attributes
+		unsigned int vertexIndex = vertexIndices[i];
+		unsigned int uvIndex = uvIndices[i];
+		unsigned int normalIndex = normalIndices[i];
+
+		// Get the attributes thanks to the index
+		vec3 vertex = temp_vertices[vertexIndex - 1];
+		vec2 uv = temp_uvs[uvIndex - 1];
+		vec3 normal = temp_normals[normalIndex - 1];
+
+		// Put the attributes in buffers
+		vertices.push_back(vertex);
+		uvs.push_back(uv);
+		normals.push_back(normal);
+		indices.push_back(i);
+	}
+
 }
+
