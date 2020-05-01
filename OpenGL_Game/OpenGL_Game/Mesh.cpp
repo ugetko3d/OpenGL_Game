@@ -1,6 +1,6 @@
-#include "Vertex.h"
+#include "Mesh.h"
 
-Vertex::Vertex(const std::vector<vec3>& vertices, const std::vector<vec3>& normals, const std::vector<vec3>& colours, const std::vector<vec2>& uvs, const std::vector<vec3>& tangents, const std::vector<vec3>& bitangents, const std::vector<unsigned short>& indices)
+Mesh::Mesh(const std::vector<vec3>& vertices, const std::vector<vec3>& normals, const std::vector<vec3>& colours, const std::vector<vec2>& uvs, const std::vector<vec3>& tangents, const std::vector<vec3>& bitangents, const std::vector<unsigned short>& indices)
 {
 	this->vertices = vertices;
 	this->normals = normals;
@@ -11,7 +11,7 @@ Vertex::Vertex(const std::vector<vec3>& vertices, const std::vector<vec3>& norma
 	this->indices = indices;
 }
 
-Vertex::~Vertex()
+Mesh::~Mesh()
 {
 	if (storedOnGPU)
 	{
@@ -21,89 +21,92 @@ Vertex::~Vertex()
 	}
 }
 
-void Vertex::setScale(const vec3& scale_vector)
+void Mesh::setScale(const vec3& scale_vector)
 {
+	hitbox.scale = scale_vector;
 	scale.scale(scale_vector);
 	uv_scale.x = scale_vector.x;
 	uv_scale.y = scale_vector.y;
 }
 
-mat4& Vertex::getScale()
+mat4& Mesh::getScale()
 {
 	return scale;
 }
 
-vec2& Vertex::getUVScale()
+vec2& Mesh::getUVScale()
 {
 	return uv_scale;
 }
 
-void Vertex::setRotate(float rotate_degrees, const vec3& rotate_vector)
+void Mesh::setRotate(float rotate_degrees, const vec3& rotate_vector)
 {
+	hitbox.rotation = rotate_vector;
 	rotate.rotate(rotate_degrees, rotate_vector);
 }
 
-mat4& Vertex::getRotation()
+mat4& Mesh::getRotation()
 {
 	return rotate;
 }
 
-void Vertex::setTranslate(const vec3& position_vector)
+void Mesh::setTranslate(const vec3& position_vector)
 {
+	hitbox.position = position_vector;
 	translate.translate(position_vector);
 }
 
-mat4& Vertex::getTranslate()
+mat4& Mesh::getTranslate()
 {
 	return translate;
 }
 
-const unsigned int Vertex::size()
+const unsigned int Mesh::size()
 {
 	return dataSize() / stride();
 }
 
-const unsigned int Vertex::dataSize()
+const unsigned int Mesh::dataSize()
 {
 	return vertices.size() * 3 + normals.size() * 3 + colours.size() * 3 + uvs.size() * 2 + tangents.size() * 3 + bitangents.size() * 3;
 }
 
-bool Vertex::hasVertices()
+bool Mesh::hasVertices()
 {
 	return !vertices.empty();
 }
 
-bool Vertex::hasNormals()
+bool Mesh::hasNormals()
 {
 	return !normals.empty();
 }
 
-bool Vertex::hasColours()
+bool Mesh::hasColours()
 {
 	return !colours.empty();
 }
 
-bool Vertex::hasUVs()
+bool Mesh::hasUVs()
 {
 	return !uvs.empty();
 }
 
-bool Vertex::hasTangents()
+bool Mesh::hasTangents()
 {
 	return !tangents.empty();
 }
 
-bool Vertex::hasBitangents()
+bool Mesh::hasBitangents()
 {
 	return !bitangents.empty();
 }
 
-bool Vertex::hasIndices()
+bool Mesh::hasIndices()
 {
 	return !indices.empty();
 }
 
-const unsigned int Vertex::stride()
+const unsigned int Mesh::stride()
 {
 	unsigned int stride = 0;
 	if (hasVertices()) stride += 3;
@@ -115,19 +118,19 @@ const unsigned int Vertex::stride()
 	return stride;
 }
 
-const unsigned int Vertex::verticeStride()
+const unsigned int Mesh::verticeStride()
 {
 	return 0;
 }
 
-const unsigned int Vertex::normalStride()
+const unsigned int Mesh::normalStride()
 {
 	unsigned int stride = 3;
 	if (!hasVertices()) stride -= 3;
 	return stride;
 }
 
-const unsigned int Vertex::colourStride()
+const unsigned int Mesh::colourStride()
 {
 	unsigned int stride = 6;
 	if (!hasVertices()) stride -= 3;
@@ -135,7 +138,7 @@ const unsigned int Vertex::colourStride()
 	return stride;
 }
 
-const unsigned int Vertex::uvStride()
+const unsigned int Mesh::uvStride()
 {
 	unsigned int stride = 9;
 	if (!hasVertices()) stride -= 3;
@@ -144,7 +147,7 @@ const unsigned int Vertex::uvStride()
 	return stride;
 }
 
-const unsigned int Vertex::tangentStride()
+const unsigned int Mesh::tangentStride()
 {
 	unsigned int stride = 11;
 	if (!hasVertices()) stride -= 3;
@@ -154,7 +157,7 @@ const unsigned int Vertex::tangentStride()
 	return stride;
 }
 
-const unsigned int Vertex::bitangentStride()
+const unsigned int Mesh::bitangentStride()
 {
 	unsigned int stride = 14;
 	if (!hasVertices()) stride -= 3;
@@ -165,7 +168,7 @@ const unsigned int Vertex::bitangentStride()
 	return stride;
 }
 
-bool Vertex::storeOnGPU()
+bool Mesh::storeOnGPU()
 {
 	if (hasVertices() && m_isModelParsed)
 	{
@@ -233,17 +236,17 @@ bool Vertex::storeOnGPU()
 	}
 }
 
-void Vertex::setDrawMode(GLenum mode)
+void Mesh::setDrawMode(GLenum mode)
 {
 	draw_mode = mode;
 }
 
-void Vertex::scaleTextures(bool enable)
+void Mesh::scaleTextures(bool enable)
 {
 	scaleTexture = enable;
 }
 
-bool Vertex::drawObject(const Shader& shader, const vec3& position, const vec3& scale_vector, float rotation_degrees, const vec3& rotation_vector, Material* material)
+bool Mesh::drawObject(const Shader& shader, const vec3& position, const vec3& scale_vector, float rotation_degrees, const vec3& rotation_vector, Material* material)
 {
 	if (storedOnGPU)
 	{
@@ -255,11 +258,13 @@ bool Vertex::drawObject(const Shader& shader, const vec3& position, const vec3& 
 		glBindVertexArray(VAO);
 
 		// Calculate the model matrix for each object and pass it to shader before drawing
-		translate.translate(position);
-		rotate.rotate(rotation_degrees, rotation_vector);
-		scale.scale(scale_vector);
+		setTranslate(position);
+		setRotate(rotation_degrees, rotation_vector);
+		setScale(scale_vector);
 		mat4 model = translate * rotate * scale;
 		shader.setMat4("model", model);
+
+		hitbox.update(position, scale_vector);
 
 		if (scaleTexture)
 			shader.setVec2("scale", vec2(scale_vector.x * uv_scale.x, scale_vector.y * uv_scale.y));
@@ -282,69 +287,69 @@ bool Vertex::drawObject(const Shader& shader, const vec3& position, const vec3& 
 	}
 }
 
-bool Vertex::drawObject(const Shader& shader, const vec3& position, float rotation_degrees, const vec3& rotation_vector, Material* material)
+bool Mesh::drawObject(const Shader& shader, const vec3& position, float rotation_degrees, const vec3& rotation_vector, Material* material)
 {
 	return drawObject(shader, position, vec3(1.0f), rotation_degrees, rotation_vector, material);
 }
 
-bool Vertex::drawObject(const Shader& shader, const vec3& position, const vec3& scale_vector, Material* material)
+bool Mesh::drawObject(const Shader& shader, const vec3& position, const vec3& scale_vector, Material* material)
 {
 	return drawObject(shader, position, scale_vector, 0.0f, vec3(1.0f), material);
 }
 
-bool Vertex::drawObject(const Shader& shader, const vec3& position, Material* material)
+bool Mesh::drawObject(const Shader& shader, const vec3& position, Material* material)
 {
 	return drawObject(shader, position, vec3(1.0f), 0.0f, vec3(1.0f), material);
 }
 
-bool Vertex::drawObject(const Shader& shader, Material* material)
+bool Mesh::drawObject(const Shader& shader, Material* material)
 {
 	return drawObject(shader, vec3(0.0f), vec3(1.0f), 0.0f, vec3(1.0f), material);
 }
 
-void Vertex::printVertices()
+void Mesh::printVertices()
 {
 	for (vec3 v : vertices)
 		std::cout << v << std::endl;
 }
 
-void Vertex::printNormals()
+void Mesh::printNormals()
 {
 	for (vec3 v : normals)
 		std::cout << v << std::endl;
 }
 
-void Vertex::printColours()
+void Mesh::printColours()
 {
 	for (vec3 v : colours)
 		std::cout << v << std::endl;
 }
 
-void Vertex::printUVs()
+void Mesh::printUVs()
 {
 	for (vec2 v : uvs)
 		std::cout << v << std::endl;
 }
 
-void Vertex::printTangents()
+void Mesh::printTangents()
 {
 	for (vec3 v : tangents)
 		std::cout << v << std::endl;
 }
 
-void Vertex::printBitangents()
+void Mesh::printBitangents()
 {
 	for (vec3 v : bitangents)
 		std::cout << v << std::endl;
 }
 
-void Vertex::printIndices()
+void Mesh::printIndices()
 {
 	for (unsigned int i = 0; i < indices.size(); i += 3)
 		std::cout << indices[i] << ", " << indices[i + 1] << ", " << indices[i + 2] << std::endl;
 }
 
-void Vertex::printVertexData()
+void Mesh::printMeshData()
 {
 	for (unsigned int i = 0; i < vertices.size(); i++)
 	{
@@ -364,7 +369,7 @@ void Vertex::printVertexData()
 	}
 }
 
-void Vertex::printDataSizes()
+void Mesh::printDataSizes()
 {
 	std::cout << "Vertices: " << vertices.size() << std::endl;
 	std::cout << "Normals: " << normals.size() << std::endl;
@@ -375,7 +380,7 @@ void Vertex::printDataSizes()
 	std::cout << "Indices: " << indices.size() << std::endl;
 }
 
-std::vector<float> Vertex::data()
+std::vector<float> Mesh::data()
 {
 	std::vector<float> raw_data;
 	
@@ -421,12 +426,12 @@ std::vector<float> Vertex::data()
 	return raw_data;
 }
 
-void Vertex::setColour(const vec3& colour)
+void Mesh::setColour(const vec3& colour)
 {
 	colours = std::vector<vec3>(size(), colour);
 }
 
-void Vertex::calculateTangents()
+void Mesh::calculateTangents()
 {
 
 	// Remove any previous tangents and bitangents
@@ -512,7 +517,7 @@ void Vertex::calculateTangents()
 }
 
 
-void Vertex::loadObjectFile(const std::string& filePath)
+void Mesh::loadObjectFile(const std::string& filePath)
 {
 	std::vector<vec3> temp_vertices, temp_normals;
 	std::vector<vec2> temp_uvs;

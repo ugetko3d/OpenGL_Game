@@ -1,10 +1,9 @@
 #pragma once
-#include "Vertex.h"
+#include "Mesh.h"
 
-class Cube : public Vertex
+class Cube : public Mesh
 {
 private:
-	const unsigned short SIZE = 24;
 	const float WIDTH = 1.0f, HEIGHT = 1.0f;
 	/* Create a cube */
 	void createCube(float width, float height);

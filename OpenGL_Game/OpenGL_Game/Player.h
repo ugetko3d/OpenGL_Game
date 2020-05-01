@@ -2,6 +2,7 @@
 #include <glfw3.h>
 #include <iostream>
 
+#include "Hitbox.h"
 #include "Camera.h"
 #include "SpotLight.h"
 
@@ -10,15 +11,8 @@ class Player
 {
 
 public:
-
-	int mass = 70;
-	vec3 position;
-	vec3 hitbox = vec3();
-
 	// Keyboard
-	bool isJumping = false;
 	bool isFlying = true;
-	bool interactWithEntity = false;
 
 	// Mouse
 	bool firstMouse = true;
@@ -30,6 +24,7 @@ public:
 
 	Camera& camera = Camera::instance();
 	SpotLight flashLight = SpotLight(vec3(0.8f, 0.8f, 0.1f), camera.position, camera.front);
+	Hitbox hitbox;
 
 	void movementInput(GLFWwindow* window, float deltaTime, bool flyingMode);
 	void mouseMoved(double xpos, double ypos);
@@ -40,8 +35,7 @@ private:
 	float jumpStrength = 7.0f;
 	float gravityPlayer = 0.0f;
 
-	void updateFlashlight();
+	void updateAttributes();
 	void processPlayerJump(float deltaTime, float jumpStrength);
-	bool collision(const vec3& objectPos);
 
 };

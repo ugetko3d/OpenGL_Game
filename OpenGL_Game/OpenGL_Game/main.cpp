@@ -14,7 +14,7 @@
 
 #include "Player.h"
 
-#include "Vertex.h"
+#include "Mesh.h"
 #include "Cube.h"
 #include "Diamond.h"
 #include "Sphere.h"
@@ -25,6 +25,7 @@ GLFWwindow* window;
 const char* WINDOW_TITLE = "OpenGL Game";
 const int OPENGL_MIN = 4, OPENGL_MAX = 4;
 unsigned int WINDOW_WIDTH = 1200, WINDOW_HEIGHT = 700;
+bool fullscreen = false;
 
 // Timing
 float deltaTime = 0.0f;	// Time between current frame and last frame
@@ -49,7 +50,8 @@ Sphere sun;
 Cube cube(1.0f);
 Diamond diamond(1.0f);
 Sphere medium_ball;
-Rect wall(20.0f, 10.0f);
+Cube leftWall(1.0f);
+Cube rightWall(1.0f);
 
 // Lights
 std::vector<Light> lights;
@@ -59,6 +61,13 @@ vec3 lightColour(0.9f, 0.7f, 0.3f);
 
 PointLight pointLight(vec3(1.0f), vec3(0.0f, 5.0f, 0.0f));
 DirectionalLight directionLight(sunColour, sunDirection);
+
+float factor = 1.0f;
+
+float Xpos = 0.0f;
+
+// Rotation angle that is used for rotating the objects. Value is increased after every iteration of the renderer loop.
+float angle = 0.0f;
 
 
 // Initialize GLFW (window for OpenGL)
@@ -76,7 +85,11 @@ void createDisplay()
 	glfwWindowHint(GLFW_SAMPLES, 4);
 
 	// Create a windowed mode window and its OpenGL context
-	window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, NULL, NULL);
+	if (fullscreen)
+		window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, glfwGetPrimaryMonitor(), NULL);
+	else
+		window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, NULL, NULL);
+
 	if (!window)
 	{
 		glfwTerminate();
@@ -107,6 +120,10 @@ void startOpenGL()
 	// Set global OpenGL state
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_MULTISAMPLE);
+
+	//Blending proporties
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// Printing out useful information to the console
 	std::cout << "Status: Using GLEW " << glewGetString(GLEW_VERSION) << std::endl;
@@ -146,7 +163,7 @@ void renderObjects(const mat4& projection, const mat4& view)
 	objectShader.use();
 	objectShader.setMat4("projection", projection);
 	objectShader.setMat4("view", view);
-	objectShader.setFloat("material.shininess", 64.0f);
+	objectShader.setFloat("material.shininess", 128.0f);
 	objectShader.setVec3("viewPos", player.camera.position);
 
 	// lights
@@ -162,11 +179,11 @@ void renderObjects(const mat4& projection, const mat4& view)
 	}
 
 	player.flashLight.drawLight(objectShader);
-
-	cube.drawObject(objectShader, vec3(0.0f, 0.0f, 5.0f), &metal);
-	diamond.drawObject(objectShader, vec3(-5.0f, 0.0f, 0.0f), &tile);
-	medium_ball.drawObject(objectShader, vec3(6.0f, 8.0f, 0.0f), &mixedstone);
-	wall.drawObject(objectShader, vec3(0.0f, 0.0f, -10.0f), 90.0f, vec3(1.0f, 0.0f, 0.0f), &mixedstone);
+	cube.drawObject(objectShader, vec3(10.0f, 3.0f, 5.0f), &metal);
+	diamond.drawObject(objectShader, vec3(-10.0f, 0.0f, 0.0f), &tile);
+	medium_ball.drawObject(objectShader, vec3(Xpos * factor, 0.0f, -10.0f), &mixedstone);
+	leftWall.drawObject(objectShader, vec3(-15.0f, 0.0f, -10.0f), vec3(0.3f, 10.0f, 7.0f), &tile);
+	rightWall.drawObject(objectShader, vec3(15.0f, 0.0f, -10.0f), vec3(0.3f, 10.0f, 7.0f), &tile);
 }
 
 void renderLights(mat4 projection, mat4 view)
@@ -228,7 +245,8 @@ int main()
 	cube.storeOnGPU();
 	diamond.storeOnGPU();
 	medium_ball.storeOnGPU();
-	wall.storeOnGPU();
+	leftWall.storeOnGPU();
+	rightWall.storeOnGPU();
 
 	// Load cubemap textures
 	cubemap.loadCubemapTexture(
@@ -264,8 +282,7 @@ int main()
 
 	mat4 view, projection;
 
-	// Rotation angle that is used for rotating the objects. Value is increased after every iteration of the renderer loop.
-	float angle = 0.0f;
+	bool headingRight = true;
 
 	// Loop until the user closes the window
 	while (!glfwWindowShouldClose(window))
@@ -294,6 +311,39 @@ int main()
 		// Render the skybox at the end
 		cubemap.drawCubemap(cubeMapShader, view, projection);
 
+		if (headingRight)
+		{
+			medium_ball.hitbox.checkCollision(rightWall.hitbox);
+			if (medium_ball.hitbox.isIntersecting)
+			{
+				std::cout << "The ball has hit the right wall!!! Bounce!!!!!" << std::endl;
+				headingRight = false;
+			}
+			else
+			{
+				std::cout << "Everything is fine..." << std::endl;
+				Xpos += 1.0f;
+			}
+				
+		}
+		else
+		{
+			medium_ball.hitbox.checkCollision(leftWall.hitbox);
+			if (medium_ball.hitbox.isIntersecting)
+			{
+				std::cout << "The ball has hit the left wall!!! Bounce!!!!!" << std::endl;
+				headingRight = true;
+			}
+			else
+			{
+				std::cout << "Everything is fine..." << std::endl;
+				Xpos -= 1.0f;
+			}
+				
+		}
+
+		factor += 0.001f;
+		
 		// Swap front and back buffers
 		glfwSwapBuffers(window);
 

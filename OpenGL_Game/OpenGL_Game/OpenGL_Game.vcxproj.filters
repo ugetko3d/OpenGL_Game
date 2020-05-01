@@ -17,9 +17,6 @@
     <Filter Include="Misc">
       <UniqueIdentifier>{1b55aace-eb8a-4f13-855f-5d4fa3142751}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Player">
-      <UniqueIdentifier>{718d1694-d054-4c87-9839-30b443c57b14}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Tools">
       <UniqueIdentifier>{0d8c5c46-7aaa-45d4-9c50-2b1d14a04230}</UniqueIdentifier>
     </Filter>
@@ -37,6 +34,9 @@
     </Filter>
     <Filter Include="Objects\object_files">
       <UniqueIdentifier>{70b3d886-f93c-4e24-95a9-79811ca2f7a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entity">
+      <UniqueIdentifier>{718d1694-d054-4c87-9839-30b443c57b14}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -59,18 +59,15 @@
       <Filter>Textures</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
-      <Filter>Player</Filter>
+      <Filter>Entity</Filter>
     </ClCompile>
     <ClCompile Include="camera.cpp">
-      <Filter>Player</Filter>
+      <Filter>Entity</Filter>
     </ClCompile>
     <ClCompile Include="stb_image.c">
       <Filter>Tools</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Vertex.cpp">
-      <Filter>RenderEngine</Filter>
-    </ClCompile>
     <ClCompile Include="SpotLight.cpp">
       <Filter>Lights</Filter>
     </ClCompile>
@@ -104,6 +101,12 @@
     <ClCompile Include="Sphere.cpp">
       <Filter>Objects</Filter>
     </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>RenderEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Hitbox.cpp">
+      <Filter>Entity</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mat4.h">
@@ -131,16 +134,13 @@
       <Filter>Textures</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
-      <Filter>Player</Filter>
+      <Filter>Entity</Filter>
     </ClInclude>
     <ClInclude Include="camera.h">
-      <Filter>Player</Filter>
+      <Filter>Entity</Filter>
     </ClInclude>
     <ClInclude Include="stb_image.h">
       <Filter>Tools</Filter>
-    </ClInclude>
-    <ClInclude Include="Vertex.h">
-      <Filter>RenderEngine</Filter>
     </ClInclude>
     <ClInclude Include="SpotLight.h">
       <Filter>Lights</Filter>
@@ -174,6 +174,12 @@
     </ClInclude>
     <ClInclude Include="Sphere.h">
       <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>RenderEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Hitbox.h">
+      <Filter>Entity</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

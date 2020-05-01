@@ -43,52 +43,18 @@ void Player::movementInput(GLFWwindow* frame, float deltaTime, bool flyingMode)
 			camera.processKeyboard(Camera::Camera_Movement::RIGHT, deltaTime, false, isFlying);
 	}
 
-	updateFlashlight();
+	updateAttributes();
 
-	/*if (glfwGetKey(frame, GLFW_KEY_SPACE) == GLFW_PRESS && !isFlying)
-	{
-		isJumping = true;
-
-	}
-
-	if (isFlying && gravityPlayer != 0)
-		gravityPlayer = 0;
-
-	if (gravityPlayer < 100.0f && !isFlying)
-	{
-		gravityPlayer += 0.1f;
-		processPlayerJump(deltaTime, -gravityPlayer);
-	}
-	else
-	{
-		gravityPlayer = 0;
-	}
-
-	// Jumping
-	if (isJumping && !isFlying)
-	{
-		jumpStrength -= 0.1f;
-		processPlayerJump(deltaTime, jumpStrength);
-	}
-
-	if (collision(position))
-	{
-		if (!isFlying)
-		{
-			jumpStrength = 7.0f;
-			isJumping = false;
-		}
-	}
-
-	// Set player position in front of camera
-	position = vec3(camera.position.x, camera.position.y - 1.0f, camera.position.z + 5.0f);*/
 }
 
 // Updates the position and direction of flash light whenever the camera is updated
-void Player::updateFlashlight()
+// Also updates the player's hitbox position
+void Player::updateAttributes()
 {
 	flashLight.position = camera.position;
 	flashLight.direction = camera.front;
+
+	hitbox.position = camera.position;
 }
 
 //Processing movement for y direction
@@ -96,13 +62,7 @@ void Player::processPlayerJump(float deltaTime, float jumpStrength)
 {
 	float velocity = jumpStrength * deltaTime;
 	camera.position = camera.position + vec3(0.0f, velocity, 0.0f);
-	updateFlashlight();
-}
-
-bool Player::collision(const vec3& objectPos)
-{
-	// TODO
-	return false;
+	updateAttributes();
 }
 
 void Player::mouseMoved(double xpos, double ypos)
@@ -126,13 +86,13 @@ void Player::mouseMoved(double xpos, double ypos)
 	lastY = ypos;
 
 	camera.processMouseMovement(xoffset, yoffset);
-	updateFlashlight();
+	updateAttributes();
 }
 
 void Player::mouseScrolled(double yoffset)
 {
 	camera.setFOV((float)yoffset);
-	updateFlashlight();
+	updateAttributes();
 }
 
 void Player::keyPressed(int key, int action)

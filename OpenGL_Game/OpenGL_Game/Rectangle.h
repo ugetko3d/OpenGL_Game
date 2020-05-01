@@ -1,7 +1,7 @@
 #pragma once
-#include "Vertex.h"
+#include "Mesh.h"
 
-class Rect : public Vertex
+class Rect : public Mesh
 {
 private:
 	const float WIDTH = 1.0f, HEIGHT = 1.0f;
