@@ -40,7 +40,7 @@ public:
 	std::vector<unsigned int> indices;
 
 	/* Constructor */
-	Mesh(const std::vector<vec3>& vertices = std::vector<vec3>(), const std::vector<vec3>& normal = std::vector<vec3>(), const std::vector<vec3>& colour = std::vector<vec3>(), const std::vector<vec2>& uv = std::vector<vec2>(), const std::vector<vec3>& tangent = std::vector<vec3>(), const std::vector<vec3>& bitangents = std::vector<vec3>(), const std::vector<unsigned int>& indices = std::vector<unsigned int>());
+	Mesh(const std::string& filePath = "", const std::vector<vec3>& vertices = std::vector<vec3>(), const std::vector<vec3>& normal = std::vector<vec3>(), const std::vector<vec3>& colour = std::vector<vec3>(), const std::vector<vec2>& uv = std::vector<vec2>(), const std::vector<vec3>& tangent = std::vector<vec3>(), const std::vector<vec3>& bitangents = std::vector<vec3>(), const std::vector<unsigned int>& indices = std::vector<unsigned int>());
 	/* De-constructor */
 	~Mesh();
 

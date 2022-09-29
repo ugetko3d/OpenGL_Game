@@ -1,6 +1,6 @@
 #include "Mesh.h"
 
-Mesh::Mesh(const std::vector<vec3>& vertices, const std::vector<vec3>& normals, const std::vector<vec3>& colours, const std::vector<vec2>& uvs, const std::vector<vec3>& tangents, const std::vector<vec3>& bitangents, const std::vector<unsigned int>& indices)
+Mesh::Mesh(const std::string& filePath, const std::vector<vec3>&vertices, const std::vector<vec3>& normals, const std::vector<vec3>& colours, const std::vector<vec2>& uvs, const std::vector<vec3>& tangents, const std::vector<vec3>& bitangents, const std::vector<unsigned int>& indices)
 {
 	this->vertices = vertices;
 	this->normals = normals;
@@ -9,6 +9,9 @@ Mesh::Mesh(const std::vector<vec3>& vertices, const std::vector<vec3>& normals, 
 	this->tangents = tangents;
 	this->bitangents = bitangents;
 	this->indices = indices;
+
+	if (filePath != "")
+		loadObjectFile(filePath);
 }
 
 Mesh::~Mesh()
@@ -309,37 +312,37 @@ bool Mesh::drawObject(const Shader& shader, Material* material)
 
 void Mesh::printVertices()
 {
-	for (vec3 v : vertices)
+	for (const vec3& v : vertices)
 		std::cout << v << std::endl;
 }
 
 void Mesh::printNormals()
 {
-	for (vec3 v : normals)
+	for (const vec3& v : normals)
 		std::cout << v << std::endl;
 }
 
 void Mesh::printColours()
 {
-	for (vec3 v : colours)
+	for (const vec3& v : colours)
 		std::cout << v << std::endl;
 }
 
 void Mesh::printUVs()
 {
-	for (vec2 v : uvs)
+	for (const vec2& v : uvs)
 		std::cout << v << std::endl;
 }
 
 void Mesh::printTangents()
 {
-	for (vec3 v : tangents)
+	for (const vec3& v : tangents)
 		std::cout << v << std::endl;
 }
 
 void Mesh::printBitangents()
 {
-	for (vec3 v : bitangents)
+	for (const vec3& v : bitangents)
 		std::cout << v << std::endl;
 }
 

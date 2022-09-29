@@ -25,7 +25,7 @@ GLFWwindow* window;
 const char* WINDOW_TITLE = "OpenGL Game";
 const int OPENGL_MIN = 4, OPENGL_MAX = 4;
 unsigned int WINDOW_WIDTH = 1200, WINDOW_HEIGHT = 700;
-bool fullscreen = false;
+bool fullscreen = true;
 
 // Timing
 float deltaTime = 0.0f;	// Time between current frame and last frame
@@ -46,6 +46,9 @@ CubeMap cubemap;
 // Sun
 Sphere sun;
 
+// Aircraft
+Mesh aircraft("resources/models/icosphere.model");
+
 // Objects
 Cube cube(1.0f);
 Diamond diamond(1.0f);
@@ -62,9 +65,6 @@ vec3 lightColour(0.9f, 0.7f, 0.3f);
 PointLight pointLight(vec3(1.0f), vec3(0.0f, 5.0f, 0.0f));
 DirectionalLight directionLight(sunColour, sunDirection);
 
-float factor = 1.0f;
-
-float Xpos = 0.0f;
 
 // Rotation angle that is used for rotating the objects. Value is increased after every iteration of the renderer loop.
 float angle = 0.0f;
@@ -181,9 +181,10 @@ void renderObjects(const mat4& projection, const mat4& view)
 	player.flashLight.drawLight(objectShader);
 	cube.drawObject(objectShader, vec3(10.0f, 3.0f, 5.0f), &metal);
 	diamond.drawObject(objectShader, vec3(-10.0f, 0.0f, 0.0f), &tile);
-	medium_ball.drawObject(objectShader, vec3(Xpos * factor, 0.0f, -10.0f), &mixedstone);
+	medium_ball.drawObject(objectShader, vec3(20.0f, 0.0f, -10.0f), &mixedstone);
 	leftWall.drawObject(objectShader, vec3(-15.0f, 0.0f, -10.0f), vec3(0.3f, 10.0f, 7.0f), &tile);
 	rightWall.drawObject(objectShader, vec3(15.0f, 0.0f, -10.0f), vec3(0.3f, 10.0f, 7.0f), &tile);
+	aircraft.drawObject(objectShader, vec3(0.0f, 20.0f, 0.0f), &tile);
 }
 
 void renderLights(mat4 projection, mat4 view)
@@ -247,6 +248,7 @@ int main()
 	medium_ball.storeOnGPU();
 	leftWall.storeOnGPU();
 	rightWall.storeOnGPU();
+	aircraft.storeOnGPU();
 
 	// Load cubemap textures
 	cubemap.loadCubemapTexture(
@@ -310,39 +312,6 @@ int main()
 
 		// Render the skybox at the end
 		cubemap.drawCubemap(cubeMapShader, view, projection);
-
-		if (headingRight)
-		{
-			medium_ball.hitbox.checkCollision(rightWall.hitbox);
-			if (medium_ball.hitbox.isIntersecting)
-			{
-				std::cout << "The ball has hit the right wall!!! Bounce!!!!!" << std::endl;
-				headingRight = false;
-			}
-			else
-			{
-				std::cout << "Everything is fine..." << std::endl;
-				Xpos += 1.0f;
-			}
-				
-		}
-		else
-		{
-			medium_ball.hitbox.checkCollision(leftWall.hitbox);
-			if (medium_ball.hitbox.isIntersecting)
-			{
-				std::cout << "The ball has hit the left wall!!! Bounce!!!!!" << std::endl;
-				headingRight = true;
-			}
-			else
-			{
-				std::cout << "Everything is fine..." << std::endl;
-				Xpos -= 1.0f;
-			}
-				
-		}
-
-		factor += 0.001f;
 		
 		// Swap front and back buffers
 		glfwSwapBuffers(window);
