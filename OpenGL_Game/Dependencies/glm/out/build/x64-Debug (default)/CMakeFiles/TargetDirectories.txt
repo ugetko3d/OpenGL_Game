@@ -1,2 +1,0 @@
-C:/Users/vetle/source/repos/OpenGL_Game/OpenGL_Game/Dependencies/glm/out/build/x64-Debug (default)/CMakeFiles/edit_cache.dir
-C:/Users/vetle/source/repos/OpenGL_Game/OpenGL_Game/Dependencies/glm/out/build/x64-Debug (default)/CMakeFiles/rebuild_cache.dir
