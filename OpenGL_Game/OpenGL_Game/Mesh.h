@@ -1,6 +1,8 @@
 #pragma once
 #include <vector>
 #include <string>
+#include <fstream>
+#include <sstream>
 #include <map>
 #include <glew.h>
 #include <glfw3.h>
@@ -21,7 +23,7 @@ private:
 	mat4 scale, rotate, translate;
 	vec2 uv_scale = vec2(1.0f, 1.0f);
 	unsigned int VBO, VAO, EBO;
-	bool storedOnGPU = false, scaleTexture = false, m_isModelParsed = true;
+	bool storedOnGPU = false, scaleTexture = false, m_isModelLoaded = true;
 	GLenum draw_mode = GL_TRIANGLES;
 
 protected:
@@ -35,10 +37,10 @@ protected:
 public:
 	std::vector<vec3> vertices, normals, colours, tangents, bitangents;
 	std::vector<vec2> uvs;
-	std::vector<unsigned short> indices;
+	std::vector<unsigned int> indices;
 
 	/* Constructor */
-	Mesh(const std::vector<vec3>& vertices = std::vector<vec3>(), const std::vector<vec3>& normal = std::vector<vec3>(), const std::vector<vec3>& colour = std::vector<vec3>(), const std::vector<vec2>& uv = std::vector<vec2>(), const std::vector<vec3>& tangent = std::vector<vec3>(), const std::vector<vec3>& bitangents = std::vector<vec3>(), const std::vector<unsigned short>& indices = std::vector<unsigned short>());
+	Mesh(const std::vector<vec3>& vertices = std::vector<vec3>(), const std::vector<vec3>& normal = std::vector<vec3>(), const std::vector<vec3>& colour = std::vector<vec3>(), const std::vector<vec2>& uv = std::vector<vec2>(), const std::vector<vec3>& tangent = std::vector<vec3>(), const std::vector<vec3>& bitangents = std::vector<vec3>(), const std::vector<unsigned int>& indices = std::vector<unsigned int>());
 	/* De-constructor */
 	~Mesh();
 
